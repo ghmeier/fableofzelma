@@ -12,7 +12,7 @@
 				<Option object_output=".objs/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-D 60 default.zpl" />
+				<Option parameters="-D 60 default.zuf" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
@@ -36,12 +36,15 @@
 			<Add option="-O3" />
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="camera.cpp" />
 		<Unit filename="fableofzelma.cpp" />
 		<Unit filename="fableofzelma.hpp" />
 		<Unit filename="resources.cpp" />
 		<Unit filename="resources.hpp" />
+		<Unit filename="room.cpp" />
 		<Unit filename="sfml_utils.cpp" />
 		<Unit filename="utils.cpp" />
+		<Unit filename="world.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
