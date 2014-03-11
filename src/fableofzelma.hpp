@@ -39,16 +39,19 @@
 
 #define ERR_USAGE 1
 #define ERR_SFML 2
-#define ERR_NOFILE1 3
-#define ERR_NOFILE2 4
-#define ERR_NOFILE3 5
-#define ERR_BADFILE1 6
-#define ERR_BADFILE2 7
-#define ERR_BADFILE3 8
-#define ERR_BADFILE4 9
+#define ERR_NOFILE1 20
+#define ERR_NOFILE2 21
+#define ERR_NOFILE3 22
+#define ERR_NOFILE4 23
+#define ERR_NOFILE5 24
+#define ERR_BADFILE1 30
+#define ERR_BADFILE2 31
+#define ERR_BADFILE3 32
+#define ERR_BADFILE4 33
+#define ERR_BADFILE5 34
 #define ERR_AUDIO 10
-#define ERR_OVERBUDGET 20
-#define ERR_NOMEM 50
+#define ERR_OVERBUDGET 50
+#define ERR_NOMEM 60
 #define ERR_UNDEFINED 100
 
 #define FRAME_RATE 60

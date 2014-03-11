@@ -82,6 +82,12 @@ void raise_error(uint32_t error_num, const char *msg) {
         case ERR_NOFILE3:
             fprintf(stderr, "Error: %s map file not found\n", msg);
             break;
+        case ERR_NOFILE4:
+            fprintf(stderr, "Error: %s room file not found\n", msg);
+            break;
+        case ERR_NOFILE5:
+            fprintf(stderr, "Error: %s audio file not found\n", msg);
+            break;
         case ERR_BADFILE1:
             fprintf(stderr, "Error: %s texture file is invalid\n", msg);
             break;
@@ -92,6 +98,9 @@ void raise_error(uint32_t error_num, const char *msg) {
             fprintf(stderr, "Error: %s map file is invalid\n", msg);
             break;
         case ERR_BADFILE4:
+            fprintf(stderr, "Error: %s room file is invalid\n", msg);
+            break;
+        case ERR_BADFILE5:
             fprintf(stderr, "Error: %s audio file is invalid\n", msg);
             break;
         case ERR_AUDIO:

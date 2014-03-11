@@ -31,7 +31,8 @@ namespace foz {
 
         std::ifstream infile;
         char *fname;
-        char linebuf[256], room_str[16];;
+        char linebuf[256], room_str[16];
+        char *linebuf_temp;
         uint32_t line_count;
         uint8_t size_ntok, room_ntok;
         uint8_t rev_tok, flip_tok;
@@ -41,7 +42,7 @@ namespace foz {
         foz::Room *temp_room;
 
 
-        /* Open and compile the team file */
+        /* Open and compile the map file */
         if (myConfig.debug_level > 1) {
             printf("Compiling map file %s\n", myConfig.map_fname);
         }
@@ -85,19 +86,30 @@ namespace foz {
                     raise_error(ERR_BADFILE3, myConfig.map_fname);
                 }
 
+                linebuf_temp = linebuf;
                 for (room_j = 0; room_j < width; room_j++) {
-                    room_ntok = sscanf(linebuf+room_j*7, " %03hu-%c%c,", &room_tok, &rev_tok, &flip_tok);
-                    if (room_ntok != 3) {
-                        room_ntok = sscanf(linebuf+room_j*6, " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
-                    }
+                    linebuf_temp = strtok(linebuf_temp, " ,");
+                    room_ntok = sscanf(linebuf_temp, " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
                     if (room_ntok != 3) {
                         printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
                         printf("  Invalid room specification in command \'%s\'", linebuf);
                         raise_error(ERR_BADFILE3, myConfig.map_fname);
                     }
+
                     temp_room = new foz::Room;
+
+                    /* Open and compile the room file */
+                    if (myConfig.debug_level > 1) {
+                        printf("Compiling room file room%03d.zrf\n", room_tok);
+                    }
                     temp_room->compile(room_tok, rev_tok=='r', flip_tok=='f');
                     myRooms[room_i].push_back(*temp_room);
+
+                    // We are done compiling, so set up the pointers
+                    if (myConfig.debug_level > 1) {
+                        printf("Room file compilation complete\n");
+                    }
+
                     delete temp_room;
 
                 }
@@ -145,13 +157,13 @@ namespace foz {
 
         for (room_i = 0; room_i < height; room_i++) {
             for (room_j = 0; room_j < width; room_j++) {
-                if (room_i != 0) {
+                if (room_i > 0) {
                     myRooms[room_i][room_j].north = &myRooms[room_i-1][room_j];
                 }
                 if (room_i < (height-1)) {
                     myRooms[room_i][room_j].south = &myRooms[room_i+1][room_j];
                 }
-                if (room_j != 0) {
+                if (room_j > 0) {
                     myRooms[room_i][room_j].west = &myRooms[room_i][room_j-1];
                 }
                 if (room_j < (width-1)) {
