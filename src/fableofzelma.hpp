@@ -32,7 +32,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-//#include "resources.hpp"
+#include "resources.hpp"
 
 #define EXEC_NAME "fableofzelma"
 #define WINDOW_TITLE "FableOfZelma, v-1.0a"
@@ -52,16 +52,17 @@
 #define ERR_UNDEFINED 100
 
 #define FRAME_RATE 60
-#define SORT_DEMO_FRAMES 600
-#define SORT_GAME_FRAMES 60
 #define NUM_SOUNDS 64
 #define SCREEN_WIDTH_DEFAULT 1920
 #define SCREEN_HEIGHT_DEFAULT 1080
 #define SCREEN_DEPTH_DEFAULT 32
 #define DEBUG_DEFAULT 0
-#define MAP_FNAME_DEFAULT "default.map"
-#define TEAM_FNAME_DEFAULT "default.zpl"
-#define TIME_MS_DEFAULT 300000
+
+#define MAP_DIR_DEFAULT "/scripts/maps/"
+#define ROOM_DIR_DEFAULT "/scripts/rooms/"
+#define TEAM_DIR_DEFAULT "/scripts/users/"
+#define MAP_FNAME_DEFAULT "default.zmf"
+#define TEAM_FNAME_DEFAULT "default.zuf"
 
 
 /* Function prototypes (utils.cpp) */
@@ -70,22 +71,39 @@ void strlower(char *in);
 namespace foz {
 
 
-    /* Player command type */
-    class cmd_type {
-        public:
-            char label_str[16];
-            char target_str[16];
-            bool has_label;
-            bool inv_pred;
-            bool has_pred;
-            bool has_plant_pred;
-            uint8_t pred;
-            uint8_t cmd;
-            uint16_t plant;
-            uint16_t plant_pred;
-            uint32_t line;
-            uint16_t opt[2];
+    /* Room information */
+    class Room_JZ {
+      public:
+        uint16_t id;
+        uint16_t width, height;
+        std::vector< std::vector<uint16_t> > tiles;
+
+        Room_JZ *north;
+        Room_JZ *south;
+        Room_JZ *west;
+        Room_JZ *east;
+
+        /* Main functions (room.cpp) */
+        Room_JZ(uint16_t id, bool room_reverse, bool room_flip);
+        uint8_t compile(char *fname);
+        void draw();
     };
+
+
+
+    /* World information */
+    class World_JZ {
+      public:
+        uint16_t width, height;
+        std::vector< std::vector<Room_JZ> > rooms;
+
+        /* Main functions (world.cpp) */
+        uint8_t compile(char *fname);
+        void draw();
+    };
+
+
+
 
     /* Game configuration information */
     class Config {
@@ -105,13 +123,10 @@ namespace foz {
             uint32_t status;
             char *name;
             uint16_t budget;
-            uint16_t zombie_index;
             int32_t timer_ms;
             uint16_t cur_cmd;
-            bool zombies_done;
             bool cmds_done;
-            uint8_t groan_counter;
-            std::vector<foz::cmd_type> cmds;
+//            std::vector<foz::cmd_type> cmds;
     };
 
 
@@ -128,42 +143,33 @@ namespace foz {
     /* Status structure that contains score and other details */
     class Status {
         public:
-            float pan, pan_prev;
             int16_t scores[4];
             float time_ms;
             uint16_t budget;
             uint8_t main_song;
             bool day;
-            bool firstZombie;
             bool end_music;
             uint8_t vol_counter;
             uint16_t music_buffer;
     };
 
 
-
     /* Main Game class */
     class Game {
         public:
-            /* Main functions (floravsundead.cpp) */
+            /* Main functions (fableofzelma.cpp) */
             Game(int argc, char **argv);
             ~Game();
             void init();
             void reset();
-            void compileMap();
-            void compileTeams();
             void mainLoop();
             void updateGame();
-            void updateDemo();
             void restartGame();
-            void demoMode();
             void endGame();
 
             /* SFML functions (sfml_utils.cpp) */
             void initSFML();
             void loadResources();
-            void drawWorld();
-            void drawMap();
             void drawScoreboard();
             void processEvents();
             void testDraw();
@@ -177,11 +183,11 @@ namespace foz {
             void printStatus();
 
              /* Globally declare Textures */
-            foz::Texture myTextures[6]; // Should be NUM_TEXTURES, but that makes problems
-
+            foz::Texture myTextures[NUM_TEXTURES];
 
         private:
             foz::Config myConfig;
+            foz::World_JZ myWorld_JZ;
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
@@ -191,6 +197,14 @@ namespace foz {
             sf::Sound mySounds[6];
             sf::Clock myClock;
     };
+
+
+
+
+
+
+
+
 
      class Drawable {
         public:
@@ -233,6 +247,8 @@ namespace foz {
     private:
         void trimEndl(char arr[]);
     };
+
+
 
 } // namespace foz
 

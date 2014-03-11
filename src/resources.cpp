@@ -17,20 +17,18 @@
 
 
 #include "fableofzelma.hpp"
-#include "resources.hpp"
-//Grant Kamin Test
+
+/* Texture files */
 std::string texFiles[NUM_TEXTURES] = {
-    "sprites/Basic_Room_Sprite_Sheet.png",
-    "sprites/Blue_Link_Clear_Background.png",
-    "sprites/Green_Link_Clear_Background.png",
-    "sprites/Purple_Link_Clear_Background.png",
-    "sprites/Red_Link_Clear_Background.png",
-    "sprites/Tier_2_Map_Sprites.png"
+    "sprites/basic_room.png",
+    "sprites/blue_link.png",
+    "sprites/green_link.png",
+    "sprites/purple_link.png",
+    "sprites/red_link.png"
     };
 
-
+/* Sprite map for LINK objects */
 uint16_t link_object_spriteMap[][4] = {
-
 {4,23,22,46}        ,{36,17,54,46}        ,{71,10,88,46}        ,{112,16,130,45}      ,{148,18,166,46}      , //1
 {183,22,208,46}	    ,{221,22,244,47}	  ,{256,15,278,47}	    ,{294,11,312,47}	  ,{329,15,351,47}	    , //2
 {363,22,392,47}	    ,{401,23,434,47}	  ,{454,23,482,53}	    ,{493,23,526,47}	  ,{524,21,572,47}	    , //3
@@ -54,8 +52,8 @@ uint16_t link_object_spriteMap[][4] = {
 
 };
 
+/* Sprite map for ROOM objects */
 uint16_t room_object_spriteMap[][4] = {
-
 {11,10,261,260}		,{282,10,340,230}	  ,{365,10,615,260}		,{665,152,741,269}    ,{705,41,821,116}	    ,//1
 {787,156,863,273}   ,{11,271,231,329}	  ,{280,271,338,329}    ,{395,279,615,337}	  ,{714,297,831,371}	,//2
 {11,347,261,597}	,{284,377,342,597}    ,{365,347,615,597}    ,{265,622,1343,1700}  						 //3

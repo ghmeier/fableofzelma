@@ -23,7 +23,6 @@ foz::Game *myGame;
 int main(int argc, char *argv[]) {
 
     myGame = new(std::nothrow)foz::Game(argc,argv);
-    foz::World w;
     myGame->init();
     myGame->printConfig();
 
@@ -99,47 +98,6 @@ namespace foz {
 
     }
 
-
-    /*****************************************************************************
-    * Function: Game::updateDemo()
-    * Description: Updates all the main elements of the game, in demo mode
-    *****************************************************************************/
-    void Game::updateDemo() {
-
-
-    }
-
-    /*****************************************************************************
-    * Function: Game::demoMode()
-    * Description: Runs the initial screen pan before the game start.
-    *****************************************************************************/
-    void Game::demoMode() {
-
-
-
-
-    }
-
-
-    /*****************************************************************************
-    * Function: Game::compileTeams()
-    * Description: Compiles the 4 team .zpl files to initialize commands and
-    * other per-team information
-    *****************************************************************************/
-    void Game::compileTeams() {
-
-
-    }
-
-    /*****************************************************************************
-    * Function: Game::compileMap()
-    * Description: Compiles the .map file to create the map
-    *****************************************************************************/
-    void Game::compileMap() {
-
-
-        return;
-    }
 
 
     /*****************************************************************************
@@ -291,6 +249,23 @@ namespace foz {
 
         return;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*****************************************************************************
