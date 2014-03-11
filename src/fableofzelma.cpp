@@ -47,6 +47,7 @@ namespace foz {
         // Set the random seed here
         srand(0);
 
+        myWorld.compile(myConfig);
 
     }
 

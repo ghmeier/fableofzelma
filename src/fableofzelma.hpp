@@ -58,17 +58,32 @@
 #define SCREEN_DEPTH_DEFAULT 32
 #define DEBUG_DEFAULT 0
 
-#define MAP_DIR_DEFAULT "/scripts/maps/"
-#define ROOM_DIR_DEFAULT "/scripts/rooms/"
-#define TEAM_DIR_DEFAULT "/scripts/users/"
+#define MAP_DIR_DEFAULT "scripts/maps/"
+#define ROOM_DIR_DEFAULT "scripts/rooms/"
+#define TEAM_DIR_DEFAULT "scripts/users/"
 #define MAP_FNAME_DEFAULT "default.zmf"
 #define TEAM_FNAME_DEFAULT "default.zuf"
 
 
 /* Function prototypes (utils.cpp) */
 void strlower(char *in);
+void print_help();
+void raise_error(uint32_t, const char *msg);
+
 
 namespace foz {
+
+
+    /* Game configuration information */
+    class Config {
+        public:
+            int32_t debug_level;
+            uint16_t screen_width;
+            uint16_t screen_height;
+            uint8_t screen_depth;
+            char *team_fname[4];
+            char *map_fname;
+    };
 
 
     /* Room information */
@@ -85,7 +100,7 @@ namespace foz {
 
         /* Main functions (room.cpp) */
         Room_JZ(uint16_t id, bool room_reverse, bool room_flip);
-        uint8_t compile(char *fname);
+        uint8_t compile(Config myConfig);
         void draw();
     };
 
@@ -98,22 +113,8 @@ namespace foz {
         std::vector< std::vector<Room_JZ> > rooms;
 
         /* Main functions (world.cpp) */
-        uint8_t compile(char *fname);
+        uint8_t compile(Config myConfig);
         void draw();
-    };
-
-
-
-
-    /* Game configuration information */
-    class Config {
-        public:
-            int32_t debug_level;
-            uint16_t screen_width;
-            uint16_t screen_height;
-            uint8_t screen_depth;
-            char *team_fname[4];
-            char *map_fname;
     };
 
 
@@ -175,8 +176,6 @@ namespace foz {
             void testDraw();
 
             /* Utility functions (utils.cpp) */
-            void print_help();
-            void raise_error(uint32_t, const char *msg);
             float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
@@ -187,7 +186,7 @@ namespace foz {
 
         private:
             foz::Config myConfig;
-            foz::World_JZ myWorld_JZ;
+            foz::World_JZ myWorld;
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
