@@ -28,10 +28,36 @@ namespace foz {
     * as well as the scripts/rooms/ directory for the file) and sets up the
     * individual tiles.
     *****************************************************************************/
-    void Room_JZ::compile(uint16_t id, bool rev, bool flip) {
+    void Room::compile(uint16_t id, bool rev, bool flip) {
 
         printf("Compiling room %03d, %d, %d\n", id, rev, flip);
+
+        // Initialize the room pointers
+        north = NULL;
+        south = NULL;
+        west = NULL;
+        east = NULL;
+
     }
+
+    /*****************************************************************************
+    * Function: ~Room::Room()
+    * Description: Simple destructor. Cleans up the room tiles.
+    *****************************************************************************/
+    Room::~Room() {
+
+        uint16_t i;
+
+        /* Perform a little bit of memory cleanup */
+        for (i = 0; i < myTiles.size(); i++) {
+            myTiles[i].clear();
+        }
+        myTiles.clear();
+
+    }
+
+
+
 
 
 } // namespace foz

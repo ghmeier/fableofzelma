@@ -87,34 +87,36 @@ namespace foz {
 
 
     /* Room information */
-    class Room_JZ {
+    class Room {
       public:
         uint16_t id;
         uint16_t width, height;
-        std::vector< std::vector<uint16_t> > tiles;
+        std::vector< std::vector<uint16_t> > myTiles;
 
-        Room_JZ *north;
-        Room_JZ *south;
-        Room_JZ *west;
-        Room_JZ *east;
+        Room *north;
+        Room *south;
+        Room *west;
+        Room *east;
 
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
+        ~Room();
+
     };
 
 
 
     /* World information */
-    class World_JZ {
+    class World {
       public:
         uint16_t width, height;
-        std::vector< std::vector<Room_JZ> > myRooms;
+        std::vector< std::vector<Room> > myRooms;
 
         /* Main functions (world.cpp) */
         void compile(Config myConfig);
         void draw();
-        ~World_JZ();
+        ~World();
     };
 
 
@@ -186,7 +188,7 @@ namespace foz {
 
         private:
             foz::Config myConfig;
-            foz::World_JZ myWorld;
+            foz::World myWorld;
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
@@ -196,57 +198,6 @@ namespace foz {
             sf::Sound mySounds[6];
             sf::Clock myClock;
     };
-
-
-
-
-
-
-
-
-
-     class Drawable {
-        public:
-            virtual void  drawSelf();
-    };
-
-    class Room:Drawable {
-
-        int xTiles;//Number of tiles to be
-        int yTiles;
-        int* layout;
-        //ToDo: Add more room attributes and methods, so pretty much everything
-
-       public:
-        Room();
-        Room(int x,int y);
-        ~Room();
-        int getXTiles();
-
-        int getYTiles();
-        void setLayout(int* lay);
-        void drawSelf();
-    };
-
-    class World {
-        int xRooms;//These are the number of rooms horizontally and vertically
-        int yRooms;//for the world.
-        std::vector<Room> rooms;
-
-    public:
-        World();
-        World(int xRoomDimension, int yRoomDimension);
-        ~World();
-
-        int getXDimension();
-
-        int getYDimension();
-
-        void addRoom(Room r);
-    private:
-        void trimEndl(char arr[]);
-    };
-
 
 
 } // namespace foz

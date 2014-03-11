@@ -27,7 +27,7 @@ namespace foz {
     * as well as the scripts/maps/ directory for the file) and builds the
     * individual rooms.
     *****************************************************************************/
-    void World_JZ::compile(Config myConfig) {
+    void World::compile(Config myConfig) {
 
         std::ifstream infile;
         char *fname;
@@ -38,7 +38,7 @@ namespace foz {
         uint16_t width_tok, height_tok, room_tok;
         uint16_t room_i=0, room_j=0;
         bool size_flag=false, room_flag=false;
-        foz::Room_JZ *temp_room;
+        foz::Room *temp_room;
 
 
         /* Open and compile the team file */
@@ -95,7 +95,7 @@ namespace foz {
                         printf("  Invalid room specification in command \'%s\'", linebuf);
                         raise_error(ERR_BADFILE3, myConfig.map_fname);
                     }
-                    temp_room = new foz::Room_JZ;
+                    temp_room = new foz::Room;
                     temp_room->compile(room_tok, rev_tok=='r', flip_tok=='f');
                     myRooms[room_i].push_back(*temp_room);
                     delete temp_room;
@@ -137,6 +137,29 @@ namespace foz {
 
         }
 
+
+        // We are done compiling, so set up the pointers
+        if (myConfig.debug_level > 1) {
+            printf("Map file compilation complete\n");
+        }
+
+        for (room_i = 0; room_i < height; room_i++) {
+            for (room_j = 0; room_j < width; room_j++) {
+                if (room_i != 0) {
+                    myRooms[room_i][room_j].north = &myRooms[room_i-1][room_j];
+                }
+                if (room_i < (height-1)) {
+                    myRooms[room_i][room_j].south = &myRooms[room_i+1][room_j];
+                }
+                if (room_j != 0) {
+                    myRooms[room_i][room_j].west = &myRooms[room_i][room_j-1];
+                }
+                if (room_j < (width-1)) {
+                    myRooms[room_i][room_j].east = &myRooms[room_i][room_j+1];
+                }
+            }
+        }
+
         return;
     }
 
@@ -146,7 +169,7 @@ namespace foz {
     * Function: ~World::World()
     * Description: Simple destructor. Cleans up the room data structures.
     *****************************************************************************/
-    World_JZ::~World_JZ() {
+    World::~World() {
 
         uint16_t i;
 
