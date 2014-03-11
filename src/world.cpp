@@ -27,19 +27,26 @@ namespace foz {
     * as well as the scripts/maps/ directory for the file) and builds the
     * individual rooms.
     *****************************************************************************/
-
-    uint8_t World_JZ::compile(Config myConfig) {
+    void World_JZ::compile(Config myConfig) {
 
         std::ifstream infile;
         char *fname;
+        char linebuf[256], room_str[16];;
+        uint32_t line_count;
+        uint8_t size_ntok, room_ntok;
+        uint8_t rev_tok, flip_tok;
+        uint16_t width_tok, height_tok, room_tok;
+        uint16_t room_i=0, room_j=0;
+        bool size_flag=false, room_flag=false;
+        foz::Room_JZ *temp_room;
+
 
         /* Open and compile the team file */
         if (myConfig.debug_level > 1) {
             printf("Compiling map file %s\n", myConfig.map_fname);
         }
 
-
-        // Does the file exist in the current directory?
+        /* Does the file exist in the current directory? */
         infile.open(myConfig.map_fname, std::ifstream::in);
         if (!infile) {
             if (myConfig.debug_level > 1) {
@@ -56,9 +63,101 @@ namespace foz {
             }
         }
 
+        // We have opened the file successfully. Parse through it.
+        size_flag = false;
+        for (line_count=1; !infile.eof(); line_count++) {
+            infile.getline(linebuf, 256);
+            strlower(linebuf);
 
-        return 0;
+            // If we have a '#', the line is a comment and we can skip it
+            // We can also skip blank lines
+            if ((linebuf[0] == 0) || (linebuf[0] == '#') || (linebuf[0] == 10) || (linebuf[0] == 13)) {
+                continue;
+            }
+
+            // Check to see if we're ready to allocate rooms
+            if (size_flag && room_flag) {
+
+                if (room_i >= height) {
+                    printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                    printf("  Expected no more than %u lines of rooms\n", height);
+                    printf("  Invalid line is \'%s\'", linebuf);
+                    raise_error(ERR_BADFILE3, myConfig.map_fname);
+                }
+
+                for (room_j = 0; room_j < width; room_j++) {
+                    room_ntok = sscanf(linebuf+room_j*7, " %03hu-%c%c,", &room_tok, &rev_tok, &flip_tok);
+                    if (room_ntok != 3) {
+                        room_ntok = sscanf(linebuf+room_j*6, " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
+                    }
+                    if (room_ntok != 3) {
+                        printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                        printf("  Invalid room specification in command \'%s\'", linebuf);
+                        raise_error(ERR_BADFILE3, myConfig.map_fname);
+                    }
+                    temp_room = new foz::Room_JZ;
+                    temp_room->compile(room_tok, rev_tok=='r', flip_tok=='f');
+                    myRooms[room_i].push_back(*temp_room);
+                    delete temp_room;
+
+                }
+                room_i++;
+                continue;
+            }
+
+            // Check for .size information, which should be followed by a width, height pair
+            // Be generous with capitalization, whitespace, and delimiters
+            size_ntok = sscanf(linebuf, " .size %hu %hu", &width_tok, &height_tok);
+            if (size_ntok != 2) {
+                size_ntok = sscanf(linebuf, " .size %hu, %hu", &width_tok, &height_tok);
+            }
+            if (size_ntok != 2) {
+                size_ntok = sscanf(linebuf, " .size %hu,%hu", &width_tok, &height_tok);
+            }
+
+            // We've found our .size information
+            if (size_ntok == 2) {
+                size_flag = true;
+                width = width_tok;
+                height = height_tok;
+            }
+            else {
+                // It's not .size information, so look for the .room flag
+                sscanf(linebuf, " %s", room_str);
+                if (!strcmp(room_str, ".rooms")) {
+                    room_flag = true;
+                    myRooms.resize(height);
+                }
+                else {
+                    printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                    printf("  Unknown or unexpected command \'%s\'", linebuf);
+                    raise_error(ERR_BADFILE3, myConfig.map_fname);
+                }
+            }
+
+        }
+
+        return;
     }
+
+
+
+    /*****************************************************************************
+    * Function: ~World::World()
+    * Description: Simple destructor. Cleans up the room data structures.
+    *****************************************************************************/
+    World_JZ::~World_JZ() {
+
+        uint16_t i;
+
+        /* Perform a little bit of memory cleanup */
+        for (i = 0; i < myRooms.size(); i++) {
+            myRooms[i].clear();
+        }
+        myRooms.clear();
+
+    }
+
 
 
 } // namespace foz

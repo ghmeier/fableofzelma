@@ -99,8 +99,7 @@ namespace foz {
         Room_JZ *east;
 
         /* Main functions (room.cpp) */
-        Room_JZ(uint16_t id, bool room_reverse, bool room_flip);
-        uint8_t compile(Config myConfig);
+        void compile(uint16_t id, bool rev, bool flip);
         void draw();
     };
 
@@ -110,11 +109,12 @@ namespace foz {
     class World_JZ {
       public:
         uint16_t width, height;
-        std::vector< std::vector<Room_JZ> > rooms;
+        std::vector< std::vector<Room_JZ> > myRooms;
 
         /* Main functions (world.cpp) */
-        uint8_t compile(Config myConfig);
+        void compile(Config myConfig);
         void draw();
+        ~World_JZ();
     };
 
 

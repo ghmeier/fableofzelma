@@ -21,10 +21,17 @@
 namespace foz {
 
 
+
     /*****************************************************************************
-    * Function: Object::Object
-    * Description: Object class constructor. Creates a set of linked lists
-    * between parent and child.
+    * Function: Room::compile
+    * Description: Compiles the specified room file (checks the current directory
+    * as well as the scripts/rooms/ directory for the file) and sets up the
+    * individual tiles.
     *****************************************************************************/
+    void Room_JZ::compile(uint16_t id, bool rev, bool flip) {
+
+        printf("Compiling room %03d, %d, %d\n", id, rev, flip);
+    }
+
 
 } // namespace foz
