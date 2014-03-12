@@ -72,6 +72,7 @@
 void strlower(char *in);
 void print_help();
 void raise_error(uint32_t, const char *msg);
+float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
 
 
 namespace foz {
@@ -181,7 +182,6 @@ namespace foz {
             void testDraw();
 
             /* Utility functions (utils.cpp) */
-            float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
             void printStatus();

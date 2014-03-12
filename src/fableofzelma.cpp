@@ -70,7 +70,8 @@ namespace foz {
         while (myWindow.isOpen()) {
             processEvents();
 
-            testDraw();
+
+            myWorld.myRooms[0][0].draw();
             myWindow.display();
         }
 

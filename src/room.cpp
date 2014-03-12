@@ -146,9 +146,9 @@ namespace foz {
             double BlockWidth = 0.10227272; // Definetly will be rounding error here if
             double BlockHeight = 0.18181818; // we stay with the identitiy insead of pixelspace
 
-    for (int y = 0; y < 11; y++){
-    for (int x = 0; x < 11; x++){
-        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BASIC_ROOM].texHandle);
+    for (int y = 0; y < height; y++){
+    for (int x = 0; x < width; x++){
+        glBindTexture(GL_TEXTURE_2D, myGame->myTextures[TEX_BASIC_ROOM].texHandle);
         getTexCoords(TEX_BASIC_ROOM, myTiles[x][y], texCoords);
         glBegin(GL_QUADS);
             glTexCoord2d(texCoords[0], texCoords[1]);
