@@ -16,6 +16,7 @@
 
 
 #include "fableofzelma.hpp"
+#include "resources.hpp"
 
 
 namespace foz {
@@ -133,6 +134,35 @@ namespace foz {
 
     }
 
+    /*****************************************************************************
+    * Function: Room::draw()
+    * Description: Draws the room, tile by tile
+    *****************************************************************************/
+    void Room::draw(){
+
+                float texCoords[6];
+
+            double BlockWidth = 0.10227272; // Definetly will be rounding error here if
+            double BlockHeight = 0.18181818; // we stay with the identitiy insead of pixelspace
+
+    for (int y = 0; y < 11; y++){
+    for (int x = 0; x < 11; x++){
+        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BASIC_ROOM].texHandle);
+        getTexCoords(TEX_BASIC_ROOM, myTiles[x][y], texCoords);
+        glBegin(GL_QUADS);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(-.5625 + x*BlockWidth, 1 - (y+1)*BlockHeight, 0);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(-.5625 + (x+1)*BlockWidth, 1 - (y+1)*BlockHeight, 0);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(-.5625 + (x+1)*BlockWidth, 1 - y*BlockHeight, 0);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(-.5625 + x*BlockWidth, 1 - y*BlockHeight, 0);
+        glEnd();
+    }
+    }
+
+    }
     /*****************************************************************************
     * Function: ~Room::Room()
     * Description: Simple destructor. Cleans up the room tiles.
