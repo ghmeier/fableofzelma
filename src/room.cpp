@@ -130,6 +130,7 @@ namespace foz {
         west = NULL;
         east = NULL;
 
+        return;
 
     }
 
