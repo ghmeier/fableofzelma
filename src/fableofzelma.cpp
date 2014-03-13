@@ -68,7 +68,6 @@ namespace foz {
 
         while (myWindow.isOpen()) {
             processEvents();
-
             testDraw();
             myWindow.display();
         }
@@ -304,90 +303,5 @@ namespace foz {
         layout = lay;
     }
 
-    World::World() {
-
-            char currentline[256];
-            std::ifstream initFile("roomBuilds.foz");
-            std::stringstream ss;
-            char delim = ' ';
-           while (!initFile.eof()){
-                initFile.getline(currentline,256,' ');
-                if (strstr(currentline,"totalDimension")!=NULL) {
-                    initFile.getline(currentline,256,',');
-                    xRooms = atoi(currentline);
-                    initFile.getline(currentline,256,',');
-                    yRooms = atoi(currentline);
-
-                    if (xRooms<=0 || yRooms<=0) {
-                        std::cout << "Incorrect World Dimensions of " << xRooms << "," << yRooms << ". Format dimensions: totalDimension 5 5"<< std::endl;
-                    } else {
-                        std::cout << "World Dimensions: " << xRooms << "," << yRooms << std::endl;
-                    }
-                }else if (strstr(currentline,"roomPosition")!=NULL) {
-                    //std::cout << "Creating Room " << currentline<< std::endl;
-                    int roomX=0,roomY=0;
-                    initFile.getline(currentline,256,',');
-                    roomX = atoi(currentline);
-                    initFile.getline(currentline,256,',');
-                    roomY = atoi(currentline);
-                    initFile.getline(currentline,256,' ');
-                    std::cout << roomX << " "<< roomY <<std::endl;
-                    if (strstr(currentline,"roomSize")!=NULL && roomX>=0 && roomX<xRooms && roomY>=0 && roomY<yRooms) {
-                        //std::cout << "Position "<<roomX << "," << roomY<< std::endl;
-                        int xDim = 0, yDim = 0;
-                        initFile.getline(currentline,256,',');
-                        //std::cout << currentline << std::endl;
-                        xDim = atoi(currentline);
-                        initFile.getline(currentline,256,',');
-                        //std::cout << currentline << std::endl;
-                        yDim = atoi(currentline);
-                        int roomLayout[xDim][yDim];
-                        for (int i=0;i<xDim;i++) {
-                            for (int j=0;j<yDim;j++) {
-                                initFile.getline(currentline,256,',');
-                                roomLayout[i][j] = atoi(currentline);
-                                //std::cout << roomLayout[i][j] << " ";
-                            }
-                            //std::cout << std::endl;
-                        }
-                        Room r(xDim,yDim);
-                        r.setLayout(*roomLayout);
-                        rooms.push_back(r);
-
-                    }
-                }
-            }
-            initFile.close();
-
-        }
-         World::World(int xRoomDimension, int yRoomDimension){
-            xRooms = xRoomDimension;
-            yRooms = yRoomDimension;
-        }
-        World::~World(){
-        }
-
-        int World::getXDimension() {
-            return xRooms;
-        }
-
-        int World::getYDimension() {
-            return yRooms;
-        }
-
-        void World::addRoom(Room r) {
-            rooms.push_back(r);
-        }
-
-        void trimEndl(char arr[]) {
-            for (int i=0;i<sizeof(arr);i++) {
-                if (arr[i]=='\n') {
-                    for (int j=i;j<sizeof(arr)-1;j++) {
-                        arr[j] = arr[j+1];
-                    }
-                    arr[sizeof(arr)-1] = '\0';
-                }
-            }
-        }
 
 } //namespace foz    test

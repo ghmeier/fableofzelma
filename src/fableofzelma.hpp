@@ -100,6 +100,9 @@ namespace foz {
         /* Main functions (world.cpp) */
         uint8_t compile(char *fname);
         void draw();
+        int getHeight();
+        int getWidth();
+        void addRoom(Room_JZ r);
     };
 
 
@@ -229,24 +232,7 @@ namespace foz {
         void drawSelf();
     };
 
-    class World {
-        int xRooms;//These are the number of rooms horizontally and vertically
-        int yRooms;//for the world.
-        std::vector<Room> rooms;
 
-    public:
-        World();
-        World(int xRoomDimension, int yRoomDimension);
-        ~World();
-
-        int getXDimension();
-
-        int getYDimension();
-
-        void addRoom(Room r);
-    private:
-        void trimEndl(char arr[]);
-    };
 
 
 
