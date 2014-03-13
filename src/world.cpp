@@ -21,6 +21,19 @@
 namespace foz {
 
 
+
+    /*****************************************************************************
+    * Function: World::draw
+    * Description: Draws the structure of the rooms in the world.
+    *****************************************************************************/
+    void World::draw() {
+
+        myRooms[0][0].draw();
+        return;
+    }
+
+
+
     /*****************************************************************************
     * Function: World::compile
     * Description: Compiles the specified world file (checks the current directory

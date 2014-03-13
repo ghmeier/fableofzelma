@@ -22,9 +22,23 @@ namespace foz {
 
 
     /*****************************************************************************
-    * Function: Object::Object
-    * Description: Object class constructor. Creates a set of linked lists
-    * between parent and child.
+    * Function: Camera::init
+    * Description: Camera class initializer. Uses World configuration information
+    * in order to decide on a starting position.
     *****************************************************************************/
+    void Camera::init(foz::World myWorld) {
+
+        state = CAMERA_INIT;
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-959.5, 959.5, -539.5, 539.5, FRONT_DEPTH, -BACK_DEPTH);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+
+        return;
+    }
 
 } // namespace foz

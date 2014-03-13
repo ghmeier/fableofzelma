@@ -106,9 +106,7 @@ namespace foz {
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
         ~Room();
-
     };
-
 
 
     /* World information */
@@ -122,6 +120,19 @@ namespace foz {
         void draw();
         ~World();
     };
+
+    /* Camera information */
+    class Camera {
+      public:
+        float x_left, x_right;
+        float y_left, y_top;
+        CAMERA_ENUM state;
+
+        /* Main functions (camera.cpp) */
+        void init(foz::World myWorld);
+    };
+
+
 
 
     /* Per-team state information */
@@ -191,6 +202,7 @@ namespace foz {
         private:
             foz::Config myConfig;
             foz::World myWorld;
+            foz::Camera myCamera;
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
