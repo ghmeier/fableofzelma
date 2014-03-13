@@ -179,7 +179,6 @@ namespace foz {
             void loadResources();
             void drawScoreboard();
             void processEvents();
-            void testDraw();
 
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);

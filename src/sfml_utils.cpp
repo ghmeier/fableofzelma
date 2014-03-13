@@ -200,42 +200,5 @@ namespace foz {
 
     }
 
-    /*****************************************************************************
-    * Function: Game::testDraw
-    * Description: Testing the drawing
-    *****************************************************************************/
-
-    void Game::testDraw() {
-
-        float texCoords[6];
-
-        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BASIC_ROOM].texHandle);
-        getTexCoords(TEX_BASIC_ROOM, WHOLE_ROOM, texCoords);
-        glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(-1, -1, 0);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(1, -1, 0);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(1, 1, 0);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(-1, 1, 0);
-        glEnd();
-
-        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BLUE_LINK].texHandle);
-        getTexCoords(TEX_BLUE_LINK, LINK_SLASH_NORTH_4, texCoords);
-        glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(0, -.2, 0);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(.1, -.2, 0);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(.1, 0, 0);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(0, 0, 0);
-        glEnd();
-
-    }
-
 
 } // namespace foz

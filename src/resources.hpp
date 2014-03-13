@@ -17,17 +17,22 @@
 
 #pragma once
 
-/*Sound effect file enum*/
+/* Sound effect file enum */
 typedef enum {SFX_BIGITEM=0, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX} SFX_ENUM;
 extern std::string sfxFiles[NUM_SFX];
 
-/*Music file enum*/
+/* Music file enum */
 typedef enum {MUSIC_MAIN=0, MUSIC_ANNIVERSARY, NUM_MUSIC} MUSIC_ENUM;
 extern std::string musicFiles[NUM_MUSIC];
 
  /* Texture file enum */
 typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, NUM_TEXTURES} TEXTURE_ENUM;
 extern std::string texFiles[NUM_TEXTURES];
+
+/* Depth enum */
+typedef enum {FRONT_DEPTH=0, FONT_DEPTH=60000, OVERLAY_DEPTH=60001, BACKGROUND_DEPTH, BACK_DEPTH} DEPTH_ENUM;
+
+
 
 /* Sprite enum for LINK objects */
 typedef enum
