@@ -71,6 +71,7 @@ namespace foz {
             processEvents();
             //testDraw();
             myWorld.myRooms[0][0].draw();
+            myWorld.draw();
             myWindow.display();
         }
 

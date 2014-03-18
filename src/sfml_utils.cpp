@@ -180,15 +180,10 @@ namespace foz {
 
         /* Configure OpenGL default state */
         glClearColor(0.0, 0.0, 0.0, 1.0);
-//        glClearDepth(BACK_DEPTH);
+        glClearDepth(BACK_DEPTH);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDepthFunc(GL_LEQUAL);
         glEnable(GL_DEPTH_TEST);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-//        glOrtho(-1032.5, 1032.5, -581.0, 581.0, FRONT_DEPTH, -BACK_DEPTH);
-        glMatrixMode(GL_MODELVIEW);
 
         glEnable(GL_TEXTURE_2D);
 
@@ -197,6 +192,8 @@ namespace foz {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+        myCamera.init(myWorld);
 
     }
 
