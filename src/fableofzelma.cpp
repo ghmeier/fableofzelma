@@ -47,6 +47,7 @@ namespace foz {
         // Set the random seed here
         srand(0);
 
+        myWorld.compile(myConfig);
 
     }
 
@@ -68,7 +69,8 @@ namespace foz {
 
         while (myWindow.isOpen()) {
             processEvents();
-            testDraw();
+            //testDraw();
+            myWorld.myRooms[0][0].draw();
             myWindow.display();
         }
 
@@ -251,57 +253,11 @@ namespace foz {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*****************************************************************************
     * Function: Game::~Game()
     * Description: Destructor for fvu::Game() class
     *****************************************************************************/
     Game::~Game() {
     }
-
-
-    Room::Room(){
-
-    }
-
-    Room::Room(int x,int y){
-        yTiles = x;
-        xTiles = y;
-    }
-
-    Room::~Room(){
-    }
-
-    int Room::getXTiles() {
-        return xTiles;
-    }
-
-    int Room::getYTiles() {
-        return yTiles;
-    }
-
-    void Room::drawSelf() {
-        //Jonathan your implementation can go here
-    }
-
-    void Room:: setLayout(int* lay) {
-        layout = lay;
-    }
-
 
 } //namespace foz    test

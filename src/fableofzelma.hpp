@@ -39,16 +39,19 @@
 
 #define ERR_USAGE 1
 #define ERR_SFML 2
-#define ERR_NOFILE1 3
-#define ERR_NOFILE2 4
-#define ERR_NOFILE3 5
-#define ERR_BADFILE1 6
-#define ERR_BADFILE2 7
-#define ERR_BADFILE3 8
-#define ERR_BADFILE4 9
+#define ERR_NOFILE1 20
+#define ERR_NOFILE2 21
+#define ERR_NOFILE3 22
+#define ERR_NOFILE4 23
+#define ERR_NOFILE5 24
+#define ERR_BADFILE1 30
+#define ERR_BADFILE2 31
+#define ERR_BADFILE3 32
+#define ERR_BADFILE4 33
+#define ERR_BADFILE5 34
 #define ERR_AUDIO 10
-#define ERR_OVERBUDGET 20
-#define ERR_NOMEM 50
+#define ERR_OVERBUDGET 50
+#define ERR_NOMEM 60
 #define ERR_UNDEFINED 100
 
 #define FRAME_RATE 60
@@ -58,54 +61,21 @@
 #define SCREEN_DEPTH_DEFAULT 32
 #define DEBUG_DEFAULT 0
 
-#define MAP_DIR_DEFAULT "/scripts/maps/"
-#define ROOM_DIR_DEFAULT "/scripts/rooms/"
-#define TEAM_DIR_DEFAULT "/scripts/users/"
+#define MAP_DIR_DEFAULT "scripts/maps/"
+#define ROOM_DIR_DEFAULT "scripts/rooms/"
+#define TEAM_DIR_DEFAULT "scripts/users/"
 #define MAP_FNAME_DEFAULT "default.zmf"
 #define TEAM_FNAME_DEFAULT "default.zuf"
 
 
 /* Function prototypes (utils.cpp) */
 void strlower(char *in);
+void print_help();
+void raise_error(uint32_t, const char *msg);
+float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
+
 
 namespace foz {
-
-
-    /* Room information */
-    class Room_JZ {
-      public:
-        uint16_t id;
-        uint16_t width, height;
-        std::vector< std::vector<uint16_t> > tiles;
-
-        Room_JZ *north;
-        Room_JZ *south;
-        Room_JZ *west;
-        Room_JZ *east;
-
-        /* Main functions (room.cpp) */
-        Room_JZ(uint16_t id, bool room_reverse, bool room_flip);
-        uint8_t compile(char *fname);
-        void draw();
-    };
-
-
-
-    /* World information */
-    class World_JZ {
-      public:
-        uint16_t width, height;
-        std::vector< std::vector<Room_JZ> > rooms;
-
-        /* Main functions (world.cpp) */
-        uint8_t compile(char *fname);
-        void draw();
-        int getHeight();
-        int getWidth();
-        void addRoom(Room_JZ r);
-    };
-
-
 
 
     /* Game configuration information */
@@ -119,6 +89,39 @@ namespace foz {
             char *map_fname;
     };
 
+
+    /* Room information */
+    class Room {
+      public:
+        uint16_t id;
+        uint16_t width, height;
+        std::vector< std::vector<uint16_t> > myTiles;
+
+        Room *north;
+        Room *south;
+        Room *west;
+        Room *east;
+
+        /* Main functions (room.cpp) */
+        void compile(uint16_t id, bool rev, bool flip);
+        void draw();
+        ~Room();
+
+    };
+
+
+
+    /* World information */
+    class World {
+      public:
+        uint16_t width, height;
+        std::vector< std::vector<Room> > myRooms;
+
+        /* Main functions (world.cpp) */
+        void compile(Config myConfig);
+        void draw();
+        ~World();
+    };
 
     /* Per-team state information */
     class Team {
@@ -175,12 +178,8 @@ namespace foz {
             void loadResources();
             void drawScoreboard();
             void processEvents();
-            void testDraw();
 
             /* Utility functions (utils.cpp) */
-            void print_help();
-            void raise_error(uint32_t, const char *msg);
-            float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
             void printStatus();
@@ -190,7 +189,7 @@ namespace foz {
 
         private:
             foz::Config myConfig;
-            foz::World_JZ myWorld_JZ;
+            foz::World myWorld;
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
@@ -201,40 +200,10 @@ namespace foz {
             sf::Clock myClock;
     };
 
-
-
-
-
-
-
-
-
      class Drawable {
         public:
             virtual void  drawSelf();
     };
-
-    class Room:Drawable {
-
-        int xTiles;//Number of tiles to be
-        int yTiles;
-        int* layout;
-        //ToDo: Add more room attributes and methods, so pretty much everything
-
-       public:
-        Room();
-        Room(int x,int y);
-        ~Room();
-        int getXTiles();
-
-        int getYTiles();
-        void setLayout(int* lay);
-        void drawSelf();
-    };
-
-
-
-
 
 } // namespace foz
 
