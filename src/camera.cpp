@@ -33,7 +33,9 @@ namespace foz {
         // Temporary code. Set the 2D view based on the size of the world
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-1.0*myWorld.width, 1.0*myWorld.width, -1.0*myWorld.height, 1.0*myWorld.height, FRONT_DEPTH, -BACK_DEPTH);
+//        glOrtho(-1.0*myWorld.width, 1.0*myWorld.width, -1.0*myWorld.height, 1.0*myWorld.height, FRONT_DEPTH, -BACK_DEPTH);
+        glOrtho(-1920/2.0, 1920/2.0, -1080/2.0, 1080/2.0, FRONT_DEPTH, -BACK_DEPTH);
+
 
         return;
     }
