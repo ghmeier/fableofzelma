@@ -105,6 +105,7 @@ namespace foz {
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
+        void draw2();
         ~Room();
     };
 
