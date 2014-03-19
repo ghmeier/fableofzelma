@@ -29,7 +29,7 @@ namespace foz {
     void World::draw() {
         uint16_t i, j;
 
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glTranslatef(-1080.0/2.0*(width-1), 1080.0/2.0*(height-1), 0.0);

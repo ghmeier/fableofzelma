@@ -61,6 +61,11 @@
 #define SCREEN_DEPTH_DEFAULT 32
 #define DEBUG_DEFAULT 0
 
+#define CAMERA_PAN_DELTA 60
+#define CAMERA_PAN_EPSILON 0.001
+#define CAMERA_ZOOM_DELTA 60
+#define CAMERA_ZOOM_EPSILON 0.001
+
 #define MAP_DIR_DEFAULT "scripts/maps/"
 #define ROOM_DIR_DEFAULT "scripts/rooms/"
 #define TEAM_DIR_DEFAULT "scripts/users/"
@@ -126,11 +131,15 @@ namespace foz {
     class Camera {
       public:
         float x_left, x_right;
-        float y_left, y_top;
+        float y_top, y_bottom;
+        int16_t x_pan_count, y_pan_count, zoom_count;
+        float x_pos, y_pos;
+        uint16_t width, height;
         CAMERA_ENUM state;
 
         /* Main functions (camera.cpp) */
         void init(foz::World myWorld);
+        void update();
     };
 
 

@@ -70,7 +70,7 @@ namespace foz {
         while (myWindow.isOpen()) {
             processEvents();
 
-
+            myCamera.update();
             myWorld.draw();
             myWindow.display();
         }
