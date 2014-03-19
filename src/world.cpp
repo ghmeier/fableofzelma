@@ -59,6 +59,7 @@ namespace foz {
         char *fname;
         char linebuf[256], room_str[16];
         char *linebuf_temp;
+        std::vector<char *> linebuf_tok;
         uint32_t line_count;
         uint8_t size_ntok, room_ntok;
         uint8_t rev_tok, flip_tok;
@@ -112,11 +113,16 @@ namespace foz {
                     raise_error(ERR_BADFILE3, myConfig.map_fname);
                 }
 
-                linebuf_temp = strtok(linebuf, " ");
+                linebuf_temp = strdup(linebuf);
+                linebuf_tok.push_back(strtok(linebuf_temp, " "));
+                for (room_j = 1; room_j < width; room_j++) {
+                    linebuf_tok.push_back(strtok(NULL, " "));
+                }
+
                 for (room_j = 0; room_j < width; room_j++) {
 
-                    room_ntok = sscanf(linebuf_temp, " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
-                    linebuf_temp = strtok(NULL, " ");
+                    printf("linebuf_tok is %s\n", linebuf_tok[room_j]);
+                    room_ntok = sscanf(linebuf_tok[room_j], " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
 
                     if (room_ntok != 3) {
                         printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
@@ -124,23 +130,24 @@ namespace foz {
                         raise_error(ERR_BADFILE3, myConfig.map_fname);
                     }
 
-                    temp_room = new foz::Room;
-
                     /* Open and compile the room file */
                     if (myConfig.debug_level > 1) {
                         printf("Compiling room file room%03d.zrf\n", room_tok);
                     }
+
+                    temp_room = new foz::Room;
                     temp_room->compile(room_tok, rev_tok=='r', flip_tok=='f');
                     myRooms[room_i].push_back(*temp_room);
+                    delete temp_room;
 
                     // We are done compiling, so set up the pointers
                     if (myConfig.debug_level > 1) {
                         printf("Room file compilation complete\n");
                     }
 
-                    delete temp_room;
-
                 }
+
+                linebuf_tok.clear();
                 room_i++;
                 continue;
             }
