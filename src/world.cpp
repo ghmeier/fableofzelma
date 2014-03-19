@@ -32,16 +32,14 @@ namespace foz {
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        myRooms[0][0].draw2();//
-        return;//
-        glTranslatef(-9.0/16*(width-1), 1.0*(height-1), 0.0);
+        glTranslatef(-1080.0/2.0*(width-1), 1080.0/2.0*(height-1), 0.0);
 
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                myRooms[i][j].draw();
-                glTranslatef(18.0/16, 0.0, 0.0);
+                myRooms[i][j].draw2();
+                glTranslatef(1080.0, 0.0, 0.0);
             }
-            glTranslatef(-18.0*width/16, -2.0, 0.0);
+            glTranslatef(-1080.0*(width), -1080.0, 0.0);
         }
 
         return;

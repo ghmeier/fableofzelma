@@ -34,8 +34,7 @@ namespace foz {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
 //        glOrtho(-1.0*myWorld.width, 1.0*myWorld.width, -1.0*myWorld.height, 1.0*myWorld.height, FRONT_DEPTH, -BACK_DEPTH);
-        glOrtho(-1920/2.0, 1920/2.0, -1080/2.0, 1080/2.0, FRONT_DEPTH, -BACK_DEPTH);
-
+        glOrtho(-1920.0/2.0*myWorld.width, 1920.0/2.0*myWorld.width, -1080.0/2.0*myWorld.height, 1080.0/2.0*myWorld.height, FRONT_DEPTH, -BACK_DEPTH);
 
         return;
     }
