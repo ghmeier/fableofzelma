@@ -1,11 +1,11 @@
 # Joseph Zambreno
 # Iowa State University
-# room000.zrf - example Fable of Zelma Room File
+# room002.zrf - example Fable of Zelma Room File
 
-# This room has a plain floor, with doors at the South and East ends
+# This room has a plain floor, with doors at the North, South and East ends
 .size 13 13
 .tiles
- 0  0  0  0  0  0  0  0  0  0  0  0  0
+ 0  0  0  0  0  0  5  0  0  0  0  0  0
  0  0  0  0  0  0  0  0  0  0  0  0  0
  0  0  0  0  0  0  0  0  0  0  0  0  0
  0  0  0  0  0  0  0  0  0  0  0  0  0

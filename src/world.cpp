@@ -27,8 +27,21 @@ namespace foz {
     * Description: Draws the structure of the rooms in the world.
     *****************************************************************************/
     void World::draw() {
+        uint16_t i, j;
 
-        myRooms[0][0].draw();
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(-9.0/16*(width-1), 1.0*(height-1), 0.0);
+
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                myRooms[i][j].draw();
+                glTranslatef(18.0/16, 0.0, 0.0);
+            }
+            glTranslatef(-18.0*width/16, -2.0, 0.0);
+        }
+
         return;
     }
 
@@ -99,10 +112,12 @@ namespace foz {
                     raise_error(ERR_BADFILE3, myConfig.map_fname);
                 }
 
-                linebuf_temp = linebuf;
+                linebuf_temp = strtok(linebuf, " ");
                 for (room_j = 0; room_j < width; room_j++) {
-                    linebuf_temp = strtok(linebuf_temp, " ,");
+
                     room_ntok = sscanf(linebuf_temp, " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
+                    linebuf_temp = strtok(NULL, " ");
+
                     if (room_ntok != 3) {
                         printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
                         printf("  Invalid room specification in command \'%s\'", linebuf);

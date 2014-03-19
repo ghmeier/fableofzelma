@@ -30,13 +30,10 @@ namespace foz {
 
         state = CAMERA_INIT;
 
+        // Temporary code. Set the 2D view based on the size of the world
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-959.5, 959.5, -539.5, 539.5, FRONT_DEPTH, -BACK_DEPTH);
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
+        glOrtho(-1.0*myWorld.width, 1.0*myWorld.width, -1.0*myWorld.height, 1.0*myWorld.height, FRONT_DEPTH, -BACK_DEPTH);
 
         return;
     }
