@@ -42,6 +42,7 @@ namespace foz {
         height = myWorld.height;
         x_pos = (width-1)/2.0;
         y_pos = (height-1)/2.0;
+        zoom_level = 1.0*width;
 
         x_pan_count = 0;
         y_pan_count = 0;
@@ -69,7 +70,8 @@ namespace foz {
             case CAMERA_INIT:
                 state = CAMERA_IDLE;
                 break;
-            case CAMERA_PAN_LEFT:
+
+            case CAMERA_PAN_RIGHT:
                 if (x_pos < 1.0) {
                     state = CAMERA_IDLE;
                     break;
@@ -85,7 +87,8 @@ namespace foz {
                     x_pos -= 1.0;
                 }
                 break;
-            case CAMERA_PAN_RIGHT:
+
+            case CAMERA_PAN_LEFT:
                 if (x_pos > (width-2.0)) {
                     state = CAMERA_IDLE;
                     break;
@@ -101,7 +104,8 @@ namespace foz {
                     x_pos += 1.0;
                 }
                 break;
-            case CAMERA_PAN_UP:
+
+            case CAMERA_PAN_DOWN:
                 if (y_pos > (height-2.0)) {
                     state = CAMERA_IDLE;
                     break;
@@ -117,7 +121,8 @@ namespace foz {
                     y_pos += 1.0;
                 }
                 break;
-            case CAMERA_PAN_DOWN:
+
+            case CAMERA_PAN_UP:
                 if (y_pos < (1.0)) {
                     state = CAMERA_IDLE;
                     break;
@@ -133,6 +138,43 @@ namespace foz {
                     y_pos -= 1.0;
                 }
                 break;
+
+            case CAMERA_ZOOM_IN:
+                if (zoom_level <= 1.0) {
+                    state = CAMERA_IDLE;
+                    break;
+                }
+
+                reposition = true;
+                x_right -= (1920.0)/CAMERA_ZOOM_DELTA;
+                y_bottom += (1080.0)/CAMERA_ZOOM_DELTA;
+                zoom_count++;
+                if (zoom_count == (CAMERA_ZOOM_DELTA)) {
+                    state = CAMERA_IDLE;
+                    zoom_count = 0;
+                    zoom_level -= 1.0;
+                }
+                break;
+
+            case CAMERA_ZOOM_OUT:
+                if (zoom_level >= width) {
+                    state = CAMERA_IDLE;
+                    break;
+                }
+
+                reposition = true;
+                x_right += (1920.0)/CAMERA_ZOOM_DELTA;
+                y_bottom -= (1080.0)/CAMERA_ZOOM_DELTA;
+                zoom_count--;
+                if (zoom_count == (-CAMERA_ZOOM_DELTA)) {
+                    state = CAMERA_IDLE;
+                    zoom_count = 0;
+                    zoom_level += 1.0;
+                }
+                break;
+
+
+
 
             default:
                 break;

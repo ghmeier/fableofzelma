@@ -134,6 +134,7 @@ namespace foz {
         float y_top, y_bottom;
         int16_t x_pan_count, y_pan_count, zoom_count;
         float x_pos, y_pos;
+        float zoom_level;
         uint16_t width, height;
         CAMERA_ENUM state;
 
