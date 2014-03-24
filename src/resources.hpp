@@ -15,21 +15,27 @@
  * 1/24/14 by JAZ::Design created.
  *****************************************************************************/
 
+#pragma once
 
-
-/*Sound effect file enum*/
-typedef enum {SFX_BIGITEM, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX};
+/* Sound effect file enum */
+typedef enum {SFX_BIGITEM=0, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX} SFX_ENUM;
 extern std::string sfxFiles[NUM_SFX];
 
-/*Music file enum*/
-typedef enum {MUSIC_MAIN, MUSIC_ANNIVERSARY, NUM_MUSIC};
+/* Music file enum */
+typedef enum {MUSIC_MAIN=0, MUSIC_ANNIVERSARY, NUM_MUSIC} MUSIC_ENUM;
 extern std::string musicFiles[NUM_MUSIC];
 
  /* Texture file enum */
-typedef enum {TEX_BASIC_ROOM=0, BLUE_LINK, GREEN_LINK, PURPLE_LINK, RED_LINK, TIER_2_MAP, NUM_TEXTURES} TEXTURE_ENUM;
+typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, NUM_TEXTURES} TEXTURE_ENUM;
 extern std::string texFiles[NUM_TEXTURES];
 
-/* Sprite enum for LINK*/
+/* Depth enum */
+typedef enum {FRONT_DEPTH=0, FONT_DEPTH=60000, OVERLAY_DEPTH=60001, CORNER_DEPTH, WALL_DEPTH, FLOOR_DEPTH, BACK_DEPTH} DEPTH_ENUM;
+
+/* Camera state enum */
+typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, CAMERA_PAN_DOWN, CAMERA_ZOOM_IN, CAMERA_ZOOM_OUT, CAMERA_IDLE} CAMERA_ENUM;
+
+/* Sprite enum for LINK objects */
 typedef enum
 {LINK_SLASH_NORTH_1 = 0, LINK_SLASH_NORTH_2, LINK_SLASH_NORTH_3, LINK_SLASH_NORTH_4, LINK_SLASH_NORTH_5,                                                                        //1
 LINK_SLASH_NORTH_6, LINK_SLASH_NORTH_7, LINK_SLASH_NORTH_8, LINK_SLASH_NORTH_10, LINK_SLASH_NORTH_11,                                                                           //2

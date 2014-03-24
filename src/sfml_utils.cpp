@@ -3,6 +3,7 @@
  * Department of Electrical and Computer Engineering
  * Iowa State University
  *****************************************************************************/
+
 /*****************************************************************************
  * sfml_utils.cpp - graphics and audio functionality using the SFML-2.1
  * library with OpenGL.
@@ -13,8 +14,6 @@
  *****************************************************************************/
 
 #include "fableofzelma.hpp"
-#include "resources.hpp"
-
 
 namespace foz {
 
@@ -53,6 +52,32 @@ namespace foz {
                         else
                             myStatus.scores[3]++;
                         break;*/
+                    case sf::Keyboard::Left:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_LEFT;
+                        break;
+                    case sf::Keyboard::Right:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_RIGHT;
+                        break;
+                    case sf::Keyboard::Up:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_UP;
+                        break;
+                    case sf::Keyboard::Down:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_DOWN;
+                        break;
+                    case sf::Keyboard::Equal:
+                    case sf::Keyboard::Add:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_ZOOM_IN;
+                        break;
+                    case sf::Keyboard::Dash:
+                    case sf::Keyboard::Subtract:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_ZOOM_OUT;
+                        break;
                     case sf::Keyboard::Escape:
                     case sf::Keyboard::Q:
                         myWindow.close();
@@ -88,7 +113,7 @@ namespace foz {
         if (myConfig.debug_level > 3)
             printf("Loading sound buffers...");
 
-            /* Load the various textures from the appropriate files */
+        /* Load the various textures from the appropriate files */
         sf::Image pixels;
         GLuint myTextureHandles[NUM_TEXTURES];
         glGenTextures(NUM_TEXTURES, myTextureHandles);
@@ -114,12 +139,12 @@ namespace foz {
             myTextures[i].height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.getPixelsPtr());
         }
 
-                /* Bind the individual spriteMaps */
+        /* Bind the individual spriteMaps */
         myTextures[TEX_BASIC_ROOM].spriteMap = room_object_spriteMap;
-        myTextures[BLUE_LINK].spriteMap = link_object_spriteMap;
-        myTextures[GREEN_LINK].spriteMap = link_object_spriteMap;
-        myTextures[PURPLE_LINK].spriteMap = link_object_spriteMap;
-        myTextures[RED_LINK].spriteMap = link_object_spriteMap;
+        myTextures[TEX_BLUE_LINK].spriteMap = link_object_spriteMap;
+        myTextures[TEX_GREEN_LINK].spriteMap = link_object_spriteMap;
+        myTextures[TEX_PURPLE_LINK].spriteMap = link_object_spriteMap;
+        myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
 
 
         if (myConfig.debug_level > 3)
@@ -181,15 +206,10 @@ namespace foz {
 
         /* Configure OpenGL default state */
         glClearColor(0.0, 0.0, 0.0, 1.0);
-//        glClearDepth(BACK_DEPTH);
+        glClearDepth(BACK_DEPTH);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDepthFunc(GL_LEQUAL);
         glEnable(GL_DEPTH_TEST);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-//        glOrtho(-1032.5, 1032.5, -581.0, 581.0, FRONT_DEPTH, -BACK_DEPTH);
-        glMatrixMode(GL_MODELVIEW);
 
         glEnable(GL_TEXTURE_2D);
 
@@ -199,47 +219,7 @@ namespace foz {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-    }
-
-    /*****************************************************************************
-    * Function: Game::testDraw
-    * Description: Testing the drawing
-    *****************************************************************************/
-
-    void Game::testDraw() {
-
-    printf("\n Testing the Drawing...\n");
-
-            float texCoords[6];
-
-        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BASIC_ROOM].texHandle);
-        getTexCoords(TEX_BASIC_ROOM, WHOLE_ROOM, texCoords);
-        glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(-1, -1, 0);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(1, -1, 0);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(1, 1, 0);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(-1, 1, 0);
-        glEnd();
-
-        glBindTexture(GL_TEXTURE_2D, myTextures[BLUE_LINK].texHandle);
-        getTexCoords(BLUE_LINK, LINK_SLASH_NORTH_4, texCoords);
-        glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(0, -.2, 0);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(.1, -.2, 0);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(.1, 0, 0);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(0, 0, 0);
-        glEnd();
-
-
-    printf("Drawing Complete.");
+        myCamera.init(myWorld);
 
     }
 
