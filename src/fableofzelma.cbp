@@ -39,6 +39,8 @@
 		<Unit filename="camera.cpp" />
 		<Unit filename="fableofzelma.cpp" />
 		<Unit filename="fableofzelma.hpp" />
+		<Unit filename="links.cpp" />
+		<Unit filename="links.hpp" />
 		<Unit filename="resources.cpp" />
 		<Unit filename="resources.hpp" />
 		<Unit filename="room.cpp" />

@@ -1,17 +1,17 @@
 
-#ifndef LINKS_H
-#define LINKS_H
+
+#pragma once
 
 /*Link Types Enum*/
 #define NUM_LINK 1
 #define NUM_LINK_SPELLINGS 1
 typedef enum {REGULAR=0} LINK_TYPE;
-std::string linkNames[NUM_LINK][NUM_LINK_SPELLINGS];
+extern std::string linkNames[NUM_LINK][NUM_LINK_SPELLINGS];
 
 /*Command Enum*/
 #define NUM_CMD_SPELLINGS 1
 typedef enum {SELECT_CMD=0, PLACE_CMD, MOVE_CMD, LEFT_CMD, RIGHT_CMD, GOTO_CMD, NUM_CMD_TYPES} CMD_TYPE;
-std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
+extern std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
 
 namespace foz {
 
@@ -57,4 +57,3 @@ namespace foz {
 
 }
 
-#endif // LINKS_H

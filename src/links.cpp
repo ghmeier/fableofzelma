@@ -1,11 +1,11 @@
-#include "links.hpp"
+#include "fableofzelma.hpp"
 
-linkNames[NUM_LINK][NUM_LINK_SPELLINGS] = {
-    "Regular"
+std::string linkNames[NUM_LINK][NUM_LINK_SPELLINGS] = {
+    {"Regular"}
     };
 
 /* Command spellings */
-cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
+std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     {"select"},
     {"move"},
     {"left"},
