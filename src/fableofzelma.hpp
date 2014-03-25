@@ -33,6 +33,7 @@
 #include <fstream>
 #include <sstream>
 #include "resources.hpp"
+#include "links.hpp"
 
 #define EXEC_NAME "fableofzelma"
 #define WINDOW_TITLE "FableOfZelma, v-1.0a"
@@ -60,6 +61,11 @@
 #define SCREEN_HEIGHT_DEFAULT 1080
 #define SCREEN_DEPTH_DEFAULT 32
 #define DEBUG_DEFAULT 0
+
+#define CAMERA_PAN_DELTA 60
+#define CAMERA_PAN_EPSILON 0.001
+#define CAMERA_ZOOM_DELTA 60
+#define CAMERA_ZOOM_EPSILON 0.001
 
 #define MAP_DIR_DEFAULT "scripts/maps/"
 #define ROOM_DIR_DEFAULT "scripts/rooms/"
@@ -105,6 +111,7 @@ namespace foz {
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
+        void draw2();
         ~Room();
     };
 
@@ -125,11 +132,33 @@ namespace foz {
     class Camera {
       public:
         float x_left, x_right;
-        float y_left, y_top;
+        float y_top, y_bottom;
+        int16_t x_pan_count, y_pan_count, zoom_count;
+        float x_pos, y_pos;
+        float zoom_level;
+        uint16_t width, height;
         CAMERA_ENUM state;
 
         /* Main functions (camera.cpp) */
         void init(foz::World myWorld);
+        void update();
+    };
+
+    /*Player types of commands*/
+    class cmd_type {
+        public:
+            char label_str[16];
+            char target_str[16];
+            bool has_label;
+            bool inv_pred;
+            bool has_pred;
+            bool has_link_pred;
+            uint8_t pred;
+            uint16_t link_pred;
+            uint16_t link;
+            uint8_t cmd;
+            uint32_t line;
+            uint16_t opt[2];
     };
 
     /* Per-team state information */
@@ -141,9 +170,9 @@ namespace foz {
             int32_t timer_ms;
             uint16_t cur_cmd;
             bool cmds_done;
-//            std::vector<foz::cmd_type> cmds;
-    };
+            std::vector<foz::cmd_type> cmds;
 
+    };
 
     /* Texture structure, so that we can more easily swap textures out */
     class Texture {
@@ -168,6 +197,10 @@ namespace foz {
             uint16_t music_buffer;
     };
 
+    /*Filler Object until we get everything*/
+    class Object{
+
+    };
 
     /* Main Game class */
     class Game {
@@ -180,6 +213,7 @@ namespace foz {
             void mainLoop();
             void updateGame();
             void restartGame();
+            void compileTeams();
             void endGame();
 
             /* SFML functions (sfml_utils.cpp) */
@@ -195,11 +229,14 @@ namespace foz {
 
              /* Globally declare Textures */
             foz::Texture myTextures[NUM_TEXTURES];
+            foz::Status myStatus;
+            std::vector<Link> myLinks[4];
 
         private:
             foz::Config myConfig;
             foz::World myWorld;
             foz::Camera myCamera;
+            foz::Team myTeams[4];
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;

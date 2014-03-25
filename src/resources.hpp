@@ -17,6 +17,11 @@
 
 #pragma once
 
+/* Predicate types and spellings */
+#define NUM_PRED_SPELLINGS 2
+typedef enum {ALWAYS_PRED=0, NEVER_PRED, READY_PRED, ALIVE_PRED, DEAD_PRED, DAMAGE_PRED, EAT_PRED, HIT_PRED, SCORE_PRED, WINNING_PRED, LOSING_PRED, EMPTY_PRED, PASSED_PRED, NUM_PRED_TYPES} PRED_TYPE;
+extern std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS];
+
 /* Sound effect file enum */
 typedef enum {SFX_BIGITEM=0, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX} SFX_ENUM;
 extern std::string sfxFiles[NUM_SFX];
@@ -33,7 +38,7 @@ extern std::string texFiles[NUM_TEXTURES];
 typedef enum {FRONT_DEPTH=0, FONT_DEPTH=60000, OVERLAY_DEPTH=60001, CORNER_DEPTH, WALL_DEPTH, FLOOR_DEPTH, BACK_DEPTH} DEPTH_ENUM;
 
 /* Camera state enum */
-typedef enum {CAMERA_INIT=0} CAMERA_ENUM;
+typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, CAMERA_PAN_DOWN, CAMERA_ZOOM_IN, CAMERA_ZOOM_OUT, CAMERA_IDLE} CAMERA_ENUM;
 
 /* Sprite enum for LINK objects */
 typedef enum

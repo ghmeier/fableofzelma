@@ -52,6 +52,32 @@ namespace foz {
                         else
                             myStatus.scores[3]++;
                         break;*/
+                    case sf::Keyboard::Left:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_LEFT;
+                        break;
+                    case sf::Keyboard::Right:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_RIGHT;
+                        break;
+                    case sf::Keyboard::Up:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_UP;
+                        break;
+                    case sf::Keyboard::Down:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_PAN_DOWN;
+                        break;
+                    case sf::Keyboard::Equal:
+                    case sf::Keyboard::Add:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_ZOOM_IN;
+                        break;
+                    case sf::Keyboard::Dash:
+                    case sf::Keyboard::Subtract:
+                        if (myCamera.state == CAMERA_IDLE)
+                            myCamera.state = CAMERA_ZOOM_OUT;
+                        break;
                     case sf::Keyboard::Escape:
                     case sf::Keyboard::Q:
                         myWindow.close();
