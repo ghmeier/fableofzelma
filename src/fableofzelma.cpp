@@ -45,8 +45,7 @@ namespace foz {
 
         // Set the random seed here
         srand(0);
-        std::cout << "hey";
-        //compileTeams();
+        compileTeams();
         myWorld.compile(myConfig);
 
         //set game timer
@@ -346,9 +345,8 @@ namespace foz {
                 foz::Link *local_link;
 
                 // Select instructions are first.
-                select_ntok = sscanf(linebuf, " %s p%hu.%s", select_str1, &select_tok, select_str2);
+                select_ntok = sscanf(linebuf, " %s link%hu.%s", select_str1, &select_tok, select_str2);
                 if (select_ntok == 3) {
-
                     for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
                         if (!strcmp(select_str1, cmdNames[SELECT_CMD][i].c_str())) {
                             select_match = true;
@@ -359,7 +357,7 @@ namespace foz {
                     // Selection commands have to come before everything else
                     if ((select_match == true) && (select_done == true)) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                        printf("  cannot select plants at run-time\n");
+                        printf("  cannot select links at run-time\n");
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
 
@@ -390,7 +388,7 @@ namespace foz {
                             for (uint16_t p2 = 0; p2 < myLinks[i_team].size(); p2++) {
                                 if (myLinks[i_team][p2].getID() == select_tok) {
                                     printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                                    printf("  duplicate plant ID - p%hu was already selected\n", select_tok);
+                                    printf("  duplicate link ID - link%hu was already selected\n", select_tok);
                                     raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                                 }
                             }
@@ -442,7 +440,7 @@ namespace foz {
 
                     if (plant_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                        printf("  invalid plant type\n");
+                        printf("  invalid link type\n");
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
                 }
@@ -465,7 +463,7 @@ namespace foz {
                     if (start_ntok == 1) {
                         start_done = true;
                     }
-                    else {
+                    /*else {
 
                     // If we haven't started yet, every command should be a place/move
                     place_str[0] = 0;
@@ -481,7 +479,7 @@ namespace foz {
                         printf("  before Start:, all commands must be place/move\n");
                         printf("  command was %s\n", linebuf);
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                    }
+                    }*/
                     /*Use this if placing something*/
                     /*else {
                         place_match = false;
@@ -516,20 +514,25 @@ namespace foz {
                         }
                     }*/
 
-                    continue;
-                    }
+                    //continue;
+                    //}
                 }
-
 
                 // Everything from here on out is a proper command, with potentially labels and predicates
                 cmd_str[0] = 0;label_str[0] = 0;
                 bool has_label = false;
-                label_ntok = sscanf(linebuf, " %[^:]: %[^\t\n]", label_str, cmd_str);
+                label_ntok = sscanf(linebuf, "%[^:]: %[^\t\n]", label_str, cmd_str);
                 if (label_ntok == 2) {
                     has_label = true;
                 }
                 else {
-                    sscanf(linebuf, " %[^\t\n]", cmd_str);
+                    if (start_str[0] > 0) {
+                        strcpy(label_str ,"start");
+                        strcpy(cmd_str , start_str);
+                        start_str[0] = 0;
+                    } else{
+                        sscanf(linebuf, " %[^\t\n]", cmd_str);
+                    }
                 }
 
                 // Check for an if statement
@@ -540,7 +543,7 @@ namespace foz {
                 bool has_link_pred = false;
                 uint16_t pred_tok;
                 uint16_t link_pred = 0;
-                pred_ntok = sscanf(cmd_str, " if not p%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                pred_ntok = sscanf(cmd_str, " if not link%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
                 if (pred_ntok == 3) {
                     has_pred = true;
                     has_link_pred = true;
@@ -548,7 +551,7 @@ namespace foz {
                     inv_pred = true;
                 }
                 else {
-                    pred_ntok = sscanf(cmd_str, " if p%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                    pred_ntok = sscanf(cmd_str, " if link%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
                     if (pred_ntok == 3) {
                         has_pred = true;
                         has_link_pred = true;
@@ -601,6 +604,7 @@ namespace foz {
                 bool cmd_match = false;
                 for (cmd = 0; cmd < NUM_CMD_TYPES; cmd++) {
                     for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
+                        //printf("%s,%s\n",cmd_str2,cmdNames[cmd][i].c_str());
                         if (!strncmp(cmd_str2, cmdNames[cmd][i].c_str(), cmdNames[cmd][i].size())) {
                             cmd_match = true;
                             break;
@@ -623,7 +627,7 @@ namespace foz {
                 uint16_t link = 0;
                 uint16_t distance = 0;
                 switch (cmd) {
-                  case PLACE_CMD:
+                  /*case PLACE_CMD:*/
                   default:
                     place_str[0] = 0;
                     cmd_ntok = sscanf(cmd_str2, "%s p%hu %hu, %hu", place_str, &link, &opt[0], &opt[1]);
@@ -633,25 +637,26 @@ namespace foz {
                     break;
                   case MOVE_CMD:
                     place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "link%hu %s %hu", &link, place_str, &distance);
+                    cmd_ntok = sscanf(cmd_str2, "%s link%hu  %hu", place_str, &link,  &distance);
                     if (cmd_ntok == 3) {
                         valid_cmd = true;
                     }
                     break;
                   case LEFT_CMD:
                       place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "link%hu %s %hu", &link, place_str,  &distance);
-                    if (cmd_ntok == 3) {
+                    cmd_ntok = sscanf(cmd_str2, "%s link%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
                         valid_cmd = true;
                     }
                     break;
                   case RIGHT_CMD:
-                      cmd_ntok = sscanf(cmd_str2, "link%hu %s %hu", &link, place_str,  &distance);
-                    if (cmd_ntok == 3) {
+                      cmd_ntok = sscanf(cmd_str2, "%s link%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
                         valid_cmd = true;
                     }
                     break;
                   case GOTO_CMD:
+
                     place_str[0] = 0;
                     target_str[0] = 0;
                     cmd_ntok = sscanf(cmd_str2, "%s %s", place_str, target_str);
@@ -673,8 +678,9 @@ namespace foz {
                 local_cmd->has_label = has_label;
                 if (has_label == true)
                     strncpy(local_cmd->label_str, label_str, 16);
-                if (cmd == GOTO_CMD)
+                if (cmd == GOTO_CMD) {
                     strncpy(local_cmd->target_str, target_str, 16);
+                }
                 local_cmd->inv_pred = inv_pred;
                 local_cmd->has_pred = has_pred;
                 local_cmd->has_link_pred = has_link_pred;
@@ -705,7 +711,7 @@ namespace foz {
                     }
                     if (link_pred_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], myTeams[i_team].cmds[i].line);
-                        printf("  command predicate plant target of p%hu not found\n", myTeams[i_team].cmds[i].link_pred);
+                        printf("  command predicate plant target of link%hu not found\n", myTeams[i_team].cmds[i].link_pred);
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
                 }
@@ -737,12 +743,12 @@ namespace foz {
                     }
                     if (link_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], myTeams[i_team].cmds[i].line);
-                        printf("  plant target of p%hu not found\n", myTeams[i_team].cmds[i].link);
+                        printf("  link target of p%hu not found\n", myTeams[i_team].cmds[i].link);
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
 
                     // Let's catch any invalid place commands now
-                    if (myTeams[i_team].cmds[i].cmd == PLACE_CMD) {
+                    /*if (myTeams[i_team].cmds[i].cmd == PLACE_CMD) {
                             bool place_valid = true;
                             if ((myTeams[i_team].cmds[i].opt[0] == 1) && (myTeams[i_team].cmds[i].opt[1] == 1))
                                 place_valid = false;
@@ -757,7 +763,7 @@ namespace foz {
                                 printf("  valid range for placement is ([1-5], [1-10]), and (1, 1) is also not allowed\n");
                                 raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                             }
-                    }
+                    }*/
 
                 }
             }
