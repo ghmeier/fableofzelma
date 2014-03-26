@@ -1,7 +1,7 @@
 #include "fableofzelma.hpp"
 
 std::string linkNames[NUM_LINK][NUM_LINK_SPELLINGS] = {
-    {"Regular"}
+    {"regular"}
     };
 
 /* Command spellings */
@@ -14,7 +14,9 @@ std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     };
 
 namespace foz{
-
+    Link::Link(uint8_t type, uint16_t myid) {
+        id = myid;
+    };
 
 
 }
