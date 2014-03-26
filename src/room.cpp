@@ -280,8 +280,6 @@ namespace foz {
         glTexCoord2d(texCoords[0], texCoords[3]);
         glVertex3f(ROOM_START_X, ROOM_START_Y, CORNER_DEPTH);
 
-
-        // North Wall
         for (uint16_t j = 1; j < (width-1); j++) {
             getTexCoords(TEX_BASIC_ROOM, WALL_TOP_CENTER, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
@@ -346,6 +344,7 @@ namespace foz {
 
         // South Wall
         for (uint16_t j = 1; j < (width-1); j++) {
+
             getTexCoords(TEX_BASIC_ROOM, WALL_BOTTOM, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
             glVertex3f(ROOM_START_X+ROOM_WALL_SIZE+(j-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-2*ROOM_WALL_SIZE-(height - 2)*ROOM_MIDDLE_SIZE - 2, WALL_DEPTH);

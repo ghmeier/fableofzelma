@@ -33,6 +33,7 @@
 #include <fstream>
 #include <sstream>
 #include "resources.hpp"
+#include "links.hpp"
 
 #define EXEC_NAME "fableofzelma"
 #define WINDOW_TITLE "FableOfZelma, v-1.0a"
@@ -143,8 +144,22 @@ namespace foz {
         void update();
     };
 
-
-
+    /*Player types of commands*/
+    class cmd_type {
+        public:
+            char label_str[16];
+            char target_str[16];
+            bool has_label;
+            bool inv_pred;
+            bool has_pred;
+            bool has_link_pred;
+            uint8_t pred;
+            uint16_t link_pred;
+            uint16_t link;
+            uint8_t cmd;
+            uint32_t line;
+            uint16_t opt[2];
+    };
 
     /* Per-team state information */
     class Team {
@@ -155,9 +170,9 @@ namespace foz {
             int32_t timer_ms;
             uint16_t cur_cmd;
             bool cmds_done;
-//            std::vector<foz::cmd_type> cmds;
-    };
+            std::vector<foz::cmd_type> cmds;
 
+    };
 
     /* Texture structure, so that we can more easily swap textures out */
     class Texture {
@@ -182,6 +197,10 @@ namespace foz {
             uint16_t music_buffer;
     };
 
+    /*Filler Object until we get everything*/
+    class Object{
+
+    };
 
     /* Main Game class */
     class Game {
@@ -194,6 +213,7 @@ namespace foz {
             void mainLoop();
             void updateGame();
             void restartGame();
+            void compileTeams();
             void endGame();
 
             /* SFML functions (sfml_utils.cpp) */
@@ -209,11 +229,14 @@ namespace foz {
 
              /* Globally declare Textures */
             foz::Texture myTextures[NUM_TEXTURES];
+            foz::Status myStatus;
+            std::vector<Link> myLinks[4];
 
         private:
             foz::Config myConfig;
             foz::World myWorld;
             foz::Camera myCamera;
+            foz::Team myTeams[4];
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;
@@ -224,6 +247,10 @@ namespace foz {
             sf::Clock myClock;
     };
 
+     class Drawable {
+        public:
+            virtual void  drawSelf();
+    };
 
 } // namespace foz
 
