@@ -48,6 +48,9 @@ namespace foz {
         compileTeams();
         myWorld.compile(myConfig);
 
+        //set game timer
+        myStatus.timer = 60;
+
     }
 
 
@@ -65,6 +68,8 @@ namespace foz {
     *****************************************************************************/
     void Game::mainLoop() {
 
+        //start clock
+        sf::Clock clock;
 
         while (myWindow.isOpen()) {
             processEvents();
@@ -73,6 +78,7 @@ namespace foz {
             myCamera.update();
             myWorld.draw();
             myWindow.display();
+            updateGame();
         }
 
         return;
@@ -86,6 +92,29 @@ namespace foz {
     *****************************************************************************/
     void Game::updateGame() {
 
+        bool gameDone;
+
+        // Check for the gameDone condition
+        if ((myStatus.timer == 0)) {
+            gameDone = true;
+        }
+        else {
+            gameDone = false;
+        }
+
+        if (gameDone == true) {
+            //myStatus.mode = GAME_END;
+            return;
+        }
+
+        //update the game timer
+        /*sf::Time elapsed = clock.getElapsedTime();
+        float sec = elapsed.asSeconds();
+        if (sec >= 1){
+            myStatus.timer--;
+            printf("timer: %d \n",myStatus.timer);
+            sf::Time elapsed = clock.restart();
+        }*/
 
     }
 
