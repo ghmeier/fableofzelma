@@ -6,7 +6,7 @@
 
 
 /*****************************************************************************
- * object.hpp - FloraVsUndead application. This class contains the
+ * object.hpp - FableOfZelma application. This class contains the
  * enumerated types and class declaration for the main object class.
  *
  *
