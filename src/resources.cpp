@@ -18,6 +18,24 @@
 
 #include "fableofzelma.hpp"
 
+
+/* Predicate spellings */
+std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS] = {
+    {"always", "true"},
+    {"never", "false"},
+    {"ready", "free"},
+    {"alive", "active"},
+    {"dead", "inactive"},
+    {"damage", "damaged"},
+    {"eaten", "alive"},
+    {"hit", "contact"},
+    {"score", "scored"},
+    {"winning", "leading"},
+    {"losing", "trailing"},
+    {"empty", "free"},
+    {"passed", "behind"}
+    };
+
 /* Texture files */
 std::string texFiles[NUM_TEXTURES] = {
     "sprites/basic_room.png",

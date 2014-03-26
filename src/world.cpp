@@ -20,8 +20,6 @@
 
 namespace foz {
 
-
-
     /*****************************************************************************
     * Function: World::draw
     * Description: Draws the structure of the rooms in the world.
@@ -44,8 +42,6 @@ namespace foz {
 
         return;
     }
-
-
 
     /*****************************************************************************
     * Function: World::compile
@@ -227,7 +223,5 @@ namespace foz {
         myRooms.clear();
 
     }
-
-
 
 } // namespace foz
