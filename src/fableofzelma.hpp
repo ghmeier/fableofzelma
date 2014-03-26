@@ -198,10 +198,32 @@ namespace foz {
             uint16_t music_buffer;
     };
 
-    /*Filler Object until we get everything*/
-    class Object{
+/* Object class. Each link/enemy has multiple objects, each with links to the parent
+* object and (potentially) multiple children. */
+class Object {
+public:
+    float x,y; //location rel to room (top left corner of object)
+    uint16_t status;
+    uint16_t type;
+    int16_t health;
+    Room *myRoom;
+    Team *myTeam;
+    //copied from FVU
+    uint16_t sprite;
+    uint32_t depth;
+    uint8_t texfile;
+    float width, height; // Size of the object
+    Object *parent;
+    Object **children;
+    uint8_t num_children;
+    void setMode(uint8_t mode);
+    void update();
+    void updateSprite(uint16_t mySprite) {sprite = mySprite;}
+    float get_abs_x();
+    float get_abs_y();
+    void draw();
 
-    };
+};
 
     /* Main Game class */
     class Game {
