@@ -188,6 +188,7 @@ namespace foz {
     class Status {
         public:
             int16_t scores[4];
+            int timer;
             float time_ms;
             uint16_t budget;
             uint8_t main_song;
@@ -246,6 +247,7 @@ namespace foz {
             sf::Sound mySounds[6];
             sf::Clock myClock;
     };
+
 
      class Drawable {
         public:
