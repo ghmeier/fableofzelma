@@ -419,8 +419,6 @@ namespace foz {
         glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, 58, FRONT_DEPTH);
         }
 
-
-
      // Floor Tiles
      for (uint16_t i = 1; i < (width - 1); i++) {
             for (uint16_t j = 1; j < (height - 1); j++) {
