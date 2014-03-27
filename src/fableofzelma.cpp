@@ -71,12 +71,52 @@ namespace foz {
         //start clock
         sf::Clock clock;
 
+        // Hard-Coded Links to test Object::draw();
+        Object testLink;
+        testLink.x = 0;
+        testLink.y = 0;
+        testLink.Xroom = 1;
+        testLink.Yroom = 1;
+        testLink.sprite = LINK_WALKING_WEST_1;
+        testLink.depth = FRONT_DEPTH;
+        testLink.texfile = TEX_BLUE_LINK;
+        testLink.height = 64;
+        testLink.width = 58;
+
+        Object testLink2;
+        testLink2.x = 58;
+        testLink2.y = 58;
+        testLink2.Xroom = 1;
+        testLink2.Yroom = 2;
+        testLink2.sprite = LINK_SLASH_NORTH_1;
+        testLink2.depth = FRONT_DEPTH;
+        testLink2.texfile = TEX_PURPLE_LINK;
+        testLink2.height = 64;
+        testLink2.width = 58;
+
+        Object testLink3;
+        testLink3.x = 232;
+        testLink3.y = -116;
+        testLink3.Xroom = 0;
+        testLink3.Yroom = 0;
+        testLink3.sprite = LINK_WALKING_SOUTH_2;
+        testLink3.depth = FRONT_DEPTH;
+        testLink3.texfile = TEX_RED_LINK;
+        testLink3.height = 64;
+        testLink3.width = 58;
+
         while (myWindow.isOpen()) {
             processEvents();
             //testDraw();
             //myWorld.myRooms[0][0].draw();
             myCamera.update();
             myWorld.draw();
+
+            // Drawing the hardcoded Link
+            testLink.draw();
+            testLink2.draw();
+            testLink3.draw();
+
             myWindow.display();
             updateGame();
         }

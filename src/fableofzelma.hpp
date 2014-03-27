@@ -202,11 +202,14 @@ namespace foz {
 * object and (potentially) multiple children. */
 class Object {
 public:
-    float x,y; //location rel to room (top left corner of object)
+    float x,y; //location rel to room (bottom left corner of object)
     uint16_t status;
     uint16_t type;
     int16_t health;
-    Room *myRoom;
+    //Room myRoom;
+    // Used in Matrix Translation while drawing
+    uint16_t Xroom; // What is the x Coordinate of the current room?
+    uint16_t Yroom; // What is the y Coordinate of the current room?
     Team *myTeam;
     //copied from FVU
     uint16_t sprite;

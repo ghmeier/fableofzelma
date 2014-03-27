@@ -28,19 +28,25 @@ void Object::draw(){
 
 float texCoords[6];
 
+// Sets matrix to draw object in its current room
+glTranslatef(1080*Xroom,1080*(-Yroom),0);
+
 getTexCoords(texfile, sprite, texCoords);
 glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
             glBegin(GL_QUADS);
                 glTexCoord2d(texCoords[0], texCoords[1]);
-                glVertex3f(x, y + height, depth);
+                glVertex3f(x, y , depth);
                 glTexCoord2d(texCoords[2], texCoords[1]);
-                glVertex3f(x + width, y + height, depth);
-                glTexCoord2d(texCoords[2], texCoords[3]);
                 glVertex3f(x + width, y, depth);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(x + width, y + height, depth);
                 glTexCoord2d(texCoords[0], texCoords[3]);
-                glVertex3f(x, y, depth);
+                glVertex3f(x, y + height, depth);
             glEnd();
+
+// Resests Matrix to previous state
+glTranslatef(1080*(-Xroom),1080*Yroom,0);
 
 }
 
