@@ -128,6 +128,7 @@ namespace foz {
                     testLink.draw();
                     testLink2.draw();
                     testLink3.draw();
+                    drawScoreboard();
 
                     updateGame();
                    break;
