@@ -47,9 +47,19 @@ namespace foz {
         srand(0);
         compileTeams();
         myWorld.compile(myConfig);
+        myStatus.mode = GAME_START;
 
         //set game timer
         myStatus.timer = 60;
+        myTime = sf::Time::Zero;
+        framecount = 0;
+        for (uint8_t i = 0; i < 4; i++) {
+            myStatus.scores[i] = 0;
+            myTeams[i].budget = 0;
+            myTeams[i].timer_ms = 0;
+            myTeams[i].cur_cmd = 0;
+            myTeams[i].cmds_done = false;
+        }
 
     }
 
@@ -59,7 +69,9 @@ namespace foz {
     * Description: Resets the game environment
     *****************************************************************************/
     void Game::reset() {
-
+        init();
+        myStatus.mode = GAME_START;
+        myClock.restart();
     }
 
     /*****************************************************************************
@@ -109,16 +121,34 @@ namespace foz {
             processEvents();
             //testDraw();
             //myWorld.myRooms[0][0].draw();
-            myCamera.update();
-            myWorld.draw();
+            switch (myStatus.mode) {
+                case GAME_START:
+                case GAME_MID:
+                    myCamera.update();
+                    myWorld.draw();
 
-            // Drawing the hardcoded Link
-            testLink.draw();
-            testLink2.draw();
-            testLink3.draw();
+                    // Drawing the hardcoded Link
+                    testLink.draw();
+                    testLink2.draw();
+                    testLink3.draw();
 
+                    updateGame();
+
+                    /*myStatus.time_ms -= 1000.0/FRAME_RATE;//myTime.asMilliseconds();
+                    if (myStatus.time_ms <= 0.0) {
+                        myStatus.time_ms = 0.0;
+                        myStatus.mode = GAME_END;
+                    }*/
+                    //myClock.restart();
+                   break;
+                case GAME_END:
+                    endGame();
+                    break;
+                default:
+                    break;
+
+            }
             myWindow.display();
-            updateGame();
         }
 
         return;
@@ -143,10 +173,11 @@ namespace foz {
         }
 
         if (gameDone == true) {
-            //myStatus.mode = GAME_END;
+            myStatus.mode = GAME_END;
             return;
         }
 
+        float elapsed_ms = 1000.0/FRAME_RATE;
         //update the game timer
         /*sf::Time elapsed = clock.getElapsedTime();
         float sec = elapsed.asSeconds();
@@ -156,6 +187,34 @@ namespace foz {
             sf::Time elapsed = clock.restart();
         }*/
 
+        // Command loop: grab the next cmd for each team.
+        for (uint16_t i = 0; i < 4; i++) {
+
+            if (myTeams[i].cmds_done == true) {
+                continue;
+            }
+
+            // Grab the current command
+            foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
+
+            bool pred_true = true;
+
+            // Advance the next command, after some per-command delay
+            if ((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
+                myTeams[i].cur_cmd++;
+                if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
+                    myTeams[i].cmds_done = true;
+                }
+
+            }
+            printf("%s",myTeams[i].cmds[myTeams[i].cur_cmd]); //print commands
+        }
+
+        for (uint16_t i = 0; i < 4; i++) {
+            myTeams[i].timer_ms += elapsed_ms;
+        }
+
+        framecount++;
     }
 
 

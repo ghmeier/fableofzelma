@@ -73,6 +73,7 @@
 #define MAP_FNAME_DEFAULT "default.zmf"
 #define TEAM_FNAME_DEFAULT "default.zuf"
 
+typedef enum {DEMO_START=0, DEMO_MID, DEMO_END, GAME_START, GAME_MID, GAME_END} MODE_TYPE;
 
 /* Function prototypes (utils.cpp) */
 void strlower(char *in);
@@ -187,6 +188,7 @@ namespace foz {
     /* Status structure that contains score and other details */
     class Status {
         public:
+            MODE_TYPE mode;
             int16_t scores[4];
             int timer;
             float time_ms;
