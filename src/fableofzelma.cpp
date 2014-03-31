@@ -153,7 +153,7 @@ namespace foz {
     *****************************************************************************/
     void Game::updateGame() {
 
-
+        uint16_t cmd_num;
 
         float elapsed_ms = 1000.0/FRAME_RATE;
 
@@ -167,8 +167,8 @@ namespace foz {
             // Grab the current command
             foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
 
-            //printf("Team:%d cmd:%s \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str());
-            //printf("Team: %d cmd:%s \n",i,mycmd); //print commands  myTeams[i].cmds[myTeams[i].cur_cmd]
+            //print the current command each frame
+            printf("Team: %d cmd: %s \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str());
 
             bool pred_true = true;
 
