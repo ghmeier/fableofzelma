@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     myGame->initSFML();
     myGame->loadResources();
-
+    //return 0;
     myGame->mainLoop();
 
     delete myGame;
@@ -888,7 +888,7 @@ namespace foz {
 
             if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
-                printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | PLNT | OPTS  \n");
+                printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
                 for (uint16_t i = 0; i < myTeams[i_team].cmds.size(); i++) {
                     printf("cmd-%03u: | ", i);
                     printf(" %3u | ", myTeams[i_team].cmds[i].line);
