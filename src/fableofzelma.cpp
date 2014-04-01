@@ -171,14 +171,16 @@ namespace foz {
             if ((myTeams[i].cmds[myTeams[i].cur_cmd].cmd != 1)||(myTeams[i].move_count > 3)){
                 //print the current command each frame
                 printf("Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd); //cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str()
-
                 bool pred_true = true;
 
                 //Handles the goto command
                 if (myTeams[i].cmds[myTeams[i].cur_cmd].cmd == 4){
                     for (uint16_t j = 0; j < myTeams[i].cmds.size(); j++) {
-                        if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)){
+                        if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)==0){
+                            printf("For Team: %d GOTO %s j=%d\n",i,myTeams[i].cmds[myTeams[i].cur_cmd].target_str,j);
                             myTeams[i].cur_cmd = j;
+                            mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
+                            break;
                         }
                     }
                 }
