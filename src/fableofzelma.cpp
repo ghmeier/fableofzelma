@@ -58,6 +58,7 @@ namespace foz {
             myTeams[i].timer_ms = 0;
             myTeams[i].cur_cmd = 0;
             myTeams[i].cmds_done = false;
+            myTeams[i].move_count = 0;
         }
 
     }
@@ -167,18 +168,38 @@ namespace foz {
             // Grab the current command
             foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
 
-            //print the current command each frame
-            printf("Team: %d cmd: %s \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str());
+            if ((myTeams[i].cmds[myTeams[i].cur_cmd].cmd != 1)||(myTeams[i].move_count > 3)){
+                //print the current command each frame
+                printf("Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd); //cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str()
 
-            bool pred_true = true;
+                bool pred_true = true;
 
-            // Advance the next command, after some per-command delay
-            if ((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
-                myTeams[i].cur_cmd++;
-                if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
-                    myTeams[i].cmds_done = true;
+                //Handles the goto command
+                if (myTeams[i].cmds[myTeams[i].cur_cmd].cmd == 4){
+                    for (uint16_t j = 0; j < myTeams[i].cmds.size(); j++) {
+                        if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)){
+                            myTeams[i].cur_cmd = j;
+                        }
+                    }
                 }
 
+                // Advance the next command, after some per-command delay
+                if ((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
+                    myTeams[i].cur_cmd++;
+                    if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
+                        myTeams[i].cmds_done = true;
+                    }
+                }
+
+                myTeams[i].move_count = 0;
+            }
+
+            //Handles the move animation
+            else if((myTeams[i].cmds[myTeams[i].cur_cmd].cmd == 1)&&(myTeams[i].move_count <= 3)){
+
+                //print the current command each frame
+                printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].move_count);
+                myTeams[i].move_count += 1;
             }
         }
 

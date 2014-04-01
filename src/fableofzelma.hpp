@@ -170,6 +170,7 @@ namespace foz {
             uint16_t budget;
             int32_t timer_ms;
             uint16_t cur_cmd;
+            uint16_t move_count;
             bool cmds_done;
             std::vector<foz::cmd_type> cmds;
 
