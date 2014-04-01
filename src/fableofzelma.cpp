@@ -177,7 +177,6 @@ namespace foz {
                 if (myTeams[i].cmds[myTeams[i].cur_cmd].cmd == 4){
                     for (uint16_t j = 0; j < myTeams[i].cmds.size(); j++) {
                         if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)==0){
-                            printf("For Team: %d GOTO %s j=%d\n",i,myTeams[i].cmds[myTeams[i].cur_cmd].target_str,j);
                             myTeams[i].cur_cmd = j;
                             mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
                             break;
