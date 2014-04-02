@@ -64,6 +64,8 @@ LINK_DYING_1, LINK_DYING_2, LINK_DYING_3, LINK_DYING_4, LINK_DYING_5,           
 LINK_DYING_6}                                                                                                                                                                   //20
 LINK_SPRITE_ENUM;
 extern uint16_t link_object_spriteMap[][4];
+extern uint16_t link_object_spriteMap_centers[][2];
+
 
 /*Sprite enum for ROOM*/
 typedef enum

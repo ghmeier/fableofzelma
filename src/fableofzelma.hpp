@@ -228,6 +228,7 @@ public:
     float get_abs_x();
     float get_abs_y();
     void draw();
+    void SlashNorthAnim();
 
 };
 

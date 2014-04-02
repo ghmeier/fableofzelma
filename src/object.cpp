@@ -50,11 +50,20 @@ glTranslatef(1080*(-Xroom),1080*Yroom,0);
 
 }
 void Object::SlashNorthAnim(){
-    static uint8_t i;
 
+    static uint8_t i;
+    static uint8_t j;
+
+    this->height = 3*(link_object_spriteMap[i][3] - link_object_spriteMap[i][1]);
+    this->width = 3*(link_object_spriteMap[i][2] - link_object_spriteMap[i][0]);
     this->sprite = i;
+    this->x =  3*(link_object_spriteMap_centers[i][0] - link_object_spriteMap[i][2]) ;
+    this->y =  3*(link_object_spriteMap_centers[i][1] - link_object_spriteMap[i][3]);
     this->draw();
-    ++i;
+    ++j;
+    if (j%5 == 0){
+        ++i;
+    }
     if (i > 19){
         i = 0;
     }

@@ -45,6 +45,7 @@ namespace foz {
                 void SlashWestAnim();
 
 
+
             private:
                 uint8_t type;
                 uint8_t status;
