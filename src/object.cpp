@@ -49,6 +49,66 @@ glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 glTranslatef(1080*(-Xroom),1080*Yroom,0);
 
 }
+void Object::SlashNorthAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 19){
+        i = 0;
+    }
+}
+/*void Object::SlashWestAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 39){
+        i = 20;
+    }
+}
+void Object::SlashSouthAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 20){
+        i = 0;
+    }
+}
+void Object::WalkNorthAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 20){
+        i = 0;
+    }
+}
+void Object::WalkWestAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 20){
+        i = 0;
+    }
+}
+void Object::DieAnim(){
+    static uint8_t i;
+
+    this->sprite = i;
+    this->draw();
+    ++i;
+    if (i > 20){
+        i = 0;
+    }
+}*/
 
 }
 

@@ -40,6 +40,10 @@ namespace foz {
                 float getDir() {return dir;}
                 void move();
                 uint16_t action_count;
+                void SlashNorthAnim();
+                void SlashSouthAnim();
+                void SlashWestAnim();
+
 
             private:
                 uint8_t type;

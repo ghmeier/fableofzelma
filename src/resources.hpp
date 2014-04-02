@@ -43,17 +43,17 @@ typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, C
 /* Sprite enum for LINK objects */
 typedef enum
 {LINK_SLASH_NORTH_1 = 0, LINK_SLASH_NORTH_2, LINK_SLASH_NORTH_3, LINK_SLASH_NORTH_4, LINK_SLASH_NORTH_5,                                                                        //1
-LINK_SLASH_NORTH_6, LINK_SLASH_NORTH_7, LINK_SLASH_NORTH_8, LINK_SLASH_NORTH_10, LINK_SLASH_NORTH_11,                                                                           //2
-LINK_SLASH_NORTH_12, LINK_SLASH_NORTH_13, LINK_SLASH_NORTH_14, LINK_SLASH_NORTH_15, LINK_SLASH_NORTH_16,                                                                        //3
-LINK_SLASH_NORTH_17, LINK_SLASH_NORTH_18, LINK_SLASH_NORTH_19, LINK_SLASH_NORTH_20, LINK_SLASH_NORTH_21,                                                                        //4
+LINK_SLASH_NORTH_6, LINK_SLASH_NORTH_7, LINK_SLASH_NORTH_8, LINK_SLASH_NORTH_9, LINK_SLASH_NORTH_10,                                                                            //2
+LINK_SLASH_NORTH_11, LINK_SLASH_NORTH_12, LINK_SLASH_NORTH_13, LINK_SLASH_NORTH_14, LINK_SLASH_NORTH_15,                                                                         //3
+LINK_SLASH_NORTH_16, LINK_SLASH_NORTH_17, LINK_SLASH_NORTH_18, LINK_SLASH_NORTH_19, LINK_SLASH_NORTH_20,                                                                       //4
 LINK_SLASH_WEST_1, LINK_SLASH_WEST_2, LINK_SLASH_WEST_3, LINK_SLASH_WEST_4, LINK_SLASH_WEST_5,                                                                                  //5
-LINK_SLASH_WEST_6, LINK_SLASH_WEST_7, LINK_SLASH_WEST_8, LINK_SLASH_WEST_10, LINK_SLASH_WEST_11,                                                                                //6
-LINK_SLASH_WEST_12, LINK_SLASH_WEST_13, LINK_SLASH_WEST_14, LINK_SLASH_WEST_15, LINK_SLASH_WEST_16,                                                                             //7
-LINK_SLASH_WEST_17, LINK_SLASH_WEST_18, LINK_SLASH_WEST_19, LINK_SLASH_WEST_20, LINK_SLASH_WEST_21,                                                                             //8
+LINK_SLASH_WEST_6, LINK_SLASH_WEST_7, LINK_SLASH_WEST_8, LINK_SLASH_WEST_9, LINK_SLASH_WEST_10,                                                                                 //6
+LINK_SLASH_WEST_11, LINK_SLASH_WEST_12, LINK_SLASH_WEST_13, LINK_SLASH_WEST_14, LINK_SLASH_WEST_15,                                                                           //7
+LINK_SLASH_WEST_16, LINK_SLASH_WEST_17, LINK_SLASH_WEST_18, LINK_SLASH_WEST_19, LINK_SLASH_WEST_20,                                                                            //8
 LINK_SLASH_SOUTH_1, LINK_SLASH_SOUTH_2, LINK_SLASH_SOUTH_3, LINK_SLASH_SOUTH_4, LINK_SLASH_SOUTH_5,                                                                             //9
-LINK_SLASH_SOUTH_6, LINK_SLASH_SOUTH_7, LINK_SLASH_SOUTH_8, LINK_SLASH_SOUTH_10, LINK_SLASH_SOUTH_11,                                                                           //10
-LINK_SLASH_SOUTH_12, LINK_SLASH_SOUTH_13, LINK_SLASH_SOUTH_14, LINK_SLASH_SOUTH_15, LINK_SLASH_SOUTH_16,                                                                        //11
-LINK_SLASH_SOUTH_17, LINK_SLASH_SOUTH_18, LINK_SLASH_SOUTH_19, LINK_SLASH_SOUTH_20, LINK_SLASH_SOUTH_21,                                                                        //12
+LINK_SLASH_SOUTH_6, LINK_SLASH_SOUTH_7, LINK_SLASH_SOUTH_8, LINK_SLASH_SOUTH_9,   LINK_SLASH_SOUTH_10,                                                                            //10
+LINK_SLASH_SOUTH_11, LINK_SLASH_SOUTH_12, LINK_SLASH_SOUTH_13, LINK_SLASH_SOUTH_14, LINK_SLASH_SOUTH_15,                                                                         //11
+LINK_SLASH_SOUTH_16, LINK_SLASH_SOUTH_17, LINK_SLASH_SOUTH_18, LINK_SLASH_SOUTH_19, LINK_SLASH_SOUTH_20,                                                                       //12
 LINK_WALKING_NORTH_1, LINK_WALKING_NORTH_2, LINK_WALKING_NORTH_3, LINK_WALKING_NORTH_4, LINK_WALKING_NORTH_5,                                                                   //13
 LINK_WALKING_NORTH_6,                                                                                                                                                           //14
 LINK_WALKING_WEST_1, LINK_WALKING_WEST_2, LINK_WALKING_WEST_3, LINK_WALKING_WEST_4, LINK_WALKING_WEST_5,                                                                        //15
