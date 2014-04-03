@@ -57,8 +57,8 @@ void Object::SlashNorthAnim(){
     this->height = 3*(link_object_spriteMap[i][3] - link_object_spriteMap[i][1]);
     this->width = 3*(link_object_spriteMap[i][2] - link_object_spriteMap[i][0]);
     this->sprite = i;
-    this->x =  3*(link_object_spriteMap_centers[i][0] - link_object_spriteMap[i][2]) ;
-    this->y =  3*(link_object_spriteMap_centers[i][1] - link_object_spriteMap[i][3]);
+    this->x =  3*(-link_object_spriteMap_centers[i][0] + link_object_spriteMap[i][0]) ;
+    this->y =  (-link_object_spriteMap_centers[i][1] + link_object_spriteMap[i][1]);
     this->draw();
     ++j;
     if (j%5 == 0){
