@@ -38,7 +38,7 @@ namespace foz {
         public:
             Link(uint8_t type, uint16_t myid, uint8_t myteam, uint8_t world_width, uint8_t world_height);
             ~Link(){};
-            void update();
+            void update(uint8_t cmd);
             void updateTransition(uint16_t val);
             void draw();
             void move();
@@ -46,6 +46,7 @@ namespace foz {
             bool active;
             uint16_t action_count;
             uint8_t type;
+            uint8_t direction;
             uint8_t team;
             uint8_t status;
             int16_t health;

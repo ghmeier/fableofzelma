@@ -145,7 +145,7 @@ namespace foz {
         myTextures[TEX_GREEN_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_PURPLE_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
-        myTextures[TEX_FONTS].spriteMap = Font_spriteMap;
+        myTextures[TEX_FONTS].spriteMap = font_spriteMap;
 
 
 

@@ -126,9 +126,9 @@ namespace foz {
             // Grab the current command
             foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
 
-            if ((myTeams[i].cmds[myTeams[i].cur_cmd].cmd != 1)||(myTeams[i].move_count > 3)){
+            if ((mycmd->cmd != MOVE_CMD)||(myTeams[i].move_count > mycmd->opt[0])){
                 //print the current command each frame
-                printf("Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd); //cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str()
+                printf("Teaasdfasdfasm: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd); //cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str()
                 bool pred_true = true;
 
                 //Handles the goto command
@@ -154,10 +154,15 @@ namespace foz {
             }
 
             //Handles the move animation
-            else if((myTeams[i].cmds[myTeams[i].cur_cmd].cmd == 1)&&(myTeams[i].move_count <= 3)){
+            else if((mycmd->cmd == MOVE_CMD) && (myTeams[i].move_count < mycmd->opt[0])) {
 
                 //print the current command each frame
                 printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].move_count);
+                // Need a "dir" value
+                if (myLinks[i][0].direction == DIRECTION_NORTH) {
+                    myLinks[i][0].y -= 5.0;
+                }
+                myLinks[i][0].update(mycmd->cmd);
                 myTeams[i].move_count += 1;
             }
         }

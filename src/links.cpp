@@ -32,6 +32,24 @@ uint16_t linkSpeeds[NUM_LINK_TYPE] = {1};
 namespace foz {
 
     /*****************************************************************************
+    * Function: Link::update
+    * Description: Updates the link sprite based on command type
+    *****************************************************************************/
+    void Link::update(uint8_t cmd) {
+
+        switch (cmd) {
+        case MOVE_CMD:
+            if (direction == DIRECTION_NORTH) {
+                sprite++;
+            }
+            break;
+        }
+
+    }
+
+
+
+    /*****************************************************************************
     * Function: Link::Link
     * Description: Class constructor. Uses an enum type to set link-specific
     * parameters
@@ -48,12 +66,13 @@ namespace foz {
         switch(team) {
             case 0:
             default:
-                texfile = TEX_BLUE_LINK;
+                texfile = TEX_PURPLE_LINK;
                 room_x = 0;
                 room_y = 0;
                 x = 50.0;
                 y = 50.0;
                 sprite = LINK_WALKING_SOUTH_1;
+                direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
             case 1:
@@ -63,6 +82,7 @@ namespace foz {
                 x = 50.0;
                 y = 50.0;
                 sprite = LINK_WALKING_NORTH_1;
+                direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
                 break;
             case 2:
@@ -72,6 +92,7 @@ namespace foz {
                 x = 50.0;
                 y = 50.0;
                 sprite = LINK_WALKING_SOUTH_1;
+                direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
 
                 break;
@@ -82,6 +103,7 @@ namespace foz {
                 x = 50.0;
                 y = 50.0;
                 sprite = LINK_WALKING_NORTH_1;
+                direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
                 break;
         }
@@ -102,7 +124,7 @@ namespace foz {
 
         glBegin(GL_QUADS);
             glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(x, y , depth);
+            glVertex3f(x, y, depth);
             glTexCoord2d(texCoords[2], texCoords[1]);
             glVertex3f(x + width, y, depth);
             glTexCoord2d(texCoords[2], texCoords[3]);

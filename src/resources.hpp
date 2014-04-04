@@ -46,6 +46,9 @@ typedef enum {FRONT_DEPTH=0, FONT_DEPTH=60000, OVERLAY_DEPTH=60001, CORNER_DEPTH
 /* Camera state enum */
 typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, CAMERA_PAN_DOWN, CAMERA_ZOOM_IN, CAMERA_ZOOM_OUT, CAMERA_IDLE} CAMERA_ENUM;
 
+/* Direction enum */
+typedef enum {DIRECTION_NORTH=0, DIRECTION_SOUTH, DIRECTION_WEST, DIRECTION_EAST} DIRECTION_TYPE;
+
 /* Sprite enum for LINK objects */
 typedef enum
 {LINK_SLASH_NORTH_1 = 0, LINK_SLASH_NORTH_2, LINK_SLASH_NORTH_3, LINK_SLASH_NORTH_4, LINK_SLASH_NORTH_5,                                                                        //1
@@ -86,4 +89,4 @@ typedef enum
 {LETTER_0, LETTER_1, LETTER_2, LETTER_3, LETTER_4, LETTER_5, LETTER_6, LETTER_7, LETTER_8, LETTER_9,
 LETTER_NEG}                                                                                                                                                                   //20
 FONT_ENUM;
-extern uint16_t Font_spriteMap[][4];
+extern uint16_t font_spriteMap[][4];
