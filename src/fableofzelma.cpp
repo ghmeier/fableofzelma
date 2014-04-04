@@ -89,7 +89,7 @@ namespace foz {
                 case GAME_START:
                 case GAME_MID:
                     myCamera.update();
-                    myWorld.draw();
+                    drawGame();
                     drawScoreboard();
 
                     updateGame();
@@ -179,7 +179,7 @@ namespace foz {
     *****************************************************************************/
     void Game::endGame() {
         myCamera.update();
-        myWorld.draw();
+        drawGame();
     }
 
 

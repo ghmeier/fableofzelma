@@ -21,11 +21,13 @@
 namespace foz {
 
     /*****************************************************************************
-    * Function: World::draw
+    * Function: Game::drawGame
     * Description: Draws the structure of the rooms in the world.
     *****************************************************************************/
-    void World::draw() {
-        uint16_t i, j;
+    void Game::drawGame() {
+        uint16_t i, j, k, i_team;
+        uint8_t width = myWorld.width;
+        uint8_t height = myWorld.height;
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
@@ -34,15 +36,38 @@ namespace foz {
 
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                myRooms[i][j].draw();
+                myWorld.myRooms[i][j].draw();
                 glTranslatef(1080.0, 0.0, 0.0);
             }
             glTranslatef(-1080.0*(width), -1080.0, 0.0);
         }
 
+
+        // Draw any active objects in each room
+        glLoadIdentity();
+        glTranslatef(-1080.0/2.0*(width-1), 1080.0/2.0*(height-1), 0.0);
+        for (i = 0; i < height; i++) {
+            for (j = 0; j < width; j++) {
+                for (i_team = 0; i_team < 4; i_team++) {
+                    for (k = 0; k < myLinks[i_team].size(); k++) {
+                        if (myLinks[i_team][k].active == true) {
+                            myLinks[i_team][k].draw();
+                        }
+                    }
+                }
+                glTranslatef(1080.0, 0.0, 0.0);
+            }
+            glTranslatef(-1080.0*(width), -1080.0, 0.0);
+        }
+
+
+
+
+
         // Resets Matrix so it draws objects starting in top left room after
         // drawing the rooms
         glTranslatef(0, 3240, 0);
+
         return;
     }
 
