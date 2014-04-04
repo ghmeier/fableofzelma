@@ -83,55 +83,13 @@ namespace foz {
     void Game::mainLoop() {
 
 
-        // Hard-Coded Links to test Object::draw();
-        Object testLink;
-        testLink.x = 0;
-        testLink.y = 0;
-        testLink.Xroom = 1;
-        testLink.Yroom = 1;
-        testLink.sprite = LINK_WALKING_WEST_1;
-        testLink.depth = FRONT_DEPTH;
-        testLink.texfile = TEX_BLUE_LINK;
-        testLink.height = 64;
-        testLink.width = 58;
-
-        Object testLink2;
-        testLink2.x = 58;
-        testLink2.y = 58;
-        testLink2.Xroom = 1;
-        testLink2.Yroom = 2;
-        testLink2.sprite = LINK_SLASH_NORTH_1;
-        testLink2.depth = FRONT_DEPTH;
-        testLink2.texfile = TEX_PURPLE_LINK;
-        testLink2.height = 64;
-        testLink2.width = 58;
-
-        Object testLink3;
-        testLink3.x = 232;
-        testLink3.y = -116;
-        testLink3.Xroom = 0;
-        testLink3.Yroom = 0;
-        testLink3.sprite = LINK_WALKING_SOUTH_2;
-        testLink3.depth = FRONT_DEPTH;
-        testLink3.texfile = TEX_RED_LINK;
-        testLink3.height = 64;
-        testLink3.width = 58;
-
         while (myWindow.isOpen()) {
             processEvents();
-            //testDraw();
-            //myWorld.myRooms[0][0].draw();
             switch (myStatus.mode) {
                 case GAME_START:
                 case GAME_MID:
                     myCamera.update();
                     myWorld.draw();
-
-                    // Drawing the hardcoded Link
-                    testLink2.SlashNorthAnim();
-                    testLink.SlashNorthAnim();
-
-                    testLink3.draw();
                     drawScoreboard();
 
                     updateGame();
@@ -388,6 +346,7 @@ namespace foz {
         FILE *team_file;
 
         for (uint8_t i_team = 0; i_team < 4; i_team++) {
+            bool first_link = true;
 
             /* Open and compile the team file */
             if (myConfig.debug_level > 1) {
@@ -473,7 +432,7 @@ namespace foz {
 
                             // Did we duplicate a link ID?
                             for (uint16_t l2 = 0; l2 < myLinks[i_team].size(); l2++) {
-                                if (myLinks[i_team][l2].getID() == select_tok) {
+                                if (myLinks[i_team][l2].id == select_tok) {
                                     printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
                                     printf("  duplicate link ID - link%hu was already selected\n", select_tok);
                                     raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
@@ -487,7 +446,9 @@ namespace foz {
                                 printf("  budget limit is %hu\n", myStatus.budget);
                                 raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                             }
-                            local_link = new Link(l, select_tok);
+                            local_link = new Link(l, select_tok, i_team, myWorld.width, myWorld.height);
+                            local_link->active = first_link;
+                            first_link = false;
                             myLinks[i_team].push_back(*local_link);
                             delete local_link;
                             break;
@@ -626,7 +587,6 @@ namespace foz {
                 bool valid_cmd = false;
                 uint16_t opt[2] = {0, 0};
                 uint16_t link = 0;
-                uint16_t distance = 0;
                 switch (cmd) {
                   case SELECT_CMD:
                   default:
@@ -634,7 +594,7 @@ namespace foz {
                     break;
                   case MOVE_CMD:
                     place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "%s l%hu %hu", place_str, &link,  &distance);
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu %hu", place_str, &link,  &opt[0]);
                     if (cmd_ntok == 3) {
                         valid_cmd = true;
                     }
@@ -707,7 +667,7 @@ namespace foz {
                 if (myTeams[i_team].cmds[i].has_link_pred == true) {
                     bool link_pred_match = false;
                     for (uint16_t p = 0; p < myLinks[i_team].size(); p++) {
-                        if (myLinks[i_team][p].getID() == myTeams[i_team].cmds[i].link_pred) {
+                        if (myLinks[i_team][p].id == myTeams[i_team].cmds[i].link_pred) {
                             link_pred_match = true;
                             break;
                         }
@@ -739,7 +699,7 @@ namespace foz {
                 else {
                     bool link_match = false;
                     for (uint16_t p = 0; p < myLinks[i_team].size(); p++) {
-                        if (myLinks[i_team][p].getID() == myTeams[i_team].cmds[i].link) {
+                        if (myLinks[i_team][p].id == myTeams[i_team].cmds[i].link) {
                             link_match = true;
                             break;
                         }
@@ -803,7 +763,6 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
-                system("pause");
             }
 
         }

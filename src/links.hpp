@@ -36,39 +36,29 @@ namespace foz {
 
     class Link {
         public:
-            Link(uint8_t type, uint16_t myid);
+            Link(uint8_t type, uint16_t myid, uint8_t myteam, uint8_t world_width, uint8_t world_height);
             ~Link(){};
             void update();
-            void place(uint8_t team, uint16_t row, uint16_t col);
             void updateTransition(uint16_t val);
-            void draw(uint16_t index);
-            uint8_t getStatus() {return status;}
-            uint16_t getID() {return id;}
-            uint8_t getType() {return type;}
-            uint16_t getRow() {return row;}
-            int16_t getHealth() {return health;}
-            void setStatus(uint8_t val) {status = val;}
-            void setHealth(int16_t myhealth) {health = myhealth;}
-            void setRow(uint16_t myrow) {row = myrow;}
-            void setCol(uint16_t mycol) {col = mycol;}
-            uint16_t getCol() {return col;}
-            uint8_t getTeam() {return team;}
-            float getGameX() {return game_x;}
-            float getGameY() {return game_y;}
-            float getDir() {return dir;}
+            void draw();
             void move();
-            uint16_t action_count;
 
-        private:
+            bool active;
+            uint16_t action_count;
             uint8_t type;
+            uint8_t team;
             uint8_t status;
             int16_t health;
+            uint16_t sprite;
+            uint32_t depth;
+            uint8_t texfile;
+            float width, height;
             uint16_t id;
             uint16_t row, col;
+            uint8_t room_x, room_y;
+            float x, y;
             float speed;
-            float game_x, game_y;
             float dir;
-            uint8_t team;
             uint16_t delay;
             uint16_t move_count;
     };

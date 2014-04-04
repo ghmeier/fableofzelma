@@ -198,39 +198,6 @@ namespace foz {
     };
 
 
-
-/* Object class. Each link/enemy has multiple objects, each with links to the parent
-* object and (potentially) multiple children. */
-class Object {
-public:
-    float x,y; //location rel to room (bottom left corner of object)
-    uint16_t status;
-    uint16_t type;
-    int16_t health;
-    //Room myRoom;
-    // Used in Matrix Translation while drawing
-    uint16_t Xroom; // What is the x Coordinate of the current room?
-    uint16_t Yroom; // What is the y Coordinate of the current room?
-    Team *myTeam;
-    //copied from FVU
-    uint16_t sprite;
-    uint32_t depth;
-    uint8_t texfile;
-    float width, height; // Size of the object
-    Object *parent;
-    Object **children;
-    uint8_t num_children;
-    void setMode(uint8_t mode);
-    void update();
-    void updateSprite(uint16_t mySprite) {sprite = mySprite;}
-    float get_abs_x();
-    float get_abs_y();
-    void draw();
-    void SlashNorthAnim();
-    void SlashWestAnim();
-
-};
-
     /* Main Game class */
     class Game {
         public:
