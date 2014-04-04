@@ -126,9 +126,9 @@ namespace foz {
                     myWorld.draw();
 
                     // Drawing the hardcoded Link
-
+                    testLink2.SlashNorthAnim();
                     testLink.SlashNorthAnim();
-                    testLink2.draw();
+
                     testLink3.draw();
                     drawScoreboard();
 
