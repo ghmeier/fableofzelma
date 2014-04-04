@@ -231,68 +231,91 @@ namespace foz {
     *****************************************************************************/
 void Game::drawScoreboard(){
 
-    #define LETTER_WIDTH 35
-    #define LETTER_HEIGHT 42
-    #define CORNER_ONE_START_X -1080
-    #define CORNER_ONE_START_Y 0//950
-    #define CORNER_TWO_START_X 3260
-    #define CORNER_TWO_START_Y 0//950
+    #define LETTER_WIDTH 70
+    #define LETTER_HEIGHT 90
 
-    // TeamNames char *name;
+
+        myStatus.scores[0] = 4001;
+        myStatus.scores[1] = -234;
+        myStatus.scores[2] = 7587;
+        myStatus.scores[3] = 8864;
 
 
      float texCoords[6];
      //glViewport(-540,-960,1080,1920); // Makes everything go crazy
 
-      glBindTexture(GL_TEXTURE_2D, myGame->myTextures[TEX_BASIC_ROOM].texHandle);
-      glBegin(GL_QUADS);
-      int letter[7] = {LETTER_A, LETTER_A, LETTER_B, LETTER_A, LETTER_A, LETTER_A, LETTER_B};
+ /* Draw the scores */
+        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+        float baseX = -1480.0, baseY = 0.0;
+        char digits[4];
+        glBegin(GL_QUADS);
+            for (uint8_t i = 0; i < 4; i++) {
 
-    for(int i = 0; i < 4; i++){
+                sprintf(digits,"%3d",myStatus.scores[i]);
 
-            //for(i = 0; i < 9; i++){
-            //char[9] teamName = myTeams[i].name;
-            //}
+                for (uint8_t j = 0; j < 4; j++) {
 
-        getTexCoords(TEX_BASIC_ROOM, letter[i], texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
+                        switch(digits[j]){
+                        case '-':
+                            getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
+                            break;
+                        case '0':
+                             getTexCoords(TEX_FONTS, LETTER_0, texCoords);
+                             break;
+                        case '1':
+                            getTexCoords(TEX_FONTS, LETTER_1, texCoords);
+                            break;
+                        case '2':
+                             getTexCoords(TEX_FONTS, LETTER_2, texCoords);
+                             break;
+                        case '3':
+                            getTexCoords(TEX_FONTS, LETTER_3, texCoords);
+                            break;
+                        case '4':
+                             getTexCoords(TEX_FONTS, LETTER_4, texCoords);
+                             break;
+                        case '5':
+                            getTexCoords(TEX_FONTS, LETTER_5, texCoords);
+                            break;
+                        case '6':
+                             getTexCoords(TEX_FONTS, LETTER_6, texCoords);
+                             break;
+                        case '7':
+                            getTexCoords(TEX_FONTS, LETTER_7, texCoords);
+                            break;
+                        case '8':
+                             getTexCoords(TEX_FONTS, LETTER_8, texCoords);
+                             break;
+                        case '9':
+                            getTexCoords(TEX_FONTS, LETTER_9, texCoords);
+                            break;
+                        }
 
-    }
+                        glTexCoord2d(texCoords[0], texCoords[1]);
+                        glVertex3f(baseX+LETTER_WIDTH*j, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[1]);
+                        glVertex3f(baseX+LETTER_WIDTH*(j+1), baseY - LETTER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[3]);
+                        glVertex3f(baseX+LETTER_WIDTH*(j+1), baseY, FONT_DEPTH);
+                        glTexCoord2d(texCoords[0], texCoords[3]);
+                        glVertex3f(baseX+LETTER_WIDTH*j, baseY, FONT_DEPTH);
 
-    for(int i = 0; i < 7; i++){
+                        }
 
-        getTexCoords(TEX_BASIC_ROOM, letter[i], texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
+                switch(i){
+            case 0:
+                baseX = 2900;
+                break;
+            case 1:
+                baseY = -2300;
+                baseX = -1480;
+                break;
+            case 2:
+                baseX = 2900;
+                break;
+                }
 
-    }
-
-        for(int i = 0; i < 7; i++){
-
-        getTexCoords(TEX_BASIC_ROOM, letter[i], texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(CORNER_TWO_START_X + i*LETTER_WIDTH, CORNER_TWO_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(CORNER_TWO_START_X + (i+1)*LETTER_WIDTH, CORNER_TWO_START_Y - LETTER_HEIGHT, FONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(CORNER_TWO_START_X + (i+1)*LETTER_WIDTH, CORNER_TWO_START_Y, FONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(CORNER_TWO_START_X + i*LETTER_WIDTH, CORNER_TWO_START_Y, FONT_DEPTH);
-
-    }
+                }
 
         glEnd();
 
