@@ -90,9 +90,6 @@ uint16_t link_object_spriteMap_centers[][2] = {
 };
 
 
-
-<<<<<<< HEAD
-=======
 /* Sprite map for Fonts */
 uint16_t Font_spriteMap[][4] = {
 {70,187,105,232}   ,{128,188,163,233}   ,{185,187,220,232}   ,{243,188,278,233}    ,{12,246,47,291}   ,
@@ -102,8 +99,6 @@ uint16_t Font_spriteMap[][4] = {
 };
 
 
-
->>>>>>> f3faca162b9c89f7a7ae6b71d10f475756ffb406
 /* Sprite map for ROOM objects */
 uint16_t room_object_spriteMap[][4] = {
 {11,10,260,259}		,{282,10,340,229}	  ,{365,10,614,259}		,{665,152,741,269}    ,{705,41,821,116}	    ,//1
