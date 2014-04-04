@@ -166,39 +166,41 @@ namespace foz {
                 size_ntok = sscanf(linebuf, " .size %hu,%hu", &width_tok, &height_tok);
             }
 
-            // Check for .budget information
-            budget_ntok = sscanf(linebuf, " .budget %hu", &budget_tok);
-            if (budget_ntok == 1) {
-                budget_flag = true;
-                myStatus->budget = budget_tok;
-            }
-
-            time_ntok = sscanf(linebuf, " .time %u", &time_tok);
-            if (time_ntok == 1) {
-                myStatus->timer_ms = 1.0*time_tok;
-            }
-
-
             // We've found our .size information
             if (size_ntok == 2) {
                 size_flag = true;
                 width = width_tok;
                 height = height_tok;
+                continue;
             }
 
-            else {
-                // It's not .size information, so look for the .room flag
-                sscanf(linebuf, " %s", room_str);
-                if (!strcmp(room_str, ".rooms")) {
-                    room_flag = true;
-                    myRooms.resize(height);
-                }
-                else {
-                    printf("Error compiling %s, line %d\n", myConfig->map_fname, line_count);
-                    printf("  Unknown or unexpected command \'%s\'", linebuf);
-                    raise_error(ERR_BADFILE3, myConfig->map_fname);
-                }
+            // Check for .budget information
+            budget_ntok = sscanf(linebuf, " .budget %hu", &budget_tok);
+            if (budget_ntok == 1) {
+                budget_flag = true;
+                myStatus->budget = budget_tok;
+                continue;
             }
+
+            // Check for .time information
+            time_ntok = sscanf(linebuf, " .time %u", &time_tok);
+            if (time_ntok == 1) {
+                myStatus->timer_ms = 1.0*time_tok;
+                continue;
+            }
+
+            // Check for the .room flag
+            sscanf(linebuf, " %s", room_str);
+            if (!strcmp(room_str, ".rooms")) {
+                room_flag = true;
+                myRooms.resize(height);
+                continue;
+            }
+
+            // We've matched nothing, must be an invalid command
+            printf("Error compiling %s, line %d\n", myConfig->map_fname, line_count);
+            printf("  Unknown or unexpected command \'%s\'", linebuf);
+            raise_error(ERR_BADFILE3, myConfig->map_fname);
 
         }
 

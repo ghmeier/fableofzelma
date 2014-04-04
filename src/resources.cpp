@@ -19,12 +19,13 @@
 #include "fableofzelma.hpp"
 
 
-/* Command spellings */
+/* Command spellings - note that you can't have command spelling that
+ * contains a subset of another command spelling */
 std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     {"select", "buy", "use"},
-    {"move", "run", "go"},
+    {"move", "run", "walk"},
     {"left", "ccw", "west"},
-    {"right", "cw", "east"},
+    {"right", "clock", "east"},
     {"swing", "fire", "action"},
     {"goto", "jump", "loop"}
     };

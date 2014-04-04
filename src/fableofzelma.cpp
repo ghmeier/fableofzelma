@@ -45,8 +45,8 @@ namespace foz {
 
         // Set the random seed here
         srand(0);
-        compileTeams();
         myWorld.compile(&myConfig, &myStatus);
+        compileTeams();
 
         // Initialize game status
         myStatus.mode = GAME_START;
@@ -66,6 +66,11 @@ namespace foz {
     * Description: Resets the game environment
     *****************************************************************************/
     void Game::reset() {
+
+        for (uint8_t i = 0; i < 4; i++) {
+            myLinks[i].clear();
+        }
+
         init();
         myStatus.mode = GAME_START;
 
@@ -152,9 +157,6 @@ namespace foz {
     *****************************************************************************/
     void Game::updateGame() {
 
-        uint16_t cmd_num;
-
-        float elapsed_ms = 1000.0/FRAME_RATE;
 
         // Command loop: grab the next cmd for each team.
         for (uint16_t i = 0; i < 4; i++) {
@@ -389,7 +391,7 @@ namespace foz {
 
             /* Open and compile the team file */
             if (myConfig.debug_level > 1) {
-                printf("Compiling team file %s\n", myConfig.team_fname[i_team]);
+                printf("\n\nCompiling team file %s\n", myConfig.team_fname[i_team]);
             }
 
             team_file = fopen(myConfig.team_fname[i_team], "r");
@@ -416,9 +418,8 @@ namespace foz {
                 char linebuf[256], select_str1[16], select_str2[16], start_str[256];
                 char place_str[16], label_str[256], target_str[256];
                 char cmd_str[256], cmd_str2[256], pred_str[256];
-                uint8_t select_ntok, start_ntok, place_ntok, label_ntok, pred_ntok, cmd_ntok;
-                uint16_t select_tok, place_tok1, place_tok2, place_tok3;
-
+                uint8_t select_ntok, start_ntok, label_ntok, pred_ntok, cmd_ntok;
+                uint16_t select_tok;
                 fgets_ret = fgets(linebuf, 256, team_file);
                 select_str1[0] = 0;select_str2[0] = 0;
 
@@ -487,37 +488,6 @@ namespace foz {
                                 raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                             }
                             local_link = new Link(l, select_tok);
-                            // We don't have portal plants
-                            /*if (p == PORTAL_PLANT) {
-                                if ((i == 0) || (i == 1)) { // H_PORTAL
-                                    local_plant->dest_team = (i_team + 2) % 4;
-                                }
-                                else if (i == 2) { // V_PORTAL
-                                    if ((i_team % 2) == 1) {
-                                        local_plant->dest_team = i_team - 1;
-                                    }
-                                    else {
-                                        local_plant->dest_team = i_team + 1;
-                                    }
-                                }
-                                else { // D_PORTAL
-                                    switch (i_team) {
-                                        case 0:
-                                        default:
-                                            local_plant->dest_team = 3;
-                                            break;
-                                        case 1:
-                                            local_plant->dest_team = 2;
-                                            break;
-                                        case 2:
-                                            local_plant->dest_team = 1;
-                                            break;
-                                        case 3:
-                                            local_plant->dest_team = 0;
-                                            break;
-                                    }
-                                }
-                            }*/
                             myLinks[i_team].push_back(*local_link);
                             delete local_link;
                             break;
@@ -541,7 +511,6 @@ namespace foz {
 
                 // Until we reach the start line, we do not support predicates
                 foz::cmd_type *local_cmd;
-                bool place_match = false;
                 start_str[0] = 0;
                 start_ntok = 0;
                 if (start_done == false) {
@@ -549,59 +518,6 @@ namespace foz {
                     if (start_ntok == 1) {
                         start_done = true;
                     }
-                    /*else {
-
-                    // If we haven't started yet, every command should be a place/move
-                    place_str[0] = 0;
-                    place_ntok = sscanf(linebuf, " %s p%hu %hu, %hu", place_str, &place_tok1, &place_tok2, &place_tok3);
-                    for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
-                        if (!strcmp(place_str, cmdNames[PLACE_CMD][i].c_str())) {
-                            place_match = true;
-                            break;
-                        }
-                    }
-                    if ((place_match == false) || (place_ntok != 4)) {
-                        printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                        printf("  before Start:, all commands must be place/move\n");
-                        printf("  command was %s\n", linebuf);
-                        raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                    }*/
-                    /*Use this if placing something*/
-                    /*else {
-                        place_match = false;
-                        for (uint16_t p = 0; p < myLinks[i_team].size(); p++) {
-                            /if (myLinks[i_team][p].getID() == place_tok1) {
-                                place_match = true;
-                                if ((place_tok2 == 1) && (place_tok3 == 1)) {
-                                    printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                                    printf("  place command [%hu, %hu] is reserved\n", place_tok2, place_tok3);
-                                    raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                                }
-                                if ((place_tok2 < 1) || (place_tok2 > NUM_ROWS) || (place_tok3 < 1) || (place_tok3 > NUM_COLS)) {
-                                    printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                                    printf("  place command [%hu, %hu] out of range\n", place_tok2, place_tok3);
-                                    raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                                }
-
-                                if (plantGrid[i_team][place_tok2-1][place_tok3-1] == true) {
-                                    printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                                    printf("  plant already placed at [%hu, %hu]\n", place_tok2, place_tok3);
-                                    raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                                }
-                                myPlants[i_team][p].place(i_team, place_tok2, place_tok3);
-                                plantGrid[i_team][place_tok2-1][place_tok3-1] = true;
-                                break;
-                            }
-                        }
-                        if (place_match == false) {
-                            printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                            printf("  attempt to place non-existent plant\n");
-                            raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                        }
-                    }*/
-
-                    //continue;
-                    //}
                 }
 
                 // Everything from here on out is a proper command, with potentially labels and predicates
@@ -629,7 +545,7 @@ namespace foz {
                 bool has_link_pred = false;
                 uint16_t pred_tok;
                 uint16_t link_pred = 0;
-                pred_ntok = sscanf(cmd_str, " if not link%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                pred_ntok = sscanf(cmd_str, " if not l%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
                 if (pred_ntok == 3) {
                     has_pred = true;
                     has_link_pred = true;
@@ -637,7 +553,7 @@ namespace foz {
                     inv_pred = true;
                 }
                 else {
-                    pred_ntok = sscanf(cmd_str, " if link%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                    pred_ntok = sscanf(cmd_str, " if l%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
                     if (pred_ntok == 3) {
                         has_pred = true;
                         has_link_pred = true;
@@ -690,7 +606,6 @@ namespace foz {
                 bool cmd_match = false;
                 for (cmd = 0; cmd < NUM_CMD_TYPES; cmd++) {
                     for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
-                        //printf("%s,%s\n",cmd_str2,cmdNames[cmd][i].c_str());
                         if (!strncmp(cmd_str2, cmdNames[cmd][i].c_str(), cmdNames[cmd][i].size())) {
                             cmd_match = true;
                             break;
@@ -713,36 +628,38 @@ namespace foz {
                 uint16_t link = 0;
                 uint16_t distance = 0;
                 switch (cmd) {
-                  /*case PLACE_CMD:*/
+                  case SELECT_CMD:
                   default:
-                    place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "%s p%hu %hu, %hu", place_str, &link, &opt[0], &opt[1]);
-                    if (cmd_ntok == 4) {
-                        valid_cmd = true;
-                    }
+                    valid_cmd = false;
                     break;
                   case MOVE_CMD:
                     place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "%s link%hu  %hu", place_str, &link,  &distance);
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu %hu", place_str, &link,  &distance);
                     if (cmd_ntok == 3) {
                         valid_cmd = true;
                     }
                     break;
                   case LEFT_CMD:
-                      place_str[0] = 0;
-                    cmd_ntok = sscanf(cmd_str2, "%s link%hu", place_str, &link);
+                    place_str[0] = 0;
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
                     }
                     break;
                   case RIGHT_CMD:
-                      cmd_ntok = sscanf(cmd_str2, "%s link%hu", place_str, &link);
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
                     }
                     break;
-                  case GOTO_CMD:
+                  case FIRE_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
 
+                  case GOTO_CMD:
                     place_str[0] = 0;
                     target_str[0] = 0;
                     cmd_ntok = sscanf(cmd_str2, "%s %s", place_str, target_str);
@@ -833,24 +750,6 @@ namespace foz {
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
 
-                    // Let's catch any invalid place commands now
-                    /*if (myTeams[i_team].cmds[i].cmd == PLACE_CMD) {
-                            bool place_valid = true;
-                            if ((myTeams[i_team].cmds[i].opt[0] == 1) && (myTeams[i_team].cmds[i].opt[1] == 1))
-                                place_valid = false;
-                            if ((myTeams[i_team].cmds[i].opt[0] <= 0) || (myTeams[i_team].cmds[i].opt[0] >= 6))
-                                place_valid = false;
-                            if ((myTeams[i_team].cmds[i].opt[1] <= 0) || (myTeams[i_team].cmds[i].opt[1] >= 11))
-                                place_valid = false;
-
-                            if (place_valid == false) {
-                                printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], myTeams[i_team].cmds[i].line);
-                                printf("  place target of p%hu (%hu, %hu) is invalid\n", myTeams[i_team].cmds[i].link, myTeams[i_team].cmds[i].opt[0], myTeams[i_team].cmds[i].opt[1]);
-                                printf("  valid range for placement is ([1-5], [1-10]), and (1, 1) is also not allowed\n");
-                                raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                            }
-                    }*/
-
                 }
             }
 
@@ -904,6 +803,7 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
+                system("pause");
             }
 
         }
