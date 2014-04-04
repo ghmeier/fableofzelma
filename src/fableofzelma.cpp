@@ -46,16 +46,13 @@ namespace foz {
         // Set the random seed here
         srand(0);
         compileTeams();
-        myWorld.compile(myConfig);
-        myStatus.mode = GAME_START;
+        myWorld.compile(&myConfig, &myStatus);
 
-        //set game timer
-        myStatus.time_ms = 30000.0; //start timer at 30 sec
+        // Initialize game status
+        myStatus.mode = GAME_START;
         framecount = 0;
         for (uint8_t i = 0; i < 4; i++) {
             myStatus.scores[i] = 0;
-            myTeams[i].budget = 0;
-            myTeams[i].timer_ms = 0;
             myTeams[i].cur_cmd = 0;
             myTeams[i].cmds_done = false;
             myTeams[i].move_count = 0;
@@ -205,15 +202,11 @@ namespace foz {
             }
         }
 
-        //update times
-        myStatus.time_ms -= 1000.0/FRAME_RATE;
-        if (myStatus.time_ms <= 0.0) {  // Check for the gameDone condition
-            myStatus.time_ms = 0.0;
+        //update time
+        myStatus.timer_ms -= 1000.0/FRAME_RATE;
+        if (myStatus.timer_ms <= 0.0) {  // Check for the gameDone condition
+            myStatus.timer_ms = 0.0;
             myStatus.mode = GAME_END;
-        }
-
-        for (uint16_t i = 0; i < 4; i++) {
-            myTeams[i].timer_ms += elapsed_ms;
         }
 
         framecount++;
@@ -407,7 +400,7 @@ namespace foz {
             myStatus.scores[i_team] = 0;
             team = &myTeams[i_team];
 
-            // Copy the file name, removing the .fpl extension
+            // Copy the file name, removing the .zuf extension
             team->name = (char *)calloc(strlen(myConfig.team_fname[i_team])-3, sizeof(char));
             if (!team->name) {
                 raise_error(ERR_NOMEM, (char *)"team->name");
@@ -430,9 +423,9 @@ namespace foz {
                 select_str1[0] = 0;select_str2[0] = 0;
 
                 strlower(linebuf);
+
                 // If we have a '#', the line is a comment and we can skip it
                 // We can also skip blank lines
-
                 if ((fgets_ret == NULL) || (linebuf == 0) || (linebuf[0] == '#') ||
                     (linebuf[0] == 10) || (linebuf[0] == 13)) {
                     continue;
@@ -440,12 +433,12 @@ namespace foz {
 
 
                 bool select_match = false;
-                bool plant_match = false;
+                bool link_match = false;
 
                 foz::Link *local_link;
 
                 // Select instructions are first.
-                select_ntok = sscanf(linebuf, " %s link%hu.%s", select_str1, &select_tok, select_str2);
+                select_ntok = sscanf(linebuf, " %s l%hu %s", select_str1, &select_tok, select_str2);
                 if (select_ntok == 3) {
                     for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
                         if (!strcmp(select_str1, cmdNames[SELECT_CMD][i].c_str())) {
@@ -463,44 +456,37 @@ namespace foz {
 
 
                     // We should have matched a valid select command at this point
-                   /* if ((select_match == false) && (select_done == false)) {
-                        printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
-                        printf("  select command is invalid\n");
-                        printf("  command was %s\n", linebuf);
-                        raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                    }*/
                     if (select_match == false) {
                         goto L1;
                     }
 
                     // It's a valid command, let's see what we selected
-                    for (uint8_t p = 0; p < NUM_LINK; p++) {
-                        uint8_t i;
-                        for (i = 0; i < NUM_LINK_SPELLINGS; i++) {
-                            if (!strcmp(select_str2, linkNames[p][i].c_str())) {
-                                plant_match = true;
+                    for (uint8_t l = 0; l < NUM_LINK_TYPE; l++) {
+                        for (uint8_t i = 0; i < NUM_LINK_SPELLINGS; i++) {
+                            if (!strcmp(select_str2, linkNames[l][i].c_str())) {
+                                link_match = true;
                                 break;
                             }
                         }
-                        if (plant_match == true) {
+                        if (link_match == true) {
 
-                            // Did we duplicate a plant ID?
-                            for (uint16_t p2 = 0; p2 < myLinks[i_team].size(); p2++) {
-                                if (myLinks[i_team][p2].getID() == select_tok) {
+                            // Did we duplicate a link ID?
+                            for (uint16_t l2 = 0; l2 < myLinks[i_team].size(); l2++) {
+                                if (myLinks[i_team][l2].getID() == select_tok) {
                                     printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
                                     printf("  duplicate link ID - link%hu was already selected\n", select_tok);
                                     raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                                 }
                             }
 
-                            //myTeams[i_team].budget += plantCosts[p]; <--This is for if we need to buy Links
+                            myTeams[i_team].budget += linkCosts[l];
                             if (myTeams[i_team].budget > myStatus.budget) {
                                 printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
                                 printf("  team is over budget\n");
                                 printf("  budget limit is %hu\n", myStatus.budget);
                                 raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                             }
-                            local_link = new Link(p, select_tok);
+                            local_link = new Link(l, select_tok);
                             // We don't have portal plants
                             /*if (p == PORTAL_PLANT) {
                                 if ((i == 0) || (i == 1)) { // H_PORTAL
@@ -538,7 +524,7 @@ namespace foz {
                         }
                     }
 
-                    if (plant_match == false) {
+                    if (link_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
                         printf("  invalid link type\n");
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);

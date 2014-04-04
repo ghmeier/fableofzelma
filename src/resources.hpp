@@ -17,10 +17,16 @@
 
 #pragma once
 
+/* Command types and spellings */
+#define NUM_CMD_SPELLINGS 3
+typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, FIRE_CMD, GOTO_CMD, NUM_CMD_TYPES} CMD_TYPE;
+extern std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
+
 /* Predicate types and spellings */
 #define NUM_PRED_SPELLINGS 2
 typedef enum {ALWAYS_PRED=0, NEVER_PRED, READY_PRED, ALIVE_PRED, DEAD_PRED, DAMAGE_PRED, EAT_PRED, HIT_PRED, SCORE_PRED, WINNING_PRED, LOSING_PRED, EMPTY_PRED, PASSED_PRED, NUM_PRED_TYPES} PRED_TYPE;
 extern std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS];
+
 
 /* Sound effect file enum */
 typedef enum {SFX_BIGITEM=0, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX} SFX_ENUM;

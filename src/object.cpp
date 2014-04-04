@@ -11,12 +11,10 @@
  *
  *
  * NOTES:
- * 2/18/13 by JAZ::Design created.
+ * 4/04/14 by JAZ::Design created.
  *****************************************************************************/
 
-#pragma once
 #include "fableofzelma.hpp"
-#include "links.hpp"
 
 namespace foz {
 

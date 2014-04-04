@@ -2,6 +2,20 @@
 # Iowa State University
 # world1.zmf - example Fable of Zelma Map File
 
+
+# The '#' symbol denotes comments.
+# Comments are only detected at the beginning of a line
+
+
+# Set the run-time. The game ends either when the clock goes down to 0
+# or when there are no commands remaining.
+.time 270000
+
+
+# Set the total budget for links. Note we are specifying the per-team budget here.
+#
+.budget 2500
+
 # This defines a simple 2x2 map
 .size 2 2
 .rooms

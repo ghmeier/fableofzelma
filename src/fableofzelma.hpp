@@ -72,6 +72,7 @@
 #define TEAM_DIR_DEFAULT "scripts/users/"
 #define MAP_FNAME_DEFAULT "default.zmf"
 #define TEAM_FNAME_DEFAULT "default.zuf"
+#define TIME_MS_DEFAULT 300000
 
 typedef enum {DEMO_START=0, DEMO_MID, DEMO_END, GAME_START, GAME_MID, GAME_END} MODE_TYPE;
 
@@ -112,10 +113,21 @@ namespace foz {
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
-        void draw2();
         ~Room();
     };
 
+    /* Status structure that contains score and other details */
+    class Status {
+        public:
+            MODE_TYPE mode;
+            int16_t scores[4];
+            float timer_ms;
+            uint16_t budget;
+            uint8_t main_song;
+            bool end_music;
+            uint8_t vol_counter;
+            uint16_t music_buffer;
+    };
 
     /* World information */
     class World {
@@ -124,7 +136,7 @@ namespace foz {
         std::vector< std::vector<Room> > myRooms;
 
         /* Main functions (world.cpp) */
-        void compile(Config myConfig);
+        void compile(Config *myConfig, Status *myStatus);
         void draw();
         ~World();
     };
@@ -168,7 +180,6 @@ namespace foz {
             uint32_t status;
             char *name;
             uint16_t budget;
-            int32_t timer_ms;
             uint16_t cur_cmd;
             uint16_t move_count;
             bool cmds_done;
@@ -186,20 +197,7 @@ namespace foz {
             uint16_t (*spriteMap)[4];
     };
 
-    /* Status structure that contains score and other details */
-    class Status {
-        public:
-            MODE_TYPE mode;
-            int16_t scores[4];
-            int timer;
-            float time_ms;
-            uint16_t budget;
-            uint8_t main_song;
-            bool day;
-            bool end_music;
-            uint8_t vol_counter;
-            uint16_t music_buffer;
-    };
+
 
 /* Object class. Each link/enemy has multiple objects, each with links to the parent
 * object and (potentially) multiple children. */

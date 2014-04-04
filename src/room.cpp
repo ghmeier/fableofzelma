@@ -151,108 +151,8 @@ namespace foz {
     /*****************************************************************************
     * Function: Room::draw()
     * Description: Draws the room, tile by tile
-    *****************************************************************************
-    void Room::draw() {
-
-        #define XSTART (-9.0/16.0)
-        #define YSTART (1.0)
-        #define XWIDTH (18.0/16.0)
-        #define YHEIGHT (-2.0)
-
-        float texCoords[6];
-        uint16_t i, j;
-
-        getTexCoords(TEX_BASIC_ROOM, WHOLE_ROOM, texCoords);
-        glBindTexture(GL_TEXTURE_2D, myGame->myTextures[TEX_BASIC_ROOM].texHandle);
-        glBegin(GL_QUADS);
-
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(XSTART, YSTART, WALL_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(XSTART+XWIDTH, YSTART, WALL_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(XSTART+XWIDTH, YSTART+YHEIGHT, WALL_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(XSTART, YSTART+YHEIGHT, WALL_DEPTH);
-
-
-        // Iterate through the room - do we have any drawable values?
-        for (i = 0; i < height; i++) {
-            for (j = 0; j < width; j++) {
-                if (myTiles[i][j] != DOOR_RIGHT) {
-                    continue;
-                }
-
-                // Left door
-                if (j == 0) {
-
-                    getTexCoords(TEX_BASIC_ROOM, DOOR_LEFT, texCoords);
-                    glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(XSTART+(j+1)*XWIDTH/width, YSTART+(i-0.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(XSTART+(j+1+75.0/58)*XWIDTH/width, YSTART+(i-0.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[3]);
-                    glVertex3f(XSTART+(j+1+75.0/58)*XWIDTH/width, YSTART+(i+1.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[0], texCoords[3]);
-                    glVertex3f(XSTART+(j+1)*XWIDTH/width, YSTART+(i+1.5)*YHEIGHT/height, WALL_DEPTH);
-                }
-
-                // Right door
-                if (j == (width-1)) {
-
-                    getTexCoords(TEX_BASIC_ROOM, DOOR_RIGHT, texCoords);
-                    glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(XSTART+(j-75.0/58)*XWIDTH/width, YSTART+(i-0.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(XSTART+(j)*XWIDTH/width, YSTART+(i-0.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[3]);
-                    glVertex3f(XSTART+(j)*XWIDTH/width, YSTART+(i+1.5)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[0], texCoords[3]);
-                    glVertex3f(XSTART+(j-75.0/58)*XWIDTH/width, YSTART+(i+1.5)*YHEIGHT/height, WALL_DEPTH);
-                }
-
-                // Top door
-                if (i == 0) {
-
-                    getTexCoords(TEX_BASIC_ROOM, DOOR_BOTTOM, texCoords);
-                    glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(XSTART+(j-0.5)*XWIDTH/width, YSTART+(i+1)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(XSTART+(j+1.5)*XWIDTH/width, YSTART+(i+1)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[3]);
-                    glVertex3f(XSTART+(j+1.5)*XWIDTH/width, YSTART+(i+1+75.0/58)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[0], texCoords[3]);
-                    glVertex3f(XSTART+(j-0.5)*XWIDTH/width, YSTART+(i+1+75.0/58)*YHEIGHT/height, WALL_DEPTH);
-                }
-
-                // Bottom door
-                if (i == (height-1)) {
-
-                    getTexCoords(TEX_BASIC_ROOM, DOOR_TOP, texCoords);
-                    glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(XSTART+(j-0.5)*XWIDTH/width, YSTART+(i-75.0/58)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(XSTART+(j+1.5)*XWIDTH/width, YSTART+(i-75.0/58)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[3]);
-                    glVertex3f(XSTART+(j+1.5)*XWIDTH/width, YSTART+(i)*YHEIGHT/height, WALL_DEPTH);
-                    glTexCoord2d(texCoords[0], texCoords[3]);
-                    glVertex3f(XSTART+(j-0.5)*XWIDTH/width, YSTART+(i)*YHEIGHT/height, WALL_DEPTH);
-                }
-
-
-            }
-        }
-
-        glEnd();
-        return;
-    }
-    */
-
-    /*****************************************************************************
-    * Function: Room::draw2()
-    * Description: Draws the room, tile by tile
     *****************************************************************************/
-    void Room::draw2(){
+    void Room::draw(){
 
         float texCoords[6];
 
@@ -282,8 +182,8 @@ namespace foz {
         glVertex3f(ROOM_START_X, ROOM_START_Y, CORNER_DEPTH);
 
         // North Wall
+        getTexCoords(TEX_BASIC_ROOM, WALL_TOP_CENTER, texCoords);
         for (uint16_t j = 1; j < (width-1); j++) {
-            getTexCoords(TEX_BASIC_ROOM, WALL_TOP_CENTER, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
             glVertex3f(ROOM_START_X+ROOM_WALL_SIZE+(j-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE, WALL_DEPTH);
             glTexCoord2d(texCoords[2], texCoords[1]);
@@ -293,6 +193,7 @@ namespace foz {
             glTexCoord2d(texCoords[0], texCoords[3]);
             glVertex3f(ROOM_START_X+ROOM_WALL_SIZE+(j-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y, WALL_DEPTH);
         }
+
         // NE corner
         getTexCoords(TEX_BASIC_ROOM, WALL_TOP_RIGHT, texCoords);
         glTexCoord2d(texCoords[0], texCoords[1]);
@@ -306,8 +207,8 @@ namespace foz {
 
 
         // West Wall
+        getTexCoords(TEX_BASIC_ROOM, WALL_LEFT, texCoords);
         for (uint16_t j = 1; j < (height-1); j++) {
-            getTexCoords(TEX_BASIC_ROOM, WALL_LEFT, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
             glVertex3f(ROOM_START_X, ROOM_START_Y-ROOM_WALL_SIZE-j*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             glTexCoord2d(texCoords[2], texCoords[1]);
@@ -319,8 +220,8 @@ namespace foz {
         }
 
         // East Wall
+        getTexCoords(TEX_BASIC_ROOM, WALL_RIGHT, texCoords);
         for (uint16_t j = 1; j < (height-1); j++) {
-            getTexCoords(TEX_BASIC_ROOM, WALL_RIGHT, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
             glVertex3f(ROOM_START_X + ROOM_WALL_SIZE +(width-2)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-j*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             glTexCoord2d(texCoords[2], texCoords[1]);
@@ -345,9 +246,8 @@ namespace foz {
         glVertex3f(ROOM_START_X, ROOM_START_Y-ROOM_WALL_SIZE-(height-2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, CORNER_DEPTH);
 
         // South Wall
+        getTexCoords(TEX_BASIC_ROOM, WALL_BOTTOM, texCoords);
         for (uint16_t j = 1; j < (width-1); j++) {
-
-            getTexCoords(TEX_BASIC_ROOM, WALL_BOTTOM, texCoords);
             glTexCoord2d(texCoords[0], texCoords[1]);
             glVertex3f(ROOM_START_X+ROOM_WALL_SIZE+(j-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-2*ROOM_WALL_SIZE-(height - 2)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             glTexCoord2d(texCoords[2], texCoords[1]);
@@ -373,67 +273,70 @@ namespace foz {
         // Cycles through possible places for a door
         // North Door?
         if(myTiles[0][6] == DOOR_CHECK){
-        getTexCoords(TEX_BASIC_ROOM, DOOR_TOP, texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE + FLOOR_BORDER, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE + FLOOR_BORDER, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE + DOOR_HEIGHT + FLOOR_BORDER, FRONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE + DOOR_HEIGHT + FLOOR_BORDER, FRONT_DEPTH);
-        }
-        // South Door?
-        if(myTiles[12][6] == DOOR_CHECK){
-        getTexCoords(TEX_BASIC_ROOM, DOOR_BOTTOM, texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER - DOOR_HEIGHT, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER - DOOR_HEIGHT, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER, FRONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER, FRONT_DEPTH);
-        }
-        // West Door?
-        if(myTiles[6][0] == DOOR_CHECK){
-        getTexCoords(TEX_BASIC_ROOM, DOOR_LEFT, texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER - DOOR_HEIGHT, -58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER, -58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER, 58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER - DOOR_HEIGHT, 58, FRONT_DEPTH);
-        }
-        // East Door?
-        if(myTiles[6][12] == DOOR_CHECK){
-        getTexCoords(TEX_BASIC_ROOM, DOOR_RIGHT, texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, -58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER + DOOR_HEIGHT, -58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER + DOOR_HEIGHT, 58, FRONT_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, 58, FRONT_DEPTH);
+            getTexCoords(TEX_BASIC_ROOM, DOOR_TOP, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE + FLOOR_BORDER, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE + FLOOR_BORDER, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE + DOOR_HEIGHT + FLOOR_BORDER, FRONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE + DOOR_HEIGHT + FLOOR_BORDER, FRONT_DEPTH);
         }
 
-     // Floor Tiles
-     for (uint16_t i = 1; i < (width - 1); i++) {
+        // South Door?
+        if(myTiles[12][6] == DOOR_CHECK){
+            getTexCoords(TEX_BASIC_ROOM, DOOR_BOTTOM, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER - DOOR_HEIGHT, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER - DOOR_HEIGHT, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER, FRONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(-58, ROOM_START_Y - ROOM_WALL_SIZE - (width - 2)*ROOM_MIDDLE_SIZE - FLOOR_BORDER, FRONT_DEPTH);
+        }
+
+        // West Door?
+        if(myTiles[6][0] == DOOR_CHECK){
+            getTexCoords(TEX_BASIC_ROOM, DOOR_LEFT, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER - DOOR_HEIGHT, -58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER, -58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER, 58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE - FLOOR_BORDER - DOOR_HEIGHT, 58, FRONT_DEPTH);
+        }
+
+        // East Door?
+        if(myTiles[6][12] == DOOR_CHECK){
+            getTexCoords(TEX_BASIC_ROOM, DOOR_RIGHT, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, -58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER + DOOR_HEIGHT, -58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER + DOOR_HEIGHT, 58, FRONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (width - 2)*ROOM_MIDDLE_SIZE + FLOOR_BORDER, 58, FRONT_DEPTH);
+        }
+
+        // Floor Tiles
+        for (uint16_t i = 1; i < (width - 1); i++) {
             for (uint16_t j = 1; j < (height - 1); j++) {
-        getTexCoords(TEX_BASIC_ROOM, myTiles[j][i], texCoords);
-        glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j)*ROOM_MIDDLE_SIZE, FLOOR_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
-        glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
-        glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
+                getTexCoords(TEX_BASIC_ROOM, myTiles[j][i], texCoords);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j)*ROOM_MIDDLE_SIZE, FLOOR_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             }
-     }
+        }
 
         glEnd();
 

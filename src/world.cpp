@@ -34,11 +34,12 @@ namespace foz {
 
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                myRooms[i][j].draw2();
+                myRooms[i][j].draw();
                 glTranslatef(1080.0, 0.0, 0.0);
             }
             glTranslatef(-1080.0*(width), -1080.0, 0.0);
         }
+
         // Resets Matrix so it draws objects starting in top left room after
         // drawing the rooms
         glTranslatef(0, 3240, 0);
@@ -51,7 +52,7 @@ namespace foz {
     * as well as the scripts/maps/ directory for the file) and builds the
     * individual rooms.
     *****************************************************************************/
-    void World::compile(Config myConfig) {
+    void World::compile(Config *myConfig, Status *myStatus) {
 
         std::ifstream infile;
         char *fname;
@@ -59,38 +60,43 @@ namespace foz {
         char *linebuf_temp;
         std::vector<char *> linebuf_tok;
         uint32_t line_count;
-        uint8_t size_ntok, room_ntok;
+        uint8_t size_ntok, room_ntok, budget_ntok, time_ntok;
         uint8_t rev_tok, flip_tok;
-        uint16_t width_tok, height_tok, room_tok;
+        uint16_t width_tok, height_tok, room_tok, budget_tok;
+        uint32_t time_tok;
         uint16_t room_i=0, room_j=0;
-        bool size_flag=false, room_flag=false;
+        bool size_flag=false, budget_flag=false, room_flag=false;
         foz::Room *temp_room;
 
-
         /* Open and compile the map file */
-        if (myConfig.debug_level > 1) {
-            printf("Compiling map file %s\n", myConfig.map_fname);
+        if (myConfig->debug_level > 1) {
+            printf("Compiling map file %s\n", myConfig->map_fname);
         }
 
         /* Does the file exist in the current directory? */
-        infile.open(myConfig.map_fname, std::ifstream::in);
+        infile.open(myConfig->map_fname, std::ifstream::in);
         if (!infile) {
-            if (myConfig.debug_level > 1) {
-                printf("Map file %s not found in root directory, checking %s\n", myConfig.map_fname, MAP_DIR_DEFAULT);
+            if (myConfig->debug_level > 1) {
+                printf("Map file %s not found in root directory, checking %s\n", myConfig->map_fname, MAP_DIR_DEFAULT);
             }
 
             // If not, just check in the MAP_DIR_DEFAULT directory
-            fname = (char *)malloc(strlen(myConfig.map_fname)+strlen(MAP_DIR_DEFAULT)+1);
+            fname = (char *)malloc(strlen(myConfig->map_fname)+strlen(MAP_DIR_DEFAULT)+1);
             strcpy(fname, MAP_DIR_DEFAULT);
-            strcat(fname, myConfig.map_fname);
+            strcat(fname, myConfig->map_fname);
             infile.open(fname, std::ifstream::in);
             if (!infile) {
-                raise_error(ERR_NOFILE3, myConfig.map_fname);
+                raise_error(ERR_NOFILE3, myConfig->map_fname);
             }
         }
 
-        // We have opened the file successfully. Parse through it.
+        // We have opened the file successfully. Set defaults, and parse through it.
         size_flag = false;
+        budget_flag = false;
+        myStatus->timer_ms = TIME_MS_DEFAULT;
+        myStatus->main_song = 1;
+
+
         for (line_count=1; !infile.eof(); line_count++) {
             infile.getline(linebuf, 256);
             strlower(linebuf);
@@ -105,10 +111,10 @@ namespace foz {
             if (size_flag && room_flag) {
 
                 if (room_i >= height) {
-                    printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                    printf("Error compiling %s, line %d\n", myConfig->map_fname, line_count);
                     printf("  Expected no more than %u lines of rooms\n", height);
                     printf("  Invalid line is \'%s\'", linebuf);
-                    raise_error(ERR_BADFILE3, myConfig.map_fname);
+                    raise_error(ERR_BADFILE3, myConfig->map_fname);
                 }
 
                 linebuf_temp = strdup(linebuf);
@@ -123,13 +129,13 @@ namespace foz {
                     room_ntok = sscanf(linebuf_tok[room_j], " %03hu-%c%c", &room_tok, &rev_tok, &flip_tok);
 
                     if (room_ntok != 3) {
-                        printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                        printf("Error compiling %s, line %d\n", myConfig->map_fname, line_count);
                         printf("  Invalid room specification in command \'%s\'", linebuf);
-                        raise_error(ERR_BADFILE3, myConfig.map_fname);
+                        raise_error(ERR_BADFILE3, myConfig->map_fname);
                     }
 
                     /* Open and compile the room file */
-                    if (myConfig.debug_level > 1) {
+                    if (myConfig->debug_level > 1) {
                         printf("Compiling room file room%03d.zrf\n", room_tok);
                     }
 
@@ -139,7 +145,7 @@ namespace foz {
                     delete temp_room;
 
                     // We are done compiling, so set up the pointers
-                    if (myConfig.debug_level > 1) {
+                    if (myConfig->debug_level > 1) {
                         printf("Room file compilation complete\n");
                     }
 
@@ -160,12 +166,26 @@ namespace foz {
                 size_ntok = sscanf(linebuf, " .size %hu,%hu", &width_tok, &height_tok);
             }
 
+            // Check for .budget information
+            budget_ntok = sscanf(linebuf, " .budget %hu", &budget_tok);
+            if (budget_ntok == 1) {
+                budget_flag = true;
+                myStatus->budget = budget_tok;
+            }
+
+            time_ntok = sscanf(linebuf, " .time %u", &time_tok);
+            if (time_ntok == 1) {
+                myStatus->timer_ms = 1.0*time_tok;
+            }
+
+
             // We've found our .size information
             if (size_ntok == 2) {
                 size_flag = true;
                 width = width_tok;
                 height = height_tok;
             }
+
             else {
                 // It's not .size information, so look for the .room flag
                 sscanf(linebuf, " %s", room_str);
@@ -174,17 +194,23 @@ namespace foz {
                     myRooms.resize(height);
                 }
                 else {
-                    printf("Error compiling %s, line %d\n", myConfig.map_fname, line_count);
+                    printf("Error compiling %s, line %d\n", myConfig->map_fname, line_count);
                     printf("  Unknown or unexpected command \'%s\'", linebuf);
-                    raise_error(ERR_BADFILE3, myConfig.map_fname);
+                    raise_error(ERR_BADFILE3, myConfig->map_fname);
                 }
             }
 
         }
 
+        // Check for required values
+        if (budget_flag != true) {
+            printf("Error compiling %s\n", myConfig->map_fname);
+            printf("  No budget specification\n");
+            raise_error(ERR_BADFILE3, myConfig->map_fname);
+        }
 
         // We are done compiling, so set up the pointers
-        if (myConfig.debug_level > 1) {
+        if (myConfig->debug_level > 1) {
             printf("Map file compilation complete\n");
         }
 

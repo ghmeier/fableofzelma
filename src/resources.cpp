@@ -19,6 +19,16 @@
 #include "fableofzelma.hpp"
 
 
+/* Command spellings */
+std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
+    {"select", "buy", "use"},
+    {"move", "run", "go"},
+    {"left", "ccw", "west"},
+    {"right", "cw", "east"},
+    {"swing", "fire", "action"},
+    {"goto", "jump", "loop"}
+    };
+
 /* Predicate spellings */
 std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS] = {
     {"always", "true"},
@@ -35,6 +45,7 @@ std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS] = {
     {"empty", "free"},
     {"passed", "behind"}
     };
+
 
 /* Texture files */
 std::string texFiles[NUM_TEXTURES] = {
@@ -76,10 +87,6 @@ uint16_t link_object_spriteMap_centers[][2] = {
 {606,33}, {655,33}, {699,33}, {737,33}, {776,33}
 
 };
-
-
-
-
 
 
 
