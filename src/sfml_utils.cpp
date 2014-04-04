@@ -145,6 +145,8 @@ namespace foz {
         myTextures[TEX_GREEN_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_PURPLE_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
+        myTextures[TEX_FONTS].spriteMap = Font_spriteMap;
+
 
 
         if (myConfig.debug_level > 3)
@@ -236,6 +238,8 @@ void Game::drawScoreboard(){
     #define CORNER_TWO_START_X 3260
     #define CORNER_TWO_START_Y 0//950
 
+    // TeamNames char *name;
+
 
      float texCoords[6];
      //glViewport(-540,-960,1080,1920); // Makes everything go crazy
@@ -243,6 +247,24 @@ void Game::drawScoreboard(){
       glBindTexture(GL_TEXTURE_2D, myGame->myTextures[TEX_BASIC_ROOM].texHandle);
       glBegin(GL_QUADS);
       int letter[7] = {LETTER_A, LETTER_A, LETTER_B, LETTER_A, LETTER_A, LETTER_A, LETTER_B};
+
+    for(int i = 0; i < 4; i++){
+
+            //for(i = 0; i < 9; i++){
+            //char[9] teamName = myTeams[i].name;
+            //}
+
+        getTexCoords(TEX_BASIC_ROOM, letter[i], texCoords);
+        glTexCoord2d(texCoords[0], texCoords[1]);
+        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
+        glTexCoord2d(texCoords[2], texCoords[1]);
+        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y - LETTER_HEIGHT, FONT_DEPTH);
+        glTexCoord2d(texCoords[2], texCoords[3]);
+        glVertex3f(CORNER_ONE_START_X + (i+1)*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
+        glTexCoord2d(texCoords[0], texCoords[3]);
+        glVertex3f(CORNER_ONE_START_X + i*LETTER_WIDTH, CORNER_ONE_START_Y, FONT_DEPTH);
+
+    }
 
     for(int i = 0; i < 7; i++){
 

@@ -66,7 +66,8 @@ void Object::SlashNorthAnim(){
         i = 0;
     }
 }
-/*void Object::SlashWestAnim(){
+/*
+void Object::SlashWestAnim(){
     static uint8_t i;
 
     this->sprite = i;
@@ -76,6 +77,7 @@ void Object::SlashNorthAnim(){
         i = 20;
     }
 }
+
 void Object::SlashSouthAnim(){
     static uint8_t i;
 
