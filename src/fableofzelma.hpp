@@ -137,6 +137,7 @@ namespace foz {
 
         /* Main functions (world.cpp) */
         void compile(Config *myConfig, Status *myStatus);
+        void draw();
         ~World();
     };
 
@@ -211,8 +212,6 @@ namespace foz {
             void compileTeams();
             void endGame();
 
-            /* Drawing functions (world.cpp) */
-            void drawGame();
 
             /* SFML functions (sfml_utils.cpp) */
             void initSFML();

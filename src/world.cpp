@@ -21,13 +21,11 @@
 namespace foz {
 
     /*****************************************************************************
-    * Function: Game::drawGame
+    * Function: World::draw
     * Description: Draws the structure of the rooms in the world.
     *****************************************************************************/
-    void Game::drawGame() {
+    void World::draw() {
         uint16_t i, j, k, i_team;
-        uint8_t width = myWorld.width;
-        uint8_t height = myWorld.height;
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
@@ -36,7 +34,7 @@ namespace foz {
 
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
-                myWorld.myRooms[i][j].draw();
+                myRooms[i][j].draw();
                 glTranslatef(1080.0, 0.0, 0.0);
             }
             glTranslatef(-1080.0*(width), -1080.0, 0.0);
@@ -49,9 +47,11 @@ namespace foz {
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
                 for (i_team = 0; i_team < 4; i_team++) {
-                    for (k = 0; k < myLinks[i_team].size(); k++) {
-                        if (myLinks[i_team][k].active == true) {
-                            myLinks[i_team][k].draw();
+                    for (k = 0; k < myGame->myLinks[i_team].size(); k++) {
+                        if ((myGame->myLinks[i_team][k].active == true) &&
+                            (myGame->myLinks[i_team][k].room_x == i) &&
+                            (myGame->myLinks[i_team][k].room_y == j)) {
+                            myGame->myLinks[i_team][k].draw();
                         }
                     }
                 }

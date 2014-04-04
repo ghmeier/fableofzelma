@@ -16,8 +16,9 @@
 #
 .budget 2500
 
-# This defines a simple 2x2 map
-.size 2 2
+# This defines a simple 3x3 map
+.size 3 3
 .rooms
-000-nn 000-rn
-000-nf 000-rf
+000-nn 001-nn 000-rn
+002-nn 003-nn 002-rn
+000-nf 001-nf 000-rf
