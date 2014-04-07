@@ -57,6 +57,14 @@ namespace foz {
                     }
                 sprite++;
             }
+            /* FIX ME
+            if (direction == DIRECTION_EAST) {
+                    if (sprite == 77){
+                        sprite = 71;
+                    }
+                sprite++;
+            }
+            */
             break;
 
 
@@ -79,6 +87,14 @@ namespace foz {
                     }
                 sprite++;
             }
+            /* FIX ME
+            if (direction == DIRECTION_EAST) {
+                    if (sprite == 77){
+                        sprite = 71;
+                    }
+                sprite++;
+            }
+            */
             break;
         }
 

@@ -160,12 +160,33 @@ namespace foz {
                 printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].move_count);
                 // Need a "dir" value
                 if (myLinks[i][0].direction == DIRECTION_NORTH) {
+                    myLinks[i][0].y += 5.0;
+                }
+                if (myLinks[i][0].direction == DIRECTION_WEST) {
+                    myLinks[i][0].x -= 5.0;
+                }
+                if (myLinks[i][0].direction == DIRECTION_SOUTH) {
                     myLinks[i][0].y -= 5.0;
+                }
+                if (myLinks[i][0].direction == DIRECTION_EAST) {
+                    myLinks[i][0].x += 5.0;
                 }
                 myLinks[i][0].update(mycmd->cmd);
                 myTeams[i].move_count += 1;
             }
+
+         else if((mycmd->cmd == ATTACK_CMD) && (myTeams[i].attack_count < mycmd->opt[0])) {
+
+                //print the current command each frame
+                printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].attack_count);
+                // Need a "dir" value
+
+                myLinks[i][0].update(mycmd->cmd);
+                myTeams[i].attack_count += 1;
+            }
+
         }
+
 
         //update time
         myStatus.timer_ms -= 1000.0/FRAME_RATE;
@@ -176,6 +197,7 @@ namespace foz {
 
         framecount++;
     }
+
 
 
     /*****************************************************************************
@@ -617,8 +639,8 @@ namespace foz {
                         valid_cmd = true;
                     }
                     break;
-                  case FIRE_CMD:
-                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                  case ATTACK_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "l%hu.%s", &link, place_str);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
                     }
