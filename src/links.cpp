@@ -40,12 +40,67 @@ namespace foz {
         switch (cmd) {
         case MOVE_CMD:
             if (direction == DIRECTION_NORTH) {
+                    if (sprite == 65){
+                        sprite = 59;
+                    }
                 sprite++;
             }
+            if (direction == DIRECTION_WEST) {
+                    if (sprite == 71){
+                        sprite = 65;
+                    }
+                sprite++;
+            }
+            if (direction == DIRECTION_SOUTH) {
+                    if (sprite == 77){
+                        sprite = 71;
+                    }
+                sprite++;
+            }
+            /* FIX ME
+            if (direction == DIRECTION_EAST) {
+                    if (sprite == 77){
+                        sprite = 71;
+                    }
+                sprite++;
+            }
+            */
+            break;
+
+
+        case ATTACK_CMD:
+            if (direction == DIRECTION_NORTH) {
+                    if (sprite == 20){
+                        sprite = -1;
+                    }
+                sprite++;
+            }
+            if (direction == DIRECTION_WEST) {
+                    if (sprite == 40){
+                        sprite = 20;
+                    }
+                sprite++;
+            }
+            if (direction == DIRECTION_SOUTH) {
+                    if (sprite == 60){
+                        sprite = 40;
+                    }
+                sprite++;
+            }
+            /* FIX ME
+            if (direction == DIRECTION_EAST) {
+                    if (sprite == 77){
+                        sprite = 71;
+                    }
+                sprite++;
+            }
+            */
             break;
         }
 
     }
+
+
 
 
 

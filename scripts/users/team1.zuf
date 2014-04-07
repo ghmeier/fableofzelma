@@ -9,5 +9,6 @@ L1.left
 L1.move 3
 L1.left
 L1.move 3
+L1.attack
 L1.left
 goto start
