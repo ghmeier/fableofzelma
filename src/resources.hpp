@@ -80,13 +80,19 @@ extern uint16_t link_object_spriteMap_centers[][2];
 typedef enum
 {WALL_TOP_LEFT, WALL_TOP_CENTER, WALL_TOP_RIGHT, DOOR_LEFT, DOOR_TOP,                                                                                                           //1
 DOOR_RIGHT, WALL_LEFT, FLOOR_TILE, WALL_RIGHT, DOOR_BOTTOM,                                                                                                                     //2
-WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST, LETTER_A, LETTER_B}                                                                                                                   //3
+WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST}                                                                                                                   //3
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 
 /* Sprite enum for FONTS */
 typedef enum
 {LETTER_0, LETTER_1, LETTER_2, LETTER_3, LETTER_4, LETTER_5, LETTER_6, LETTER_7, LETTER_8, LETTER_9,
-LETTER_NEG}                                                                                                                                                                   //20
+LETTER_NEG, LETTER_A, LETTER_B, LETTER_C, LETTER_D, LETTER_E, LETTER_F, LETTER_G,LETTER_H, LETTER_I,
+LETTER_J, LETTER_K, LETTER_L, LETTER_M, LETTER_N, LETTER_O, LETTER_P, LETTER_Q, LETTER_R, LETTER_S,
+LETTER_T, LETTER_U, LETTER_V, LETTER_W, LETTER_X, LETTER_Y, LETTER_Z, LETTER_a, LETTER_b, LETTER_c,
+LETTER_d, LETTER_e, LETTER_f, LETTER_g, LETTER_h, LETTER_i, LETTER_j, LETTER_k, LETTER_l, LETTER_m,
+LETTER_n, LETTER_o, LETTER_p, LETTER_q, LETTER_r, LETTER_s, LETTER_t, LETTER_u, LETTER_v, LETTER_w,
+LETTER_x, LETTER_y, LETTER_z, NUM_FONTS}                                                                                                                                                                   //20
 FONT_ENUM;
 extern uint16_t font_spriteMap[][4];
+

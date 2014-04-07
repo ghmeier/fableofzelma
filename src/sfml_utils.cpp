@@ -147,8 +147,6 @@ namespace foz {
         myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_FONTS].spriteMap = font_spriteMap;
 
-
-
         if (myConfig.debug_level > 3)
             printf("done.\n");
 
@@ -231,76 +229,132 @@ namespace foz {
     *****************************************************************************/
 void Game::drawScoreboard(){
 
-    #define LETTER_WIDTH 70
-    #define LETTER_HEIGHT 90
+    #define NUMBER_WIDTH 70
+    #define NUMBER_HEIGHT 90
+    #define LETTER_WIDTH 80
+    #define LETTER_HEIGHT 88
+
+        float texCoords[6];
+        float baseX = -1480.0, baseY = 100.0;
+
+        // For setting up the Scoreboard Camera
+        float x_left = -1920.0/2.0*myWorld.width;
+        float x_right = 1920.0/2.0*myWorld.width;
+        float y_bottom = -1080.0/2.0*myWorld.height;
+        float y_top = 1080.0/2.0*myWorld.height;
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(x_left, x_right, y_bottom, y_top, FRONT_DEPTH, -BACK_DEPTH);
 
 
+        // Hard-Coded Scores and Names
         myStatus.scores[0] = 4001;
         myStatus.scores[1] = -234;
         myStatus.scores[2] = 7587;
         myStatus.scores[3] = 8864;
 
+        myTeams[0].name = "Team 1";
+        myTeams[1].name = "Team 2";
+        myTeams[2].name = "Team 3";
+        myTeams[3].name = "Team 4";
 
-     float texCoords[6];
-     //glViewport(-540,-960,1080,1920); // Makes everything go crazy
-
- /* Draw the scores */
+        /* Draw the team names */
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-        float baseX = -1480.0, baseY = 0.0;
-        char digits[4];
+        char name[9];
         glBegin(GL_QUADS);
+            for (uint8_t i = 0; i < 4; i++) {
+                snprintf(name, 9, "%-8s", myTeams[i].name);
+                uint16_t font_num;
+                for (uint8_t j = 0; j < 8; j++) {
+                    font_num = NUM_FONTS;
+                    if (name[j] >= 'A' && name[j] <= 'Z') {
+                        font_num = name[j] - 'A' + LETTER_A;
+                    }
+                    if (name[j] >= 'a' && name[j] <= 'z') {
+                        font_num = name[j] - 'a' + LETTER_a;
+                    }
+                    if (name[j] >= '0' && name[j] <= '9') {
+                    font_num = name[j] - '0' + LETTER_0;
+                    }
+
+                    if (font_num != NUM_FONTS) {
+                        getTexCoords(TEX_FONTS, font_num, texCoords);
+                        glTexCoord2d(texCoords[0], texCoords[3]);
+                        glVertex3f(baseX + j*LETTER_WIDTH, baseY + LETTER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[3]);
+                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY + LETTER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[1]);
+                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
+                        glTexCoord2d(texCoords[0], texCoords[1]);
+                        glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
+                    }
+                }
+            switch(i){
+            case 0:
+                baseX = 2900;
+                baseY = 100;
+                break;
+            case 1:
+                baseY = -2200;
+                baseX = -1480;
+                break;
+            case 2:
+                baseY = -2200;
+                baseX = 2900;
+                break;
+
+                }
+            }
+
+    /* Draw the scores */
+     baseX = -1480.0;
+     baseY = 0.0;
+        char digits[4];
             for (uint8_t i = 0; i < 4; i++) {
 
                 sprintf(digits,"%3d",myStatus.scores[i]);
 
-                for (uint8_t j = 0; j < 4; j++) {
+                        /* Draw Rupee Symbol
+                        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_RUPEES].texHandle);
+                        getTexCoords(TEX_RUPEES, i, texCoords);
 
-                        switch(digits[j]){
-                        case '-':
-                            getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
-                            break;
-                        case '0':
-                             getTexCoords(TEX_FONTS, LETTER_0, texCoords);
-                             break;
-                        case '1':
-                            getTexCoords(TEX_FONTS, LETTER_1, texCoords);
-                            break;
-                        case '2':
-                             getTexCoords(TEX_FONTS, LETTER_2, texCoords);
-                             break;
-                        case '3':
-                            getTexCoords(TEX_FONTS, LETTER_3, texCoords);
-                            break;
-                        case '4':
-                             getTexCoords(TEX_FONTS, LETTER_4, texCoords);
-                             break;
-                        case '5':
-                            getTexCoords(TEX_FONTS, LETTER_5, texCoords);
-                            break;
-                        case '6':
-                             getTexCoords(TEX_FONTS, LETTER_6, texCoords);
-                             break;
-                        case '7':
-                            getTexCoords(TEX_FONTS, LETTER_7, texCoords);
-                            break;
-                        case '8':
-                             getTexCoords(TEX_FONTS, LETTER_8, texCoords);
-                             break;
-                        case '9':
-                            getTexCoords(TEX_FONTS, LETTER_9, texCoords);
-                            break;
-                        }
-
+                    glBegin(GL_QUADS);
                         glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX+LETTER_WIDTH*j, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                        glVertex3f(baseX, baseY - NUMBER_HEIGHT, FONT_DEPTH);
                         glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+LETTER_WIDTH*(j+1), baseY - LETTER_HEIGHT, FONT_DEPTH);
+                        glVertex3f(baseX+NUMBER_WIDTH, baseY - NUMBER_HEIGHT, FONT_DEPTH);
                         glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+LETTER_WIDTH*(j+1), baseY, FONT_DEPTH);
+                        glVertex3f(baseX+NUMBER_WIDTH, baseY, FONT_DEPTH);
                         glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX+LETTER_WIDTH*j, baseY, FONT_DEPTH);
+                        glVertex3f(baseX, baseY, FONT_DEPTH);
+                    glEnd();
+                    */
 
-                        }
+                for (uint8_t j = 0; j < 4; j++) {
+                glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+                    if (digits[j] == '-') {
+                        getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
+                    }
+                    else if (digits[j] != ' ') {
+                        getTexCoords(TEX_FONTS, digits[j] - '0' + LETTER_0, texCoords);
+                    }
+                    if (digits[j] != ' ') {
+
+                    glBegin(GL_QUADS);
+                        glTexCoord2d(texCoords[0], texCoords[1]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[1]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[3]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY, FONT_DEPTH);
+                        glTexCoord2d(texCoords[0], texCoords[3]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
+                    glEnd();
+                    }
+                }
+
+
 
                 switch(i){
             case 0:
@@ -316,8 +370,8 @@ void Game::drawScoreboard(){
                 }
 
                 }
-
-        glEnd();
+    // Reset Camera
+    myCamera.update(true);
 
 }
 

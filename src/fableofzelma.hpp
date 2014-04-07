@@ -154,7 +154,7 @@ namespace foz {
 
         /* Main functions (camera.cpp) */
         void init(foz::World myWorld);
-        void update();
+        void update(bool reposition);
     };
 
     /*Player types of commands*/

@@ -60,10 +60,7 @@ namespace foz {
     * Function: Camera::update
     * Description: Updates the camera position based on state.
     *****************************************************************************/
-    void Camera::update() {
-
-        bool reposition = false;
-
+    void Camera::update(bool reposition) {
 
         switch(state) {
 

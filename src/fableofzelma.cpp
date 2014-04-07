@@ -88,7 +88,7 @@ namespace foz {
             switch (myStatus.mode) {
                 case GAME_START:
                 case GAME_MID:
-                    myCamera.update();
+                    myCamera.update(false);
                     myWorld.draw();
                     drawScoreboard();
 
@@ -183,7 +183,7 @@ namespace foz {
     * Description: Runs the end game sequence.
     *****************************************************************************/
     void Game::endGame() {
-        myCamera.update();
+        myCamera.update(false);
         myWorld.draw();
     }
 
