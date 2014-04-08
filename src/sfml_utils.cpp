@@ -219,7 +219,7 @@ namespace foz {
 //        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-        myCamera.init(myWorld);
+        myCamera.init(&myWorld);
 
     }
 

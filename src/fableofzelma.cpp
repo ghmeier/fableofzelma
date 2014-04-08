@@ -53,6 +53,7 @@ namespace foz {
         framecount = 0;
         for (uint8_t i = 0; i < 4; i++) {
             myStatus.scores[i] = 0;
+            myTeams[i].id = i;
             myTeams[i].cur_cmd = 0;
             myTeams[i].cur_link = 0;
             myTeams[i].cmds_done = false;

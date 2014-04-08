@@ -26,20 +26,20 @@ namespace foz {
     * Description: Camera class initializer. Uses World configuration information
     * in order to decide on a starting position.
     *****************************************************************************/
-    void Camera::init(foz::World myWorld) {
+    void Camera::init(foz::World *myWorld) {
 
         state = CAMERA_INIT;
 
         // Temporary code. Set the 2D view based on the size of the world
-        x_left = -1920.0/2.0*myWorld.width;
-        x_right = 1920.0/2.0*myWorld.width;
-        y_bottom = -1080.0/2.0*myWorld.height;
-        y_top = 1080.0/2.0*myWorld.height;
+        x_left = -1920.0/2.0*myWorld->width;
+        x_right = 1920.0/2.0*myWorld->width;
+        y_bottom = -1080.0/2.0*myWorld->height;
+        y_top = 1080.0/2.0*myWorld->height;
 
         // We need to keep track of what room we are looking at currently, independent of the zoom level
         // This x_pos/y_pos might not be an integer for even-sized worlds.
-        width = myWorld.width;
-        height = myWorld.height;
+        width = myWorld->width;
+        height = myWorld->height;
         x_pos = (width-1)/2.0;
         y_pos = (height-1)/2.0;
         zoom_level = 1.0*width;
@@ -58,6 +58,52 @@ namespace foz {
 
     /*****************************************************************************
     * Function: Camera::update
+    * Description: Updates the camera position based on where a team's Link is.
+    *****************************************************************************/
+    void Camera::update(foz::Team *myTeam) {
+
+        bool reposition = false;
+        foz::Link *myLink;
+
+
+        if (myTeam->cmds_done != true) {
+            myLink = &myGame->myLinks[myTeam->id][myTeam->cur_link];
+        }
+
+        switch(state) {
+
+            case CAMERA_INIT:
+                state = CAMERA_IDLE;
+                break;
+
+            case CAMERA_TEAM_1:
+                // If the team is already done, there is nothing the camera can do
+                if (myTeam->cmds_done != true) {
+                    x_pos = (float)myLink->room_x;
+                    y_pos = (float)myLink->room_y;
+                    zoom_level = 1.0;
+//                    x_left =
+                    //x_left, x_right, y_bottom, y_top;
+                }
+                state = CAMERA_IDLE;
+                break;
+
+            default:
+                break;
+
+        }
+
+        if (reposition == true) {
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(x_left, x_right, y_bottom, y_top, FRONT_DEPTH, -BACK_DEPTH);
+        }
+
+
+    }
+
+    /*****************************************************************************
+    * Function: Camera::update
     * Description: Updates the camera position based on state.
     *****************************************************************************/
     void Camera::update(bool reposition) {
@@ -69,7 +115,7 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_RIGHT:
-                if (x_pos < 1.0) {
+                if (x_pos <= -1.0) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -82,11 +128,12 @@ namespace foz {
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos -= 1.0;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
             case CAMERA_PAN_LEFT:
-                if (x_pos > (width-2.0)) {
+                if (x_pos >= (width)) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -99,11 +146,12 @@ namespace foz {
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos += 1.0;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
             case CAMERA_PAN_DOWN:
-                if (y_pos > (height-2.0)) {
+                if (y_pos >= (height)) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -116,11 +164,12 @@ namespace foz {
                     state = CAMERA_IDLE;
                     y_pan_count = 0;
                     y_pos += 1.0;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
             case CAMERA_PAN_UP:
-                if (y_pos < (1.0)) {
+                if (y_pos <= (-1.0)) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -133,6 +182,7 @@ namespace foz {
                     state = CAMERA_IDLE;
                     y_pan_count = 0;
                     y_pos -= 1.0;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
@@ -150,6 +200,9 @@ namespace foz {
                     state = CAMERA_IDLE;
                     zoom_count = 0;
                     zoom_level -= 1.0;
+                    x_pos -= 1.0;
+                    y_pos -= 1080.0/1920;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
@@ -167,11 +220,11 @@ namespace foz {
                     state = CAMERA_IDLE;
                     zoom_count = 0;
                     zoom_level += 1.0;
+                    x_pos += 1.0;
+                    y_pos += 1080.0/1920;
+                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
-
-
-
 
             default:
                 break;

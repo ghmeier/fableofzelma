@@ -141,21 +141,6 @@ namespace foz {
         ~World();
     };
 
-    /* Camera information */
-    class Camera {
-      public:
-        float x_left, x_right;
-        float y_top, y_bottom;
-        int16_t x_pan_count, y_pan_count, zoom_count;
-        float x_pos, y_pos;
-        float zoom_level;
-        uint16_t width, height;
-        CAMERA_ENUM state;
-
-        /* Main functions (camera.cpp) */
-        void init(foz::World myWorld);
-        void update(bool reposition);
-    };
 
     /*Player types of commands*/
     class cmd_type {
@@ -177,6 +162,7 @@ namespace foz {
     /* Per-team state information */
     class Team {
         public:
+            uint8_t id;
             uint32_t status;
             char *name;
             uint16_t budget;
@@ -188,6 +174,25 @@ namespace foz {
             std::vector<foz::cmd_type> cmds;
 
     };
+
+    /* Camera information */
+    class Camera {
+      public:
+        float x_left, x_right;
+        float y_top, y_bottom;
+        int16_t x_pan_count, y_pan_count, zoom_count;
+        float x_pos, y_pos;
+        float zoom_level;
+        uint16_t width, height;
+        CAMERA_ENUM state;
+
+        /* Main functions (camera.cpp) */
+        void init(foz::World *myWorld);
+        void update(bool reposition);
+        void update(foz::Team *myTeam);
+    };
+
+
 
     /* Texture structure, so that we can more easily swap textures out */
     class Texture {
