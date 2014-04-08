@@ -146,6 +146,7 @@ namespace foz {
         myTextures[TEX_PURPLE_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_FONTS].spriteMap = font_spriteMap;
+        myTextures[TEX_RUPEE].spriteMap = rupee_spriteMap;
 
         if (myConfig.debug_level > 3)
             printf("done.\n");
@@ -262,7 +263,6 @@ void Game::drawScoreboard(){
         /* Draw the team names */
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
         char name[9];
-        glBegin(GL_QUADS);
             for (uint8_t i = 0; i < 4; i++) {
                 snprintf(name, 9, "%-8s", myTeams[i].name);
                 uint16_t font_num;
@@ -279,6 +279,8 @@ void Game::drawScoreboard(){
                     }
 
                     if (font_num != NUM_FONTS) {
+
+                    glBegin(GL_QUADS);
                         getTexCoords(TEX_FONTS, font_num, texCoords);
                         glTexCoord2d(texCoords[0], texCoords[3]);
                         glVertex3f(baseX + j*LETTER_WIDTH, baseY + LETTER_HEIGHT, FONT_DEPTH);
@@ -288,6 +290,8 @@ void Game::drawScoreboard(){
                         glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
                         glTexCoord2d(texCoords[0], texCoords[1]);
                         glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
+                    glEnd();
+
                     }
                 }
             switch(i){
@@ -315,9 +319,19 @@ void Game::drawScoreboard(){
 
                 sprintf(digits,"%3d",myStatus.scores[i]);
 
-                        /* Draw Rupee Symbol
-                        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_RUPEES].texHandle);
-                        getTexCoords(TEX_RUPEES, i, texCoords);
+                    // Gives Rupee Symbol Animation
+                    static int RUPEE_CYCLE = 0;
+                    static int RUPEE_CYCLE_SLOW = 0;
+                    RUPEE_CYCLE_SLOW++;
+                    if(RUPEE_CYCLE_SLOW % 60 == 0){
+                    RUPEE_CYCLE++;
+                    if(RUPEE_CYCLE == 3) RUPEE_CYCLE = 0;
+                    }
+                    if(RUPEE_CYCLE_SLOW == 6000) RUPEE_CYCLE_SLOW = 0;
+
+                        /* Draw Rupee Symbol */
+                        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_RUPEE].texHandle);
+                        getTexCoords(TEX_RUPEE, 3*i + RUPEE_CYCLE, texCoords);
 
                     glBegin(GL_QUADS);
                         glTexCoord2d(texCoords[0], texCoords[1]);
@@ -329,7 +343,7 @@ void Game::drawScoreboard(){
                         glTexCoord2d(texCoords[0], texCoords[3]);
                         glVertex3f(baseX, baseY, FONT_DEPTH);
                     glEnd();
-                    */
+
 
                 for (uint8_t j = 0; j < 4; j++) {
                 glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);

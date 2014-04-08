@@ -37,7 +37,7 @@ typedef enum {MUSIC_MAIN=0, MUSIC_ANNIVERSARY, NUM_MUSIC} MUSIC_ENUM;
 extern std::string musicFiles[NUM_MUSIC];
 
  /* Texture file enum */
-typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, NUM_TEXTURES} TEXTURE_ENUM;
+typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, TEX_RUPEE, NUM_TEXTURES} TEXTURE_ENUM;
 extern std::string texFiles[NUM_TEXTURES];
 
 /* Depth enum */
@@ -95,4 +95,13 @@ LETTER_n, LETTER_o, LETTER_p, LETTER_q, LETTER_r, LETTER_s, LETTER_t, LETTER_u, 
 LETTER_x, LETTER_y, LETTER_z, NUM_FONTS}                                                                                                                                                                   //20
 FONT_ENUM;
 extern uint16_t font_spriteMap[][4];
+
+/*Sprite enum for RUPEE*/
+typedef enum
+{RUPEE_GREEN_ONE = 0, RUPEE_GREEN_TWO, RUPEE_GREEN_THREE,
+RUPEE_PURPLE_ONE, RUPEE_PURPLE_TWO, RUPEE_PURPLE_THREE,
+RUPEE_BLUE_ONE, RUPEE_BLUE_TWO, RUPEE_BLUE_THREE,
+RUPEE_RED_ONE, RUPEE_RED_TWO, RUPEE_RED_THREE}                                                                                                               //3
+RUPEE_SPRITE_ENUM ;
+extern uint16_t rupee_spriteMap[][4];
 
