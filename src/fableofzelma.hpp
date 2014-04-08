@@ -181,9 +181,9 @@ namespace foz {
             char *name;
             uint16_t budget;
             uint16_t cur_cmd;
-            uint16_t move_count;
-            uint16_t attack_count;
-            int cmdFrame;
+            uint16_t cur_link;
+            uint16_t cur_cmdframe;
+            uint16_t cur_cmdopt;
             bool cmds_done;
             std::vector<foz::cmd_type> cmds;
 

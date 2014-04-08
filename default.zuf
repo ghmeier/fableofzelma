@@ -6,5 +6,9 @@ select L4 Regular
 
 start: move L1 4
 right L1
+move L1 4
+right L1
+move L1 4
 attack L1
+right L1
 goto start

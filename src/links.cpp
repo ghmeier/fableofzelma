@@ -36,105 +36,152 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
+
         switch (cmd) {
-        case MOVE_CMD:
-            if (direction == DIRECTION_NORTH) {
-                    if (sprite >= 65){
-                        sprite = 59;
-                    }else if (sprite<59) {
-                        sprite = 59;
+
+            case MOVE_CMD:
+                if (direction == DIRECTION_NORTH) {
+                    if (sprite >= LINK_WALKING_NORTH_6) {
+                        sprite = LINK_WALKING_NORTH_1;
                     }
-                sprite++;
-            }
-            if (direction == DIRECTION_WEST) {
-                    if (sprite >= 71){
-                        sprite = 65;
-                    }else if (sprite<65) {
-                        sprite = 65;
+                    else if (sprite < LINK_WALKING_NORTH_1) {
+                        sprite = LINK_WALKING_NORTH_1;
                     }
-                sprite++;
-            }
-            if (direction == DIRECTION_SOUTH) {
-                    if (sprite >= 77){
-                        sprite = 71;
-                    }else if (sprite<71) {
-                        sprite = 71;
+                    else {
+                        sprite++;
                     }
-                sprite++;
-            }
-            /* FIX ME
-            if (direction == DIRECTION_EAST) {
-                    if (sprite == 77){
-                        sprite = 71;
+                    y += 5.0;
+                }
+                if (direction == DIRECTION_SOUTH) {
+                    if (sprite >= LINK_WALKING_SOUTH_6) {
+                        sprite = LINK_WALKING_SOUTH_1;
                     }
-                sprite++;
-            }
-            */
-            break;
+                    else if (sprite < LINK_WALKING_SOUTH_1) {
+                        sprite = LINK_WALKING_SOUTH_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                    y -= 5.0;
+                }
+                if (direction == DIRECTION_WEST) {
+                    if (sprite >= LINK_WALKING_WEST_6) {
+                        sprite = LINK_WALKING_WEST_1;
+                    }
+                    else if (sprite < LINK_WALKING_WEST_1) {
+                        sprite = LINK_WALKING_WEST_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                    x -= 5.0;
+                }
+                if (direction == DIRECTION_EAST) {
+                    if (sprite >= LINK_WALKING_WEST_6) {
+                        sprite = LINK_WALKING_WEST_1;
+                    }
+                    else if (sprite < LINK_WALKING_WEST_1) {
+                        sprite = LINK_WALKING_WEST_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                    x += 5.0;
+                }
+
+                break;
 
 
-        case ATTACK_CMD:
-            if (direction == DIRECTION_NORTH) {
-                    if (sprite >= 20){
-                        sprite = -1;
-                    }else if (sprite<-1) {
-                        sprite = -1;
+            case ATTACK_CMD:
+                if (direction == DIRECTION_NORTH) {
+                    if (sprite >= LINK_SLASH_NORTH_20){
+                        sprite = LINK_SLASH_NORTH_1;
                     }
-                sprite++;
-            }
-            if (direction == DIRECTION_WEST) {
-                    if (sprite >= 40){
-                        sprite = 20;
-                    }else if (sprite<20) {
-                        sprite = 20;
+                    else if (sprite < LINK_SLASH_NORTH_1) {
+                        sprite = LINK_SLASH_NORTH_1;
                     }
-                sprite++;
-            }
-            if (direction == DIRECTION_SOUTH) {
-                    if (sprite >= 60){
-                        sprite = 40;
-                    }else if (sprite<40) {
-                        sprite = 40;
+                    else {
+                        sprite++;
                     }
-                sprite++;
-            }
-            /* FIX ME
-            if (direction == DIRECTION_EAST) {
-                    if (sprite == 77){
-                        sprite = 71;
+                }
+                if (direction == DIRECTION_SOUTH) {
+                    if (sprite >= LINK_SLASH_SOUTH_20){
+                        sprite = LINK_SLASH_SOUTH_1;
                     }
-                sprite++;
-            }
-            */
-            break;
+                    else if (sprite < LINK_SLASH_SOUTH_1) {
+                        sprite = LINK_SLASH_SOUTH_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                }
+                if (direction == DIRECTION_WEST) {
+                    if (sprite >= LINK_SLASH_WEST_20){
+                        sprite = LINK_SLASH_WEST_1;
+                    }
+                    else if (sprite < LINK_SLASH_WEST_1) {
+                        sprite = LINK_SLASH_WEST_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                }
+                if (direction == DIRECTION_EAST) {
+                    if (sprite >= LINK_SLASH_WEST_20){
+                        sprite = LINK_SLASH_WEST_1;
+                    }
+                    else if (sprite < LINK_SLASH_WEST_1) {
+                        sprite = LINK_SLASH_WEST_1;
+                    }
+                    else {
+                        sprite++;
+                    }
+                }
+
+                break;
 
         case LEFT_CMD:
-            printf("DIR is %d\n",direction);
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_WEST;
-            }else if (direction == DIRECTION_EAST) {
-                direction = DIRECTION_NORTH;
-            }else if (direction == DIRECTION_SOUTH) {
+                sprite = LINK_WALKING_WEST_1;
+            }
+            else if (direction == DIRECTION_SOUTH) {
                 direction = DIRECTION_EAST;
-            }else if (direction == DIRECTION_WEST) {
+                sprite = LINK_WALKING_WEST_1;
+            }
+            else if (direction == DIRECTION_WEST) {
                 direction = DIRECTION_SOUTH;
+                sprite = LINK_WALKING_SOUTH_1;
+            }
+            else if (direction == DIRECTION_EAST) {
+                direction = DIRECTION_NORTH;
+                sprite = LINK_WALKING_NORTH_1;
             }
             break;
 
         case RIGHT_CMD:
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_EAST;
-            }else if (direction == DIRECTION_EAST) {
-                direction = DIRECTION_SOUTH;
-            }else if (direction == DIRECTION_SOUTH) {
+                sprite = LINK_WALKING_WEST_1;
+            }
+            else if (direction == DIRECTION_SOUTH) {
                 direction = DIRECTION_WEST;
-            }else if(direction == DIRECTION_WEST){
+                sprite = LINK_WALKING_WEST_1;
+            }
+            else if (direction == DIRECTION_WEST) {
                 direction = DIRECTION_NORTH;
+                sprite = LINK_WALKING_NORTH_1;
+            }
+            else if (direction == DIRECTION_EAST) {
+                direction = DIRECTION_SOUTH;
+                sprite = LINK_WALKING_SOUTH_1;
             }
             break;
         }
 
 
+        // We need better collision detection than this. It would have to go in Game::update() since
+        // collisions are world-specific (room-specific), not Link-specific.
         if(x<-150) {
             x=-150;
         }else if (x>250) {
@@ -146,6 +193,7 @@ namespace foz {
         }else if (y>250) {
             y=250;
         }
+
     }
 
 
@@ -226,14 +274,29 @@ namespace foz {
         glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
         glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(x, y, depth);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(x + width, y, depth);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(x + width, y + height, depth);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(x, y + height, depth);
+
+            if (direction == DIRECTION_EAST) {
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(x, y, depth);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(x + width, y, depth);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(x + width, y + height, depth);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(x, y + height, depth);
+            }
+
+            else {
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(x, y, depth);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(x + width, y, depth);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(x + width, y + height, depth);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(x, y + height, depth);
+            }
+
         glEnd();
 
         return;
