@@ -36,23 +36,29 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
-
+        printf("LINK DIRECTION IS %d\n",direction);
         switch (cmd) {
         case MOVE_CMD:
             if (direction == DIRECTION_NORTH) {
-                    if (sprite == 65){
+                    if (sprite >= 65){
+                        sprite = 59;
+                    }else if (sprite<59) {
                         sprite = 59;
                     }
                 sprite++;
             }
             if (direction == DIRECTION_WEST) {
-                    if (sprite == 71){
+                    if (sprite >= 71){
+                        sprite = 65;
+                    }else if (sprite<65) {
                         sprite = 65;
                     }
                 sprite++;
             }
             if (direction == DIRECTION_SOUTH) {
-                    if (sprite == 77){
+                    if (sprite >= 77){
+                        sprite = 71;
+                    }else if (sprite<71) {
                         sprite = 71;
                     }
                 sprite++;
@@ -70,19 +76,25 @@ namespace foz {
 
         case ATTACK_CMD:
             if (direction == DIRECTION_NORTH) {
-                    if (sprite == 20){
+                    if (sprite >= 20){
+                        sprite = -1;
+                    }else if (sprite<-1) {
                         sprite = -1;
                     }
                 sprite++;
             }
             if (direction == DIRECTION_WEST) {
-                    if (sprite == 40){
+                    if (sprite >= 40){
+                        sprite = 20;
+                    }else if (sprite<20) {
                         sprite = 20;
                     }
                 sprite++;
             }
             if (direction == DIRECTION_SOUTH) {
-                    if (sprite == 60){
+                    if (sprite >= 60){
+                        sprite = 40;
+                    }else if (sprite<40) {
                         sprite = 40;
                     }
                 sprite++;
@@ -95,6 +107,21 @@ namespace foz {
                 sprite++;
             }
             */
+            break;
+
+        case LEFT_CMD:
+            printf("DIR is %d",direction);
+            direction--;
+            if (direction<0 || direction>3) {
+                direction = 3;
+            }
+            break;
+
+        case RIGHT_CMD:
+            direction++;
+            if (direction>3 || direction<0) {
+                direction = 0;
+            }
             break;
         }
 

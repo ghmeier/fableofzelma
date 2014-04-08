@@ -26,7 +26,7 @@ std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     {"move", "run", "walk"},
     {"left", "ccw", "west"},
     {"right", "clock", "east"},
-    {"swing", "fire", "action"},
+    {"attack","swing", "action"},
     {"goto", "jump", "loop"}
     };
 

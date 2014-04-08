@@ -183,6 +183,7 @@ namespace foz {
             uint16_t cur_cmd;
             uint16_t move_count;
             uint16_t attack_count;
+            int cmdFrame;
             bool cmds_done;
             std::vector<foz::cmd_type> cmds;
 
