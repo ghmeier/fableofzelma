@@ -36,7 +36,6 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
-        printf("LINK DIRECTION IS %d\n",direction);
         switch (cmd) {
         case MOVE_CMD:
             if (direction == DIRECTION_NORTH) {
@@ -110,21 +109,43 @@ namespace foz {
             break;
 
         case LEFT_CMD:
-            printf("DIR is %d",direction);
-            direction--;
-            if (direction<0 || direction>3) {
-                direction = 3;
+            printf("DIR is %d\n",direction);
+            if (direction == DIRECTION_NORTH) {
+                direction = DIRECTION_WEST;
+            }else if (direction == DIRECTION_EAST) {
+                direction = DIRECTION_NORTH;
+            }else if (direction == DIRECTION_SOUTH) {
+                direction = DIRECTION_EAST;
+            }else if (direction == DIRECTION_WEST) {
+                direction = DIRECTION_SOUTH;
             }
             break;
 
         case RIGHT_CMD:
-            direction++;
-            if (direction>3 || direction<0) {
-                direction = 0;
+            if (direction == DIRECTION_NORTH) {
+                direction = DIRECTION_EAST;
+            }else if (direction == DIRECTION_EAST) {
+                direction = DIRECTION_SOUTH;
+            }else if (direction == DIRECTION_SOUTH) {
+                direction = DIRECTION_WEST;
+            }else if(direction == DIRECTION_WEST){
+                direction = DIRECTION_NORTH;
             }
             break;
         }
 
+
+        if(x<-150) {
+            x=-150;
+        }else if (x>250) {
+            x = 250;
+        }
+
+        if (y<-150) {
+            y=-150;
+        }else if (y>250) {
+            y=250;
+        }
     }
 
 

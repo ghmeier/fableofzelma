@@ -129,7 +129,7 @@ namespace foz {
             switch (mycmd->cmd) {
 
                 case MOVE_CMD:
-                    printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].move_count);
+
                     if (myLinks[i][0].direction == DIRECTION_NORTH) {
                         myLinks[i][0].y += 5.0;
                     }
@@ -148,6 +148,7 @@ namespace foz {
                         myLinks[i][0].update(mycmd->cmd);
                         myTeams[i].cmdFrame++;
                     } else {
+                        printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].move_count);
                        // printf("CHANGING MOVE FRAME\n");
                         myLinks[i][0].update(mycmd->cmd);
                         myTeams[i].move_count++;
@@ -165,14 +166,18 @@ namespace foz {
                     }
                     break;
                 case ATTACK_CMD:
-                    //print the current command each frame
-                    printf("Attack!! Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].attack_count);
-                    // Need a "dir" value
+                    if (myTeams[i].cmdFrame<CMDFRAMEMAX) {
+                        printf("attack frame: %d",myTeams[i].cmdFrame);
+                        myLinks[i][0].update(mycmd->cmd);
+                        myTeams[i].cmdFrame++;
+                    }else {
+                        myTeams[i].attack_count += 1;
+                        myTeams[i].move_count = 0;
+                        myTeams[i].cmdFrame=0;
+                    }
 
-                    myLinks[i][0].update(mycmd->cmd);
-                    myTeams[i].attack_count += 1;
-                    myTeams[i].move_count = 0;
                    if (myTeams[i].attack_count>=mycmd->opt[0]) {
+                        printf("Attack!! Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].attack_count);
                         if ((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
                             myTeams[i].cur_cmd++;
                             if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
@@ -183,9 +188,12 @@ namespace foz {
                     }
                     break;
                 case LEFT_CMD:
-                    printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].attack_count);
-                    if (myTeams[i].cmdFrame<CMDFRAMEMAX) {
+
+                    if (myTeams[i].cmdFrame < 1){
+                        printf("Team: %d cmd: %s \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str());
                         myLinks[i][0].update(mycmd->cmd);
+                        myTeams[i].cmdFrame++;
+                    }else if (myTeams[i].cmdFrame<CMDFRAMEMAX) {
                         myTeams[i].cmdFrame++;
                     }else {
                         //myLinks[i][0].update(mycmd->cmd);
@@ -194,8 +202,12 @@ namespace foz {
                     }
                     break;
                 case RIGHT_CMD:
-                    printf("Team: %d cmd: %s x%d \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].attack_count);
-                    if (myTeams[i].cmdFrame<CMDFRAMEMAX) {
+
+                    if (myTeams[i].cmdFrame < 1){
+                        printf("Team: %d cmd: %s \n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str());
+                        myLinks[i][0].update(mycmd->cmd);
+                        myTeams[i].cmdFrame++;
+                    }else if (myTeams[i].cmdFrame<CMDFRAMEMAX) {
                         myLinks[i][0].update(mycmd->cmd);
                         myTeams[i].cmdFrame++;
                     }else {
@@ -205,11 +217,11 @@ namespace foz {
                     }
                     break;
                 default:
-                    printf("Non-Move Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd); //cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str()
                     bool pred_true = true;
 
                     //Handles the goto command
                     if (myTeams[i].cmds[myTeams[i].cur_cmd].cmd == GOTO_CMD){
+                        printf("Goto Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd);
                         for (uint16_t j = 0; j < myTeams[i].cmds.size(); j++) {
                             if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)==0){
                                 myTeams[i].cur_cmd = j;
@@ -217,9 +229,8 @@ namespace foz {
                                 break;
                             }
                         }
-                    }
-                    // Advance the next command, after some per-command delay
-                    if ((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
+                    }else if((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
+                        printf("Unrecognized Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd);
                         myTeams[i].cur_cmd++;
                         if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
                             myTeams[i].cmds_done = true;
