@@ -16,7 +16,11 @@
 
 
 #include "fableofzelma.hpp"
+#define GLOBALHEIGHT 64.0
+#define GLOBALWIDTH 58.0
+#include <iostream>
 
+#include <windows.h>
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}
@@ -40,6 +44,8 @@ namespace foz {
         switch (cmd) {
 
             case MOVE_CMD:
+                 height = 64.0;
+                 width = 58.0;
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_WALKING_NORTH_6) {
                         sprite = LINK_WALKING_NORTH_1;
@@ -96,13 +102,19 @@ namespace foz {
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_SLASH_NORTH_20){
                         sprite = LINK_SLASH_NORTH_1;
+
                     }
                     else if (sprite < LINK_SLASH_NORTH_1) {
                         sprite = LINK_SLASH_NORTH_1;
+
                     }
                     else {
                         sprite++;
+                        x =  x + (-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
+                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
                 }
                 if (direction == DIRECTION_SOUTH) {
                     if (sprite >= LINK_SLASH_SOUTH_20){
@@ -113,7 +125,16 @@ namespace foz {
                     }
                     else {
                         sprite++;
+                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
+
+
+
                     }
+
+                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+
                 }
                 if (direction == DIRECTION_WEST) {
                     if (sprite >= LINK_SLASH_WEST_20){
@@ -124,8 +145,14 @@ namespace foz {
                     }
                     else {
                         sprite++;
+                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
+                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+
                 }
+
                 if (direction == DIRECTION_EAST) {
                     if (sprite >= LINK_SLASH_WEST_20){
                         sprite = LINK_SLASH_WEST_1;
@@ -135,12 +162,19 @@ namespace foz {
                     }
                     else {
                         sprite++;
+                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
-                }
+                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                    }
+
 
                 break;
 
         case LEFT_CMD:
+             height = 64.0;
+             width = 58.0;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_WEST;
                 sprite = LINK_WALKING_WEST_1;
@@ -160,6 +194,8 @@ namespace foz {
             break;
 
         case RIGHT_CMD:
+             height = 64.0;
+             width = 58.0;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_EAST;
                 sprite = LINK_WALKING_WEST_1;
@@ -211,8 +247,8 @@ namespace foz {
         id = myid;
         team = myteam;
 
-        height = 64.0;
-        width = 58.0;
+        height = GLOBALHEIGHT;
+        width = GLOBALWIDTH;
 
         switch(team) {
             case 0:
