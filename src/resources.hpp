@@ -49,6 +49,9 @@ typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, C
 /* Direction enum */
 typedef enum {DIRECTION_NORTH=0, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST} DIRECTION_TYPE;
 
+/* Object Type Enum */
+typedef enum {CHEST=0, CHEST_OPEN,POT, POT_TILE} OBJECT_TYPE;
+
 /* Sprite enum for LINK objects */
 typedef enum
 {LINK_SLASH_NORTH_1 = 0, LINK_SLASH_NORTH_2, LINK_SLASH_NORTH_3, LINK_SLASH_NORTH_4, LINK_SLASH_NORTH_5,                                                                        //1
