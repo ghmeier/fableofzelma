@@ -99,7 +99,7 @@ namespace foz {
 
 
             case ATTACK_CMD:
-        Sleep(50);
+
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_SLASH_NORTH_20){
                         sprite = LINK_SLASH_NORTH_1;
