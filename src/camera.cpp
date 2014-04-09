@@ -40,8 +40,8 @@ namespace foz {
         // This x_pos/y_pos might not be an integer for even-sized worlds.
         width = myWorld->width;
         height = myWorld->height;
-        x_pos = (width-1)/2.0;
-        y_pos = (height-1)/2.0;
+        x_pos = 0; //(width-1)/2.0;
+        y_pos = 0; //(height-1)/2.0;
         zoom_level = 1.0*width;
 
         x_pan_count = 0;
@@ -115,7 +115,7 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_RIGHT:
-                if (x_pos <= -1.0) {
+                if (x_pos <= (-width)) { // Was -1.0, changed to -width
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -169,7 +169,8 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_UP:
-                if (y_pos <= (-1.0)) {
+                //if (y_pos <= (- 1 - (zoom_level+1)*(1080/1920))) {
+                if (y_pos <= (- height)) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -193,6 +194,7 @@ namespace foz {
                 }
 
                 reposition = true;
+
                 x_right -= (1920.0)/CAMERA_ZOOM_DELTA;
                 y_bottom += (1080.0)/CAMERA_ZOOM_DELTA;
                 zoom_count++;
@@ -205,6 +207,7 @@ namespace foz {
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
+
 
             case CAMERA_ZOOM_OUT:
                 if (zoom_level >= width) {

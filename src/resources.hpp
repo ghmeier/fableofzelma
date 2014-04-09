@@ -80,7 +80,8 @@ extern uint16_t link_object_spriteMap_centers[][2];
 typedef enum
 {WALL_TOP_LEFT, WALL_TOP_CENTER, WALL_TOP_RIGHT, DOOR_LEFT, DOOR_TOP,                                                                                                           //1
 DOOR_RIGHT, WALL_LEFT, FLOOR_TILE, WALL_RIGHT, DOOR_BOTTOM,                                                                                                                     //2
-WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST}                                                                                                                   //3
+WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST, CHEST_OPEN, POT, POT_TILE,
+BUTTON, TORCH_UNLIT, TORCH_LIT}                                                                                                                   //3
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 
