@@ -144,6 +144,19 @@ namespace foz {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 6;
 
+                    //check for collision with walls
+                    if(myLink->x < -308) {
+                        myLink->x = -303;
+                    }else if (myLink->x > 250) {
+                        myLink->x = 250;
+                    }
+
+                    if (myLink->y < -308) {
+                        myLink->y = -303;
+                    }else if (myLink->y > 250) {
+                        myLink->y = 250;
+                    }
+
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
 

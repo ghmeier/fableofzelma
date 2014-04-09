@@ -214,22 +214,6 @@ namespace foz {
             }
             break;
         }
-
-
-        // We need better collision detection than this. It would have to go in Game::update() since
-        // collisions are world-specific (room-specific), not Link-specific.
-        if(x<-150) {
-            x=-150;
-        }else if (x>250) {
-            x = 250;
-        }
-
-        if (y<-150) {
-            y=-150;
-        }else if (y>250) {
-            y=250;
-        }
-
     }
 
 
