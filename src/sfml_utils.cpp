@@ -224,7 +224,7 @@ namespace foz {
     #define LETTER_HEIGHT 88
 
         float texCoords[6];
-        float baseX = -1480.0, baseY = 100.0;
+        float baseX = -1920.0/2.0*myWorld.width, baseY = 1080.0/3.0*myWorld.height;
 
 
         // Reset Camera
@@ -237,11 +237,6 @@ namespace foz {
         myStatus.scores[1] = -234;
         myStatus.scores[2] = 7587;
         myStatus.scores[3] = 8864;
-
-        myTeams[0].name = "Team 1";
-        myTeams[1].name = "Team 2";
-        myTeams[2].name = "Team 3";
-        myTeams[3].name = "Team 4";
 
         /* Draw the team names */
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);

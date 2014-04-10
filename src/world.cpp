@@ -49,8 +49,8 @@ namespace foz {
                 for (i_team = 0; i_team < 4; i_team++) {
                     for (k = 0; k < myGame->myLinks[i_team].size(); k++) {
                         if ((myGame->myLinks[i_team][k].active == true) &&
-                            (myGame->myLinks[i_team][k].room_x == i) &&
-                            (myGame->myLinks[i_team][k].room_y == j)) {
+                            (myGame->myLinks[i_team][k].room_x == j) &&
+                            (myGame->myLinks[i_team][k].room_y == i)) {
                             myGame->myLinks[i_team][k].draw();
                         }
                     }
