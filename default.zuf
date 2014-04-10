@@ -4,23 +4,12 @@ select L3 Regular
 select L4 Regular
 
 
-<<<<<<< HEAD
-start: left L1
-move L1 10
-right L1
-move L1 3
-left L1
-move L1 9
-right L1
-move L1 18
-=======
 start: move L1 5
 right L1
 move L1 5
 right L1
 move L1 5
 attack L1
->>>>>>> fac3a2c2bf44ef8473df205e915e0e25333fa2bd
 right L1
 move L1 19
 right L1
