@@ -62,11 +62,10 @@ namespace foz {
 
 
 
-
-
         // Resets Matrix so it draws objects starting in top left room after
         // drawing the rooms
-        glTranslatef(0, 3240, 0);
+        glLoadIdentity();
+        glTranslatef(-1080.0/2.0*(width), 1080.0/2.0*(height), 0.0);
 
         return;
     }

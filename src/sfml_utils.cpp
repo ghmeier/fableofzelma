@@ -28,30 +28,18 @@ namespace foz {
         while (myWindow.pollEvent(event)) {
             if (event.type == sf::Event::KeyPressed) {
                 switch (event.key.code) {
-/*                    case sf::Keyboard::Num1:
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
-                            myStatus.scores[0]--;
-                        else
-                            myStatus.scores[0]++;
+                    case sf::Keyboard::Num1:
+                        myCamera.state = CAMERA_TEAM_1;
                         break;
                     case sf::Keyboard::Num2:
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
-                            myStatus.scores[1]--;
-                        else
-                            myStatus.scores[1]++;
+                        myCamera.state = CAMERA_TEAM_2;
                         break;
                     case sf::Keyboard::Num3:
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
-                            myStatus.scores[2]--;
-                        else
-                            myStatus.scores[2]++;
+                        myCamera.state = CAMERA_TEAM_3;
                         break;
                     case sf::Keyboard::Num4:
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
-                            myStatus.scores[3]--;
-                        else
-                            myStatus.scores[3]++;
-                        break;*/
+                        myCamera.state = CAMERA_TEAM_4;
+                        break;
                     case sf::Keyboard::Left:
                         if (myCamera.state == CAMERA_IDLE)
                             myCamera.state = CAMERA_PAN_LEFT;
@@ -228,7 +216,7 @@ namespace foz {
     * Function: Game::drawScoreboard()
     * Description: Draws the Game Scoreboards for the four teams
     *****************************************************************************/
-void Game::drawScoreboard(){
+    void Game::drawScoreboard(){
 
     #define NUMBER_WIDTH 70
     #define NUMBER_HEIGHT 90
@@ -238,16 +226,11 @@ void Game::drawScoreboard(){
         float texCoords[6];
         float baseX = -1480.0, baseY = 100.0;
 
-        // For setting up the Scoreboard Camera
-        float x_left = -1920.0/2.0*myWorld.width;
-        float x_right = 1920.0/2.0*myWorld.width;
-        float y_bottom = -1080.0/2.0*myWorld.height;
-        float y_top = 1080.0/2.0*myWorld.height;
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(x_left, x_right, y_bottom, y_top, FRONT_DEPTH, -BACK_DEPTH);
-
+        // Reset Camera
+        CAMERA_ENUM prev_camera_state = myCamera.state;
+        myCamera.state = CAMERA_INIT;
+        myCamera.update(true);
 
         // Hard-Coded Scores and Names
         myStatus.scores[0] = 4001;
@@ -384,7 +367,9 @@ void Game::drawScoreboard(){
                 }
 
                 }
+
     // Reset Camera
+    myCamera.state = prev_camera_state;
     myCamera.update(true);
 
 }
