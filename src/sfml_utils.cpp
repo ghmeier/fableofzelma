@@ -297,7 +297,7 @@ namespace foz {
         }
 
         /* Draw the scores */
-        char digits[5];
+        char digits[6];
         for (uint8_t i = 0; i < 4; i++) {
 
             switch(i) {
@@ -350,7 +350,7 @@ namespace foz {
 
 
             glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-            for (uint8_t j = 0; j < 4; j++) {
+            for (uint8_t j = 0; j < 5; j++) {
                 if (digits[j] == '-') {
                     getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
                 }
@@ -372,6 +372,9 @@ namespace foz {
                         glTexCoord2d(texCoords[0], texCoords[3]);
                         glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
                     glEnd();
+                }
+                else {
+                    break;
                 }
             }
         }
@@ -419,7 +422,7 @@ namespace foz {
 
 
             glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-            for (uint8_t j = 0; j < 4; j++) {
+            for (uint8_t j = 0; j < 3; j++) {
                 if ((links[j] >= '0') && (links[j] <= '9')) {
                     getTexCoords(TEX_FONTS, links[j] - '0' + LETTER_0, texCoords);
                 }
@@ -439,6 +442,10 @@ namespace foz {
                         glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
                     glEnd();
                 }
+                else {
+                    break;
+                }
+
             }
         }
 
