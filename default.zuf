@@ -4,11 +4,14 @@ select L3 Regular
 select L4 Regular
 
 
-start: move L1 20
+start: move L1 5
 right L1
-move L1 20
+move L1 5
 right L1
-move L1 20
+move L1 5
 attack L1
 right L1
+move L1 19
+right L1
+move L1 12
 goto start

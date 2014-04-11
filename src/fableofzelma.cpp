@@ -144,6 +144,28 @@ namespace foz {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 6;
 
+                    //doors (south)
+                    if ((myLink->y < -308)&&(myLink->x > -43)&&(myLink->x < -37)) { //tolerance of +- 3 pixels
+                        myLink->room_x++;
+                        myLink->y = 250;
+                    }
+                    // (east)
+                    else if ((myLink->x > 250)&&(myLink->y > -43)&&(myLink->y < -37)) { //tolerance of +- 3 pixels
+                        myLink->room_y++;
+                        myLink->x = -303;
+                    }
+
+                    // (west)
+                    else if ((myLink->x < -308)&&(myLink->y > -21)&&(myLink->y < -17 )) { //tolerance of +- 3 pixels
+                        myLink->room_y--;
+                        myLink->x = 250;
+                    }
+                    // (north)
+                    else if ((myLink->y > 250)&&(myLink->x > -47)&&(myLink->x < -37)) { //tolerance of +- 3 pixels
+                        myLink->room_x--;
+                        myLink->y = -303;
+                    }
+
                     //check for collision with walls
                     if(myLink->x < -308) {
                         myLink->x = -303;
@@ -153,9 +175,13 @@ namespace foz {
 
                     if (myLink->y < -308) {
                         myLink->y = -303;
-                    }else if (myLink->y > 250) {
+                    }
+
+                    else if (myLink->y > 250) {
+
                         myLink->y = 250;
                     }
+
 
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);

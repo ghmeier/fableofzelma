@@ -40,7 +40,7 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
-
+        uint16_t tempSprite;
         switch (cmd) {
 
             case MOVE_CMD:
@@ -99,9 +99,11 @@ namespace foz {
 
 
             case ATTACK_CMD:
+
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_SLASH_NORTH_20){
                         sprite = LINK_SLASH_NORTH_1;
+
 
                     }
                     else if (sprite < LINK_SLASH_NORTH_1) {
@@ -110,30 +112,36 @@ namespace foz {
                     }
                     else {
                         sprite++;
-                        x =  x + (-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
                         y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
                 width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+
                 }
                 if (direction == DIRECTION_SOUTH) {
+                        tempSprite = sprite;
                     if (sprite >= LINK_SLASH_SOUTH_20){
                         sprite = LINK_SLASH_SOUTH_1;
+                        //x =  x + 3.05*(-(link_object_spriteMap[tempSprite][0] - link_object_spriteMap_centers[tempSprite][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        //y =  y +3.2*(-(link_object_spriteMap[tempSprite][1] - link_object_spriteMap_centers[tempSprite][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
                     else if (sprite < LINK_SLASH_SOUTH_1) {
                         sprite = LINK_SLASH_SOUTH_1;
+                        //x =  x + 3.05*(-(link_object_spriteMap[tempSprite][0] - link_object_spriteMap_centers[tempSprite][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        //y =  y +3.2*(-(link_object_spriteMap[tempSprite][1] - link_object_spriteMap_centers[tempSprite][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
                     else {
                         sprite++;
-                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
-                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
+                        x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y + 3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
 
 
 
                     }
 
                 width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
 
                 }
                 if (direction == DIRECTION_WEST) {
@@ -145,11 +153,11 @@ namespace foz {
                     }
                     else {
                         sprite++;
-                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
-                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
+                        x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
+                        y =  y +3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
                     }
                 width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
 
                 }
 
@@ -162,11 +170,12 @@ namespace foz {
                     }
                     else {
                         sprite++;
-                        x =  x + 3*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
-                        y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
+                        x =  x + 3.05*(-(-link_object_spriteMap[sprite - 1][2] + link_object_spriteMap_centers[sprite - 1][0]) + (-link_object_spriteMap[sprite][2] + link_object_spriteMap_centers[sprite][0]));
+                        y =  y +3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
                     }
                 width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.2*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+
                     }
 
 
@@ -237,7 +246,7 @@ namespace foz {
         switch(team) {
             case 0:
             default:
-                texfile = TEX_PURPLE_LINK;
+                texfile = TEX_BLUE_LINK;
                 room_x = 0;
                 room_y = 0;
                 x = 50.0;
@@ -247,7 +256,7 @@ namespace foz {
                 depth = FRONT_DEPTH;
                 break;
             case 1:
-                texfile = TEX_RED_LINK;
+                texfile = TEX_GREEN_LINK;
                 room_x = 0;
                 room_y = world_height-1;
                 x = 50.0;
@@ -257,7 +266,7 @@ namespace foz {
                 depth = FRONT_DEPTH;
                 break;
             case 2:
-                texfile = TEX_GREEN_LINK;
+                texfile = TEX_PURPLE_LINK;
                 room_x = world_width-1;
                 room_y = 0;
                 x = 50.0;
@@ -268,7 +277,7 @@ namespace foz {
 
                 break;
             case 3:
-                texfile = TEX_PURPLE_LINK;
+                texfile = TEX_RED_LINK;
                 room_x = world_width-1;
                 room_y = world_height-1;
                 x = 50.0;

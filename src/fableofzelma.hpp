@@ -191,7 +191,6 @@ namespace foz {
         /* Main functions (camera.cpp) */
         void init(foz::World *myWorld);
         void update(bool reposition);
-        void update(foz::Team *myTeam);
     };
 
 
@@ -237,12 +236,12 @@ namespace foz {
             foz::Texture myTextures[NUM_TEXTURES];
             foz::Status myStatus;
             std::vector<Link> myLinks[4];
+            foz::Team myTeams[4];
 
         private:
             foz::Config myConfig;
             foz::World myWorld;
             foz::Camera myCamera;
-            foz::Team myTeams[4];
             sf::Time myTime;
             uint32_t framecount;
             sf::ContextSettings mySettings;

@@ -40,8 +40,8 @@ namespace foz {
         // This x_pos/y_pos might not be an integer for even-sized worlds.
         width = myWorld->width;
         height = myWorld->height;
-        x_pos = 0; //(width-1)/2.0;
-        y_pos = 0; //(height-1)/2.0;
+        x_pos = (width-1)/2.0;
+        y_pos = (height-1)/2.0;
         zoom_level = 1.0*width;
 
         x_pan_count = 0;
@@ -58,60 +58,54 @@ namespace foz {
 
     /*****************************************************************************
     * Function: Camera::update
-    * Description: Updates the camera position based on where a team's Link is.
-    *****************************************************************************/
-    void Camera::update(foz::Team *myTeam) {
-
-        bool reposition = false;
-        foz::Link *myLink;
-
-
-        if (myTeam->cmds_done != true) {
-            myLink = &myGame->myLinks[myTeam->id][myTeam->cur_link];
-        }
-
-        switch(state) {
-
-            case CAMERA_INIT:
-                state = CAMERA_IDLE;
-                break;
-
-            case CAMERA_TEAM_1:
-                // If the team is already done, there is nothing the camera can do
-                if (myTeam->cmds_done != true) {
-                    x_pos = (float)myLink->room_x;
-                    y_pos = (float)myLink->room_y;
-                    zoom_level = 1.0;
-//                    x_left =
-                    //x_left, x_right, y_bottom, y_top;
-                }
-                state = CAMERA_IDLE;
-                break;
-
-            default:
-                break;
-
-        }
-
-        if (reposition == true) {
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(x_left, x_right, y_bottom, y_top, FRONT_DEPTH, -BACK_DEPTH);
-        }
-
-
-    }
-
-    /*****************************************************************************
-    * Function: Camera::update
     * Description: Updates the camera position based on state.
     *****************************************************************************/
     void Camera::update(bool reposition) {
 
+        foz::Link *myLink;
+        foz::Team *myTeam;
+        uint8_t team_id = 0;
+
+        if ((state == CAMERA_TEAM_1) || (state == CAMERA_TEAM_2) ||
+            (state == CAMERA_TEAM_3) || (state == CAMERA_TEAM_4)) {
+            team_id = state - (uint8_t)CAMERA_TEAM_1;
+        }
+
         switch(state) {
 
             case CAMERA_INIT:
+                x_left = -1920.0/2.0*width;
+                x_right = 1920.0/2.0*width;
+                y_bottom = -1080.0/2.0*height;
+                y_top = 1080.0/2.0*height;
                 state = CAMERA_IDLE;
+                break;
+
+            case CAMERA_TEAM_1:
+            case CAMERA_TEAM_2:
+            case CAMERA_TEAM_3:
+            case CAMERA_TEAM_4:
+                // If the team is already done, there is nothing the camera can do
+                myTeam = &myGame->myTeams[team_id];
+                if (myTeam->cmds_done != true) {
+                    reposition = true;
+                    myLink = &myGame->myLinks[myTeam->id][myTeam->cur_link];
+                    x_pos = (float)myLink->room_x;
+                    y_pos = (float)myLink->room_y;
+
+                    zoom_level = 1.0;
+                    x_pan_count = 0;
+                    y_pan_count = 0;
+                    zoom_count = 0;
+
+                    x_left = (1080.0/2.0)*(2*x_pos-width)-420.0;
+                    x_right = x_left + 1920.0;
+                    y_top = (1080.0/2.0)*(height-2*y_pos);
+                    y_bottom = y_top - 1080.0;
+                }
+                else {
+                    state = CAMERA_IDLE;
+                }
                 break;
 
             case CAMERA_PAN_RIGHT:
@@ -128,7 +122,6 @@ namespace foz {
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos -= 1.0;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                 break;
 
