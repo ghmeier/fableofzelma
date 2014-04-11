@@ -34,6 +34,7 @@
 #include <sstream>
 #include "resources.hpp"
 #include "links.hpp"
+#include "object.hpp"
 
 #define EXEC_NAME "fableofzelma"
 #define WINDOW_TITLE "FableOfZelma, v-1.0a"
@@ -104,6 +105,7 @@ namespace foz {
         uint16_t id;
         uint16_t width, height;
         std::vector< std::vector<uint16_t> > myTiles;
+        std::vector< std::vector<Object> > myObjects;
 
         Room *north;
         Room *south;
