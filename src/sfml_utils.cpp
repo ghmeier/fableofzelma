@@ -204,8 +204,8 @@ namespace foz {
 
         glAlphaFunc(GL_GREATER, 64.0/255.0);
         glEnable(GL_ALPHA_TEST);
-//        glEnable(GL_BLEND);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
         myCamera.init(&myWorld);
@@ -220,118 +220,147 @@ namespace foz {
 
     #define NUMBER_WIDTH 70
     #define NUMBER_HEIGHT 90
-    #define LETTER_WIDTH 80
+    #define LETTER_WIDTH 60
     #define LETTER_HEIGHT 88
 
         float texCoords[6];
-        float baseX = -1920.0/2.0*myWorld.width, baseY = 1080.0/3.0*myWorld.height;
-
+        float baseX, baseY;
 
         // Reset Camera
         CAMERA_ENUM prev_camera_state = myCamera.state;
         myCamera.state = CAMERA_INIT;
         myCamera.update(true);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(-1920.0/2.0*(myWorld.width), 1080.0/2.0*(myWorld.height), 0.0);
+
 
         // Hard-Coded Scores and Names
         myStatus.scores[0] = 4001;
         myStatus.scores[1] = -234;
-        myStatus.scores[2] = 7587;
+        myStatus.scores[2] = 3;
         myStatus.scores[3] = 8864;
 
         /* Draw the team names */
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
         char name[9];
-            for (uint8_t i = 0; i < 4; i++) {
-                snprintf(name, 9, "%-8s", myTeams[i].name);
-                uint16_t font_num;
-                for (uint8_t j = 0; j < 8; j++) {
-                    font_num = NUM_FONTS;
-                    if (name[j] >= 'A' && name[j] <= 'Z') {
-                        font_num = name[j] - 'A' + LETTER_A;
-                    }
-                    if (name[j] >= 'a' && name[j] <= 'z') {
-                        font_num = name[j] - 'a' + LETTER_a;
-                    }
-                    if (name[j] >= '0' && name[j] <= '9') {
-                    font_num = name[j] - '0' + LETTER_0;
-                    }
+        for (uint8_t i = 0; i < 4; i++) {
 
-                    if (font_num != NUM_FONTS) {
-
-                    glBegin(GL_QUADS);
-                        getTexCoords(TEX_FONTS, font_num, texCoords);
-                        glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY + LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY + LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
-                        glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
-                    glEnd();
-
-                    }
-                }
-            switch(i){
-            case 0:
-                baseX = 2900;
-                baseY = 100;
-                break;
-            case 1:
-                baseY = -2200;
-                baseX = -1480;
-                break;
-            case 2:
-                baseY = -2200;
-                baseX = 2900;
-                break;
-
-                }
+            switch(i) {
+                case 0:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -LETTER_HEIGHT;
+                    break;
+                case 1:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-LETTER_HEIGHT;
+                    break;
+                case 2:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -LETTER_HEIGHT;
+                    break;
+                case 3:
+                default:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-LETTER_HEIGHT;
+                    break;
             }
 
-    /* Draw the scores */
-     baseX = -1480.0;
-     baseY = 0.0;
-        char digits[4];
-            for (uint8_t i = 0; i < 4; i++) {
+            snprintf(name, 9, "%-8s", myTeams[i].name);
+            uint16_t font_num;
+            for (uint8_t j = 0; j < 8; j++) {
+                font_num = NUM_FONTS;
+                if (name[j] >= 'A' && name[j] <= 'Z') {
+                    font_num = name[j] - 'A' + LETTER_A;
+                }
+                if (name[j] >= 'a' && name[j] <= 'z') {
+                    font_num = name[j] - 'a' + LETTER_a;
+                }
+                if (name[j] >= '0' && name[j] <= '9') {
+                font_num = name[j] - '0' + LETTER_0;
+                }
 
-                sprintf(digits,"%3d",myStatus.scores[i]);
-
-                    // Gives Rupee Symbol Animation
-                    static int RUPEE_CYCLE = 0;
-                    static int RUPEE_CYCLE_SLOW = 0;
-                    RUPEE_CYCLE_SLOW++;
-                    if(RUPEE_CYCLE_SLOW % 60 == 0){
-                    RUPEE_CYCLE++;
-                    if(RUPEE_CYCLE == 3) RUPEE_CYCLE = 0;
-                    }
-                    if(RUPEE_CYCLE_SLOW == 6000) RUPEE_CYCLE_SLOW = 0;
-
-                        /* Draw Rupee Symbol */
-                        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_RUPEE].texHandle);
-                        getTexCoords(TEX_RUPEE, 3*i + RUPEE_CYCLE, texCoords);
-
+                if (font_num != NUM_FONTS) {
                     glBegin(GL_QUADS);
+                        getTexCoords(TEX_FONTS, font_num, texCoords);
                         glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
                         glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+NUMBER_WIDTH, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
                         glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+NUMBER_WIDTH, baseY, FONT_DEPTH);
+                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
                         glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX, baseY, FONT_DEPTH);
+                        glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
                     glEnd();
+                }
+            }
+        }
+
+        /* Draw the scores */
+        char digits[6];
+        for (uint8_t i = 0; i < 4; i++) {
+
+            switch(i) {
+                case 0:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -2.5*LETTER_HEIGHT;
+                    break;
+                case 1:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-2.5*LETTER_HEIGHT;
+                    break;
+                case 2:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -2.5*LETTER_HEIGHT;
+                    break;
+                case 3:
+                default:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-2.5*LETTER_HEIGHT;
+                    break;
+            }
+
+            sprintf(digits,"x%-3d",myStatus.scores[i]);
+
+            // Gives Rupee Symbol Animation
+            static int RUPEE_CYCLE = 0;
+            static int RUPEE_CYCLE_SLOW = 0;
+
+            RUPEE_CYCLE_SLOW++;
+            if((RUPEE_CYCLE_SLOW % 60) == 0) {
+                RUPEE_CYCLE++;
+                RUPEE_CYCLE %= 3;
+            }
+            RUPEE_CYCLE_SLOW %= 6000;
+
+            /* Draw Rupee Symbol */
+            glBindTexture(GL_TEXTURE_2D, myTextures[TEX_RUPEE].texHandle);
+            getTexCoords(TEX_RUPEE, 3*i + RUPEE_CYCLE, texCoords);
+
+            glBegin(GL_QUADS);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(baseX, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(baseX+NUMBER_WIDTH, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(baseX+NUMBER_WIDTH, baseY, FONT_DEPTH);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(baseX, baseY, FONT_DEPTH);
+            glEnd();
 
 
-                for (uint8_t j = 0; j < 4; j++) {
-                glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-                    if (digits[j] == '-') {
-                        getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
-                    }
-                    else if (digits[j] != ' ') {
-                        getTexCoords(TEX_FONTS, digits[j] - '0' + LETTER_0, texCoords);
-                    }
-                    if (digits[j] != ' ') {
+            glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+            for (uint8_t j = 0; j < 5; j++) {
+                if (digits[j] == '-') {
+                    getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
+                }
+                else if ((digits[j] >= '0') && (digits[j] <= '9')) {
+                    getTexCoords(TEX_FONTS, digits[j] - '0' + LETTER_0, texCoords);
+                }
+                else if (digits[j] == 'x') {
+                    getTexCoords(TEX_FONTS, LETTER_times, texCoords);
+                }
+                if (digits[j] != ' ') {
 
                     glBegin(GL_QUADS);
                         glTexCoord2d(texCoords[0], texCoords[1]);
@@ -343,30 +372,110 @@ namespace foz {
                         glTexCoord2d(texCoords[0], texCoords[3]);
                         glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
                     glEnd();
-                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        /* Draw the Links remaining */
+        char links[4];
+        for (uint8_t i = 0; i < 4; i++) {
+
+            switch(i) {
+                case 0:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -4.0*LETTER_HEIGHT;
+                    break;
+                case 1:
+                    baseX = 3*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
+                    break;
+                case 2:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -4.0*LETTER_HEIGHT;
+                    break;
+                case 3:
+                default:
+                    baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+                    baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
+                    break;
+            }
+
+            sprintf(links,"x%-2d", myLinks[i].size() - myTeams[i].cur_link);
+
+            /* Draw Link Symbol */
+            glBindTexture(GL_TEXTURE_2D, myTextures[myLinks[i][myTeams[i].cur_link].texfile].texHandle);
+            getTexCoords(TEX_BLUE_LINK, LINK_WALKING_SOUTH_1, texCoords);
+
+            glBegin(GL_QUADS);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(baseX, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(baseX+NUMBER_WIDTH, baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(baseX+NUMBER_WIDTH, baseY, FONT_DEPTH);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(baseX, baseY, FONT_DEPTH);
+            glEnd();
+
+
+            glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+            for (uint8_t j = 0; j < 3; j++) {
+                if ((links[j] >= '0') && (links[j] <= '9')) {
+                    getTexCoords(TEX_FONTS, links[j] - '0' + LETTER_0, texCoords);
+                }
+                else if (links[j] == 'x') {
+                    getTexCoords(TEX_FONTS, LETTER_times, texCoords);
+                }
+                if (links[j] != ' ') {
+
+                    glBegin(GL_QUADS);
+                        glTexCoord2d(texCoords[0], texCoords[1]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[1]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY - NUMBER_HEIGHT, FONT_DEPTH);
+                        glTexCoord2d(texCoords[2], texCoords[3]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY, FONT_DEPTH);
+                        glTexCoord2d(texCoords[0], texCoords[3]);
+                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
+                    glEnd();
+                }
+                else {
+                    break;
                 }
 
+            }
+        }
 
 
-                switch(i){
-            case 0:
-                baseX = 2900;
-                break;
-            case 1:
-                baseY = -2300;
-                baseX = -1480;
-                break;
-            case 2:
-                baseX = 2900;
-                break;
-                }
+        // Draw the black shading rectangles
+        glEnable(GL_BLEND);
+        glBegin(GL_QUADS);
+            glColor4f(1.0, 0.0, 0.0, 0.5);
 
-                }
+            glVertex3f(0.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(420.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
+            glVertex3f(0.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
 
-    // Reset Camera
-    myCamera.state = prev_camera_state;
-    myCamera.update(true);
+            glColor4f(0.0, 1.0, 0.0, 0.5);
+            glVertex3f(1920.0*(myWorld.width)-420.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(1920.0*myWorld.width, 0.0, OVERLAY_DEPTH);
+            glVertex3f(1920.0*(myWorld.width), -1080.0*(myWorld.height), OVERLAY_DEPTH);
+            glVertex3f(1920.0*(myWorld.width)-420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
 
-}
+            glColor4f(1.0, 1.0, 1.0, 1.0);
+
+        glEnd();
+
+        glDisable(GL_BLEND);
+
+        // Reset Camera
+        myCamera.state = prev_camera_state;
+        myCamera.update(true);
+
+    }
 
 } // namespace foz

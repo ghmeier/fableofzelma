@@ -145,41 +145,43 @@ namespace foz {
                     CMDFRAMEMAX = 6;
 
                     //doors (south)
-                    if ((myLink->y < -308)&&(myLink->x > -43)&&(myLink->x < -37)) { //tolerance of +- 3 pixels
-                        myLink->room_x++;
+                    if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
+                        myLink->room_y++;
                         myLink->y = 250;
                     }
                     // (east)
-                    else if ((myLink->x > 250)&&(myLink->y > -43)&&(myLink->y < -37)) { //tolerance of +- 3 pixels
-                        myLink->room_y++;
+                    else if ((myLink->x > 370)&&(myLink->y > -50)&&(myLink->y < -15)) {
+                        myLink->room_x++;
                         myLink->x = -303;
                     }
 
                     // (west)
-                    else if ((myLink->x < -308)&&(myLink->y > -21)&&(myLink->y < -17 )) { //tolerance of +- 3 pixels
-                        myLink->room_y--;
+                    else if ((myLink->x < -390)&&(myLink->y > -50)&&(myLink->y < 0 )) {
+                        myLink->room_x--;
                         myLink->x = 250;
                     }
                     // (north)
-                    else if ((myLink->y > 250)&&(myLink->x > -47)&&(myLink->x < -37)) { //tolerance of +- 3 pixels
-                        myLink->room_x--;
+                    else if ((myLink->y > 320)&&(myLink->x > -47)&&(myLink->x < 0)) {
+                        myLink->room_y--;
                         myLink->y = -303;
                     }
 
                     //check for collision with walls
-                    if(myLink->x < -308) {
-                        myLink->x = -303;
-                    }else if (myLink->x > 250) {
-                        myLink->x = 250;
+                    if ((myLink->x < -335)&&((myLink->y <= -50)||(myLink->y >= 0))) { //west
+                        myLink->x = -330;
                     }
 
-                    if (myLink->y < -308) {
-                        myLink->y = -303;
+                    else if ((myLink->x > 295)&&((myLink->y <= -50)||(myLink->y >= -15))) { //east
+                        myLink->x = 290;
                     }
 
-                    else if (myLink->y > 250) {
+                    if ((myLink->y < -335)&&((myLink->x <= -50)||(myLink->x >= -20))) { //south
+                        myLink->y = -330;
+                    }
 
-                        myLink->y = 250;
+                    else if ((myLink->y > 295)&&((myLink->x <= -47)||(myLink->x >= 0))) { //north
+
+                        myLink->y = 290;
                     }
 
 

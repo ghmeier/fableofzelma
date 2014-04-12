@@ -246,7 +246,7 @@ namespace foz {
         switch(team) {
             case 0:
             default:
-                texfile = TEX_BLUE_LINK;
+                texfile = TEX_GREEN_LINK;
                 room_x = 0;
                 room_y = 0;
                 x = 50.0;
@@ -256,7 +256,7 @@ namespace foz {
                 depth = FRONT_DEPTH;
                 break;
             case 1:
-                texfile = TEX_GREEN_LINK;
+                texfile = TEX_PURPLE_LINK;
                 room_x = 0;
                 room_y = world_height-1;
                 x = 50.0;
@@ -266,7 +266,7 @@ namespace foz {
                 depth = FRONT_DEPTH;
                 break;
             case 2:
-                texfile = TEX_PURPLE_LINK;
+                texfile = TEX_BLUE_LINK;
                 room_x = world_width-1;
                 room_y = 0;
                 x = 50.0;
