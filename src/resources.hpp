@@ -50,7 +50,8 @@ typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, C
 typedef enum {DIRECTION_NORTH=0, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST} DIRECTION_TYPE;
 
 /* Object Type Enum */
-typedef enum {CHEST=0, CHEST_OPEN,POT, POT_TILE} OBJECT_TYPE;
+//Begins at the value of the first sprite
+//typedef enum {CHEST_OBJ=13, CHEST_OPEN_OBJ,POT_OBJ, POT_TILE,BUTTON,TORCH_UNLIT,TORCH_LIT} OBJECT_TYPE;
 
 /* Sprite enum for LINK objects */
 typedef enum
