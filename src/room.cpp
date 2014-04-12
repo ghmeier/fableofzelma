@@ -39,7 +39,7 @@ namespace foz {
         uint8_t size_ntok, tiles_ntok;
         uint16_t width_tok, height_tok, tile_tok;
         uint16_t tile_i=0, tile_j=0;
-        bool size_flag=false, tile_flag=false;
+        bool size_flag=false, tile_flag=false, obj_flag = false;
 
         /* Does the file exist in the current directory? */
         fname1 = (char *)malloc(12);
@@ -89,6 +89,7 @@ namespace foz {
                     myTiles[tile_i].push_back(tile_tok);
                     linebuf_temp = strtok(NULL, " ,.-");
                 }
+
                 tile_i++;
                 continue;
             }
@@ -115,8 +116,7 @@ namespace foz {
                 if (!strcmp(tiles_str, ".tiles")) {
                     tile_flag = true;
                     myTiles.resize(height);
-                }
-                else {
+                }else {
                     printf("Error compiling %s, line %d\n", fname1, line_count);
                     printf("  Unknown or unexpected command \'%s\'", linebuf);
                     raise_error(ERR_BADFILE4, fname1);

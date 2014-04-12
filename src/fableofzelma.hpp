@@ -105,7 +105,7 @@ namespace foz {
         uint16_t id;
         uint16_t width, height;
         std::vector< std::vector<uint16_t> > myTiles;
-        std::vector< std::vector<Object> > myObjects;
+        //std::vector< std::vector<Object> > myObjects;
 
         Room *north;
         Room *south;
