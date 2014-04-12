@@ -204,8 +204,8 @@ namespace foz {
 
         glAlphaFunc(GL_GREATER, 64.0/255.0);
         glEnable(GL_ALPHA_TEST);
-//        glEnable(GL_BLEND);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
         myCamera.init(&myWorld);
@@ -406,7 +406,7 @@ namespace foz {
             sprintf(links,"x%-2d", myLinks[i].size() - myTeams[i].cur_link);
 
             /* Draw Link Symbol */
-            glBindTexture(GL_TEXTURE_2D, myTextures[TEX_BLUE_LINK + i].texHandle);
+            glBindTexture(GL_TEXTURE_2D, myTextures[myLinks[i][myTeams[i].cur_link].texfile].texHandle);
             getTexCoords(TEX_BLUE_LINK, LINK_WALKING_SOUTH_1, texCoords);
 
             glBegin(GL_QUADS);
@@ -450,7 +450,27 @@ namespace foz {
         }
 
 
+        // Draw the black shading rectangles
+        glEnable(GL_BLEND);
+        glBegin(GL_QUADS);
+            glColor4f(1.0, 0.0, 0.0, 0.5);
 
+            glVertex3f(0.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(420.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
+            glVertex3f(0.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
+
+            glColor4f(0.0, 1.0, 0.0, 0.5);
+            glVertex3f(1920.0*(myWorld.width)-420.0, 0.0, OVERLAY_DEPTH);
+            glVertex3f(1920.0*myWorld.width, 0.0, OVERLAY_DEPTH);
+            glVertex3f(1920.0*(myWorld.width), -1080.0*(myWorld.height), OVERLAY_DEPTH);
+            glVertex3f(1920.0*(myWorld.width)-420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
+
+            glColor4f(1.0, 1.0, 1.0, 1.0);
+
+        glEnd();
+
+        glDisable(GL_BLEND);
 
         // Reset Camera
         myCamera.state = prev_camera_state;
