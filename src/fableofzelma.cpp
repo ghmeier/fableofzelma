@@ -154,9 +154,9 @@ namespace foz {
                         }
                     }
                     else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] != 50) {
-                    if ((myLink->y < -335)) {
-                        myLink->y = -330;
-                    }
+                        if ((myLink->y < -335)) {
+                            myLink->y = -330;
+                        }
                     }
 
                     //Checks for East Door / collision with East Wall
