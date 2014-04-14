@@ -38,7 +38,6 @@ namespace foz {
         float texCoords[6];
 
         getTexCoords(texfile, sprite, texCoords);
-        printf("I can get here \n");
         glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
         glBegin(GL_QUADS);
