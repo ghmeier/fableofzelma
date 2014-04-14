@@ -15,6 +15,7 @@
  *****************************************************************************/
 
 #include "fableofzelma.hpp"
+#include "resources.hpp"
 
 #define GLOBALHEIGHT 58.0
 #define GLOBALWIDTH 58.0
@@ -27,6 +28,7 @@ namespace foz {
         sprite = myType;
         width = GLOBALWIDTH;
         height = GLOBALHEIGHT;
+        texfile = TEX_BASIC_ROOM;
         x = myX;
         y = myY;
     }
@@ -36,6 +38,7 @@ namespace foz {
         float texCoords[6];
 
         getTexCoords(texfile, sprite, texCoords);
+        printf("I can get here \n");
         glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
         glBegin(GL_QUADS);

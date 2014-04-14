@@ -17,6 +17,7 @@
 
 #include "fableofzelma.hpp"
 #include "resources.hpp"
+#include "object.hpp"
 
 
 namespace foz {
@@ -90,7 +91,9 @@ namespace foz {
                         myTiles[tile_i].push_back(tile_tok);
 
                     }else {
-                        //myObjects.push_back(new Object(tile_tok,tile_j*58,tile_i*58));
+                        myTiles[tile_i].push_back(13);
+                        Object toPush(tile_tok,0,0);
+                        myObjects.push_back(toPush);
                     }
                     linebuf_temp = strtok(NULL, " ,.-");
                 }
@@ -342,10 +345,12 @@ namespace foz {
                 glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             }
         }
-
-        //for (uint16_t i = 0; i< myObjects.size(); i++) {
-        //    myObjects[i].draw();
-        //}
+        printf("hey yo\n");
+        for (uint16_t i = 0; i< myObjects.size(); i++) {
+                //printf("Before %d improtant\n",i);
+                myObjects[i].draw();
+               // printf("This is%d improtant\n",i);
+        }
 
         glEnd();
 
