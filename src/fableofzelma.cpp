@@ -143,6 +143,7 @@ namespace foz {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 6;
 
+
                     //doors (south)
                     if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
                         myLink->room_y++;
