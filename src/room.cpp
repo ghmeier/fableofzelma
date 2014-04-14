@@ -86,7 +86,12 @@ namespace foz {
                         printf("  Invalid room specification in command \'%s\'", linebuf);
                         raise_error(ERR_BADFILE4, fname1);
                     }
-                    myTiles[tile_i].push_back(tile_tok);
+                    if (tile_tok<=12 || tile_tok==50) {//12 is the number of background sprites and 50 is the doors
+                        myTiles[tile_i].push_back(tile_tok);
+
+                    }else {
+                        //myObjects.push_back(new Object(tile_tok,tile_j*58,tile_i*58));
+                    }
                     linebuf_temp = strtok(NULL, " ,.-");
                 }
 
@@ -337,6 +342,10 @@ namespace foz {
                 glVertex3f(ROOM_START_X + ROOM_WALL_SIZE + (i-1)*ROOM_MIDDLE_SIZE, ROOM_START_Y-ROOM_WALL_SIZE-(j-1)*ROOM_MIDDLE_SIZE, WALL_DEPTH);
             }
         }
+
+        //for (uint16_t i = 0; i< myObjects.size(); i++) {
+        //    myObjects[i].draw();
+        //}
 
         glEnd();
 

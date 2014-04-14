@@ -5,7 +5,7 @@
 namespace foz {
     class Object{
         public:
-            Object(uint8_t myType, uint8_t myX, uint8_t myY, uint8_t world_width, uint8_t world_height);
+            Object(uint8_t myType, uint8_t myX, uint8_t myY);
             ~Object();
             void update(uint8_t cmd);
             void updateTransition(uint16_t val);

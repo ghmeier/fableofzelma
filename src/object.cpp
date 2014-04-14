@@ -6,7 +6,7 @@
 
 namespace foz {
 
-    Object::Object(uint8_t myType, uint8_t myX, uint8_t myY, uint8_t world_width, uint8_t world_height)
+    Object::Object(uint8_t myType, uint8_t myX, uint8_t myY)
     {
         type = myType;
         sprite = myType;

@@ -42,7 +42,6 @@ namespace foz {
     * map files.
     *****************************************************************************/
     void Game::init() {
-
         // Set the random seed here
         srand(0);
         myWorld.compile(&myConfig, &myStatus);
