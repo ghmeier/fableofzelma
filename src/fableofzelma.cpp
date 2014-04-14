@@ -143,44 +143,69 @@ namespace foz {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 6;
 
-                    //doors (south)
-                    if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
-                        myLink->room_y++;
-                        myLink->y = 250;
+                    //Checks for South Door / collision with South Wall
+                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50) {
+                        if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
+                            myLink->room_y++;
+                            myLink->y = 250;
+                        }
+                        else if ((myLink->y < -335)&&((myLink->x <= -50)||(myLink->x >= -20))) {
+                        myLink->y = -330;
+                        }
                     }
-                    // (east)
-                    else if ((myLink->x > 370)&&(myLink->y > -50)&&(myLink->y < -15)) {
-                        myLink->room_x++;
-                        myLink->x = -303;
-                    }
-
-                    // (west)
-                    else if ((myLink->x < -390)&&(myLink->y > -50)&&(myLink->y < 0 )) {
-                        myLink->room_x--;
-                        myLink->x = 250;
-                    }
-                    // (north)
-                    else if ((myLink->y > 320)&&(myLink->x > -47)&&(myLink->x < 0)) {
-                        myLink->room_y--;
-                        myLink->y = -303;
-                    }
-
-                    //check for collision with walls
-                    if ((myLink->x < -335)&&((myLink->y <= -50)||(myLink->y >= 0))) { //west
-                        myLink->x = -330;
-                    }
-
-                    else if ((myLink->x > 295)&&((myLink->y <= -50)||(myLink->y >= -15))) { //east
-                        myLink->x = 290;
-                    }
-
-                    if ((myLink->y < -335)&&((myLink->x <= -50)||(myLink->x >= -20))) { //south
+                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] != 50) {
+                    if ((myLink->y < -335)) {
                         myLink->y = -330;
                     }
+                    }
 
-                    else if ((myLink->y > 295)&&((myLink->x <= -47)||(myLink->x >= 0))) { //north
+                    //Checks for East Door / collision with East Wall
+                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50){
+                        if((myLink->x > 370)&&(myLink->y > -50)&&(myLink->y < -15)){
+                            myLink->room_x++;
+                            myLink->x = -303;
+                        }
+                        else if ((myLink->x > 295)&&((myLink->y <= -50)||(myLink->y >= -15))) {
+                        myLink->x = 290;
+                        }
+                    }
+                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] != 50){
+                        if ((myLink->x > 295)) {
+                            myLink->x = 290;
+                        }
+                    }
 
+
+                    //Checks for West Door / collision with West Wall
+                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50) {
+                        if ((myLink->x < -390)&&(myLink->y > -50)&&(myLink->y < 0 )) {
+                            myLink->room_x--;
+                            myLink->x = 250;
+                        }
+                        else if ((myLink->x < -335)&&((myLink->y <= -50)||(myLink->y >= 0))) {
+                        myLink->x = -330;
+                        }
+                    }
+                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] != 50) {
+                    if ((myLink->x < -335)) {
+                        myLink->x = -330;
+                    }
+                    }
+
+                    //Checks for North Door / collision with North Wall
+                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50) {
+                        if ((myLink->y > 320)&&(myLink->x > -47)&&(myLink->x < 0)) {
+                            myLink->room_y--;
+                            myLink->y = -303;
+                        }
+                        else if ((myLink->y > 295)&&((myLink->x <= -47)||(myLink->x >= 0))) {
                         myLink->y = 290;
+                        }
+                    }
+                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] != 50) {
+                        if ((myLink->y > 295)) {
+                            myLink->y = 290;
+                        }
                     }
 
 
