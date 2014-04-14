@@ -22,15 +22,16 @@
 
 namespace foz {
 
-    Object::Object(uint8_t myType, uint8_t myX, uint8_t myY)
+    Object::Object(uint8_t myType, float myX, float myY)
     {
         type = myType;
-        sprite = myType;
         width = GLOBALWIDTH;
         height = GLOBALHEIGHT;
         texfile = TEX_BASIC_ROOM;
+        sprite = myType;
         x = myX;
         y = myY;
+        depth = 3;
     }
 
     void Object::draw(){
@@ -42,18 +43,6 @@ namespace foz {
 
         glBegin(GL_QUADS);
 
-            if (direction == DIRECTION_EAST) {
-                glTexCoord2d(texCoords[2], texCoords[1]);
-                glVertex3f(x, y, depth);
-                glTexCoord2d(texCoords[0], texCoords[1]);
-                glVertex3f(x + width, y, depth);
-                glTexCoord2d(texCoords[0], texCoords[3]);
-                glVertex3f(x + width, y + height, depth);
-                glTexCoord2d(texCoords[2], texCoords[3]);
-                glVertex3f(x, y + height, depth);
-            }
-
-            else {
                 glTexCoord2d(texCoords[0], texCoords[1]);
                 glVertex3f(x, y, depth);
                 glTexCoord2d(texCoords[2], texCoords[1]);
@@ -62,7 +51,6 @@ namespace foz {
                 glVertex3f(x + width, y + height, depth);
                 glTexCoord2d(texCoords[0], texCoords[3]);
                 glVertex3f(x, y + height, depth);
-            }
 
         glEnd();
 

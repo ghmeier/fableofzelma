@@ -23,7 +23,7 @@ namespace foz {
 
     class Object{
         public:
-            Object(uint8_t myType, uint8_t myX, uint8_t myY);
+            Object(uint8_t myType, float myX, float myY);
             ~Object();
             void update(uint8_t cmd);
             void updateTransition(uint16_t val);

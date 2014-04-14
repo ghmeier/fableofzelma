@@ -91,8 +91,8 @@ namespace foz {
                         myTiles[tile_i].push_back(tile_tok);
 
                     }else {
-                        //myTiles[tile_i].push_back(13);
-                        Object toPush(tile_tok,tile_i*58 + 219,tile_j*58 + 219);
+                        myTiles[tile_i].push_back(FLOOR_TILE);
+                        Object toPush(tile_tok,tile_i*58.0-375.0,tile_j*-58.0+320.0);
                         myObjects.push_back(toPush);
                     }
                     linebuf_temp = strtok(NULL, " ,.-");
