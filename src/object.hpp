@@ -1,8 +1,26 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+/*****************************************************************************
+ * Joseph Zambreno
+ * Department of Electrical and Computer Engineering
+ * Iowa State University
+ *****************************************************************************/
+
+
+/*****************************************************************************
+ * links.hpp - FableofZelma application. This class contains the
+ * enumerated types and class declaration for the main object class.
+ *
+ *
+ * NOTES:
+ * 4/04/14 by JAZ::Design created.
+ *****************************************************************************/
+
+
+#pragma once
+
 #include "fableofzelma.hpp"
 
 namespace foz {
+
     class Object{
         public:
             Object(uint8_t myType, uint8_t myX, uint8_t myY);
@@ -27,5 +45,3 @@ namespace foz {
 
     };
 };
-
-#endif // OBJECT_H

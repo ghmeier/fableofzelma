@@ -11,16 +11,13 @@
  *
  *
  * NOTES:
- * 2/16/13 by JAZ::Design created.
+ * 4/12/14 by JAZ::Design created.
  *****************************************************************************/
 
 
 #include "fableofzelma.hpp"
 #define GLOBALHEIGHT 64.0
 #define GLOBALWIDTH 58.0
-#include <iostream>
-
-#include <windows.h>
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}

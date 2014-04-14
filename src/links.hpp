@@ -6,7 +6,7 @@
 
 
 /*****************************************************************************
- * plants.hpp - FableofZelma application. This class contains the
+ * links.hpp - FableofZelma application. This class contains the
  * enumerated types and class declaration for the main link class.
  *
  *

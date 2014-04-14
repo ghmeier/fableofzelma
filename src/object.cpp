@@ -1,4 +1,19 @@
-#include "object.hpp"
+/*****************************************************************************
+ * Joseph Zambreno
+ * Department of Electrical and Computer Engineering
+ * Iowa State University
+ *****************************************************************************/
+
+
+/*****************************************************************************
+ * object.cpp - FableofZelma application. This class contains the
+ * enumerated types and class declaration for the main Object class.
+ *
+ *
+ * NOTES:
+ * 4/12/14 by JAZ::Design created.
+ *****************************************************************************/
+
 #include "fableofzelma.hpp"
 
 #define GLOBALHEIGHT 58.0
