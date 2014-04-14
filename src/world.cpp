@@ -117,7 +117,7 @@ namespace foz {
         // We have opened the file successfully. Set defaults, and parse through it.
         size_flag = false;
         budget_flag = false;
-        myStatus->timer_ms = TIME_MS_DEFAULT;
+        myStatus->time_ms = TIME_MS_DEFAULT;
         myStatus->main_song = 1;
 
 
@@ -209,7 +209,7 @@ namespace foz {
             // Check for .time information
             time_ntok = sscanf(linebuf, " .time %u", &time_tok);
             if (time_ntok == 1) {
-                myStatus->timer_ms = 1.0*time_tok;
+                myStatus->time_ms = 1.0*time_tok;
                 continue;
             }
 

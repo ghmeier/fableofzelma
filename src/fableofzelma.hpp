@@ -123,7 +123,7 @@ namespace foz {
         public:
             MODE_TYPE mode;
             int16_t scores[4];
-            float timer_ms;
+            float time_ms;
             uint16_t budget;
             uint8_t main_song;
             bool end_music;

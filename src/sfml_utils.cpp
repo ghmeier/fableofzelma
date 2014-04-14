@@ -474,72 +474,161 @@ namespace foz {
 
 
         /* Draw the Time Remaining */
-        char time_word[5] = {'T','i','m','e',':'};
-        baseX = baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
-        baseY  = -1280.0 + NUMBER_HEIGHT;
+        char time_word[5] = "Time";
+        baseX = 1920.0*myWorld.width - 10*LETTER_WIDTH;
+        baseY = -1080.0 + NUMBER_HEIGHT;
         uint16_t font_numx;
-            for (uint8_t j = 0; j < 5; j++) {
-                font_numx = NUM_FONTS;
-                if (time_word[j] >= 'A' && time_word[j] <= 'Z') {
-                    font_numx = time_word[j] - 'A' + LETTER_A;
-                }
-                if (time_word[j] >= 'a' && time_word[j] <= 'z') {
-                    font_numx = time_word[j] - 'a' + LETTER_a;
-                }
-                if (time_word[j] >= '0' && time_word[j] <= '9') {
-                font_numx = time_word[j] - '0' + LETTER_0;
-                }
-                if (time_word[j] == ':') {
+        for (uint8_t j = 0; j < 4; j++) {
+            font_numx = NUM_FONTS;
+            if (time_word[j] >= 'A' && time_word[j] <= 'Z') {
+                font_numx = time_word[j] - 'A' + LETTER_A;
+            }
+            if (time_word[j] >= 'a' && time_word[j] <= 'z') {
+                font_numx = time_word[j] - 'a' + LETTER_a;
+            }
+            if (time_word[j] == ':') {
                 font_numx = LETTER_colon;
-                }
+            }
+            if (font_numx != NUM_FONTS) {
+                glBegin(GL_QUADS);
+                    getTexCoords(TEX_FONTS, font_numx, texCoords);
+                    glTexCoord2d(texCoords[0], texCoords[1]);
+                    glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[1]);
+                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[3]);
+                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
+                    glTexCoord2d(texCoords[0], texCoords[3]);
+                    glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
+                glEnd();
+            }
+        }
 
-                if (font_numx != NUM_FONTS) {
-                    glBegin(GL_QUADS);
-                        getTexCoords(TEX_FONTS, font_numx, texCoords);
-                        glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
-                        glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
-                    glEnd();
-                }
+        int32_t time_ms;
+        if (myStatus.time_ms >= 6000000) {
+            time_ms = 5999999;
+        }
+        else {
+            time_ms = myStatus.time_ms;
+        }
+
+        uint32_t fullmins = time_ms / 600000;
+        uint32_t mins = (time_ms / 60000) % 10;
+        uint32_t fullsecs = (time_ms % 60000) / 10000;
+        uint32_t secs = ((time_ms % 60000) / 1000) % 10;
+        uint32_t tenths = (time_ms % 1000) / 100;
+
+
+        baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
+        baseY  = -1080.0 - 1.5*NUMBER_HEIGHT;
+
+        glBegin(GL_QUADS);
+        if (fullmins != 0) {
+            getTexCoords(TEX_FONTS, LETTER_0 + fullmins, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+        }
+        baseX += NUMBER_WIDTH;
+        if ((fullmins > 0) || (mins > 0)) {
+            getTexCoords(TEX_FONTS, LETTER_0 + mins, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            baseX += 0.75*NUMBER_WIDTH;
+
+            getTexCoords(TEX_FONTS, LETTER_colon, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+
+            baseX += 0.75*NUMBER_WIDTH;
+            getTexCoords(TEX_FONTS, LETTER_0 + fullsecs, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+
+            baseX += NUMBER_WIDTH;
+            getTexCoords(TEX_FONTS, LETTER_0 + secs, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+        }
+
+        // Otherwise, draw the sec.tenths scoreboard mode
+        else {
+            if (fullsecs > 0) {
+                getTexCoords(TEX_FONTS, LETTER_0 + fullsecs, texCoords);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(baseX, baseY, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
             }
 
-            char Time[4];
-            float time_sec = myStatus.timer_ms/1000;
-            int time_min = (int)time_sec / 60;
-            time_sec = time_sec - (int)time_min * 60;
-            sprintf(Time, "%-d.%-6f", time_min, time_sec);
-            baseX = 1920.0*myWorld.width - 12*LETTER_WIDTH;
-            baseY  = -1280.0;
+            baseX += NUMBER_WIDTH;
+            getTexCoords(TEX_FONTS, LETTER_0 + secs, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
 
-            printf("%f \n", myStatus.timer_ms);
-            printf(Time);
+            baseX += 0.75*NUMBER_WIDTH;
+            getTexCoords(TEX_FONTS, LETTER_dot, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
 
-            for (uint8_t j = 0; j < 4; j++) {
+            baseX += 0.75*NUMBER_WIDTH;
+            getTexCoords(TEX_FONTS, LETTER_0 + tenths, texCoords);
+            glTexCoord2d(texCoords[0], texCoords[1]);
+            glVertex3f(baseX, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[1]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
+            glTexCoord2d(texCoords[2], texCoords[3]);
+            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            glTexCoord2d(texCoords[0], texCoords[3]);
+            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+        }
 
-                        if (Time[j] == '.') {
-                        getTexCoords(TEX_FONTS, LETTER_colon, texCoords);
-                        }
-                        else if (Time[j] != ' ') {
-                        getTexCoords(TEX_FONTS, Time[j] - '0' + LETTER_0, texCoords);
-                        }
-                        glBegin(GL_QUADS);
-                            glTexCoord2d(texCoords[0], texCoords[1]);
-                            glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                            glTexCoord2d(texCoords[2], texCoords[1]);
-                            glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                            glTexCoord2d(texCoords[2], texCoords[3]);
-                            glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY, FONT_DEPTH);
-                            glTexCoord2d(texCoords[0], texCoords[3]);
-                            glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
-                        glEnd();
-
-                    }
-
+        glEnd();
 
         // Reset Camera
         myCamera.state = prev_camera_state;

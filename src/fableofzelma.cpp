@@ -249,9 +249,9 @@ namespace foz {
 
 
         //update time
-        myStatus.timer_ms -= 1000.0/FRAME_RATE;
-        if (myStatus.timer_ms <= 0.0) {  // Check for the gameDone condition
-            myStatus.timer_ms = 0.0;
+        myStatus.time_ms -= 1000.0/FRAME_RATE;
+        if (myStatus.time_ms <= 0.0) {  // Check for the gameDone condition
+            myStatus.time_ms = 0.0;
             myStatus.mode = GAME_END;
         }
 

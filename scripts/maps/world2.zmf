@@ -9,7 +9,7 @@
 
 # Set the run-time. The game ends either when the clock goes down to 0
 # or when there are no commands remaining.
-.time 270000
+.time 90000
 
 
 # Set the total budget for links. Note we are specifying the per-team budget here.
