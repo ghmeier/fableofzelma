@@ -143,6 +143,35 @@ namespace foz {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 6;
 
+                    //check to see is an object will keep Link from moving
+                    myLink->can_move = true; //Link can move unless we find something in his way
+                    for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.size(); obj++) {
+                        foz::Object *myObject = &myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects[obj];
+
+                        //heading south
+                        if ((myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
+                            switch (myLink->direction) {
+                            case DIRECTION_SOUTH:
+                               myLink->can_move = false;
+                                myLink->y += 10;
+                                break;
+                            case DIRECTION_EAST:
+                                myLink->can_move = false;
+                                myLink->x -= 30;
+                                break;
+                            case DIRECTION_WEST:
+                                myLink->can_move = false;
+                                myLink->x += 30;
+                                break;
+                            case DIRECTION_NORTH:
+                                myLink->can_move = false;
+                                myLink->y -= 10;
+                                break;
+                            }
+                        }
+                    }
+
+
                     //Checks for South Door / collision with South Wall
                     if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50) {
                         if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
@@ -187,9 +216,9 @@ namespace foz {
                         }
                     }
                     else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] != 50) {
-                    if ((myLink->x < -335)) {
-                        myLink->x = -330;
-                    }
+                        if ((myLink->x < -335)) {
+                            myLink->x = -330;
+                        }
                     }
 
                     //Checks for North Door / collision with North Wall
@@ -208,9 +237,10 @@ namespace foz {
                         }
                     }
 
-
-                    myTeams[i].cur_cmdframe++;
-                    myLink->update(mycmd->cmd);
+                    if (myLink->can_move) {
+                        myTeams[i].cur_cmdframe++;
+                        myLink->update(mycmd->cmd);
+                    }
 
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.

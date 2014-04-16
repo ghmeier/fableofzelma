@@ -44,6 +44,7 @@ namespace foz {
             void move();
 
             bool active;
+            bool can_move;
             uint16_t action_count;
             uint8_t type;
             uint8_t direction;
