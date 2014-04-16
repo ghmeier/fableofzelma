@@ -149,25 +149,23 @@ namespace foz {
                         foz::Object *myObject = &myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects[obj];
 
                         //heading south
-                        if ((myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
-                            switch (myLink->direction) {
-                            case DIRECTION_SOUTH:
-                               myLink->can_move = false;
-                                myLink->y += 10;
-                                break;
-                            case DIRECTION_EAST:
-                                myLink->can_move = false;
-                                myLink->x -= 30;
-                                break;
-                            case DIRECTION_WEST:
-                                myLink->can_move = false;
-                                myLink->x += 30;
-                                break;
-                            case DIRECTION_NORTH:
-                                myLink->can_move = false;
-                                myLink->y -= 10;
-                                break;
-                            }
+                        if ((myLink->direction == DIRECTION_SOUTH)&&(myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y-5 > myObject->y-58)&&(myLink->y-5 < myObject->y+58)) {
+                            myLink->can_move = false;
+                        }
+
+                        //heading east
+                        if ((myLink->direction == DIRECTION_EAST)&&(myLink->x+5 > myObject->x-58)&&(myLink->x+5 < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
+                            myLink->can_move = false;
+                        }
+
+                        //heading west
+                        if ((myLink->direction == DIRECTION_WEST)&&(myLink->x-5 > myObject->x-58)&&(myLink->x-5 < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
+                            myLink->can_move = false;
+                        }
+
+                        //heading north
+                        if ((myLink->direction == DIRECTION_NORTH)&&(myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y+5 > myObject->y-58)&&(myLink->y+5 < myObject->y+58)) {
+                            myLink->can_move = false;
                         }
                     }
 
@@ -238,9 +236,10 @@ namespace foz {
                     }
 
                     if (myLink->can_move) {
-                        myTeams[i].cur_cmdframe++;
                         myLink->update(mycmd->cmd);
                     }
+
+                    myTeams[i].cur_cmdframe++;
 
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.
