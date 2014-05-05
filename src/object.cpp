@@ -27,11 +27,19 @@ namespace foz {
         type = myType;
         width = GLOBALWIDTH;
         height = GLOBALHEIGHT;
-        texfile = TEX_BASIC_ROOM;
-        sprite = myType;
+
         x = myX;
         y = myY;
         depth = 3;
+
+        if (type>12 && type<20) {
+            texfile = TEX_BASIC_ROOM;
+            sprite = type;
+            status = SOLID;
+        }else if (type>19 &&  type<24) {
+            texfile = TEX_RUPEE;
+            sprite = (type-20)*3;
+        }
     }
 
     void Object::draw(){
@@ -53,7 +61,12 @@ namespace foz {
                 glVertex3f(x, y + height, depth);
 
         glEnd();
-
+        if (texfile == TEX_RUPEE) {
+            sprite++;
+            if (sprite>=(type-19)*3) {
+                sprite = (type-20)*3;
+            }
+        }
         return;
 
     }

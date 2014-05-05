@@ -86,7 +86,7 @@ typedef enum
 {WALL_TOP_LEFT, WALL_TOP_CENTER, WALL_TOP_RIGHT, DOOR_LEFT, DOOR_TOP,                                                                                                           //1
 DOOR_RIGHT, WALL_LEFT, FLOOR_TILE, WALL_RIGHT, DOOR_BOTTOM,                                                                                                                     //2
 WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST, CHEST_OPEN, POT, POT_TILE,
-BUTTON, TORCH_UNLIT, TORCH_LIT}                                                                                                                   //3
+BUTTON, TORCH_UNLIT, TORCH_LIT, RUPEE_GREEN, RUPEE_PURPLE, RUPEE_BLUE, RUPEE_RED}                                                                                                                   //3
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 
@@ -110,4 +110,7 @@ RUPEE_BLUE_ONE, RUPEE_BLUE_TWO, RUPEE_BLUE_THREE,
 RUPEE_RED_ONE, RUPEE_RED_TWO, RUPEE_RED_THREE}                                                                                                               //3
 RUPEE_SPRITE_ENUM ;
 extern uint16_t rupee_spriteMap[][4];
+
+/*Sets the collision type of the object.*/
+typedef enum {TRANSPARENT=0,SOLID}OBJECT_STATUS;
 
