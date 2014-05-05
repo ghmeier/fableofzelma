@@ -48,6 +48,7 @@ typedef enum {CAMERA_INIT=0, CAMERA_PAN_LEFT, CAMERA_PAN_RIGHT, CAMERA_PAN_UP, C
 
 /* Direction enum */
 typedef enum {DIRECTION_NORTH=0, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST} DIRECTION_TYPE;
+extern int16_t direction_Modifier[4][2];
 
 /* Object Type Enum */
 //Begins at the value of the first sprite

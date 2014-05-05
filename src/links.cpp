@@ -53,7 +53,6 @@ namespace foz {
                     else {
                         sprite++;
                     }
-                    y += 5.0;
                 }
                 if (direction == DIRECTION_SOUTH) {
                     if (sprite >= LINK_WALKING_SOUTH_6) {
@@ -65,7 +64,6 @@ namespace foz {
                     else {
                         sprite++;
                     }
-                    y -= 5.0;
                 }
                 if (direction == DIRECTION_WEST) {
                     if (sprite >= LINK_WALKING_WEST_6) {
@@ -77,7 +75,7 @@ namespace foz {
                     else {
                         sprite++;
                     }
-                    x -= 5.0;
+
                 }
                 if (direction == DIRECTION_EAST) {
                     if (sprite >= LINK_WALKING_WEST_6) {
@@ -89,8 +87,9 @@ namespace foz {
                     else {
                         sprite++;
                     }
-                    x += 5.0;
                 }
+                x = x + speed*direction_Modifier[direction][0];
+                y = y + speed*direction_Modifier[direction][1];
 
                 break;
 
@@ -239,6 +238,7 @@ namespace foz {
 
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
+        speed = 2.9;
 
         switch(team) {
             case 0:

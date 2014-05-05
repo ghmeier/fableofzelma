@@ -137,36 +137,59 @@ namespace foz {
             foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
             foz::Link *myLink = &myLinks[i][myTeams[i].cur_link];
 
+            //the vertices of link and each object for easier access
+            uint16_t linkLt = 0;
+            uint16_t linkRt = 0;
+            uint16_t linkTp = 0;
+            uint16_t linkBt = 0;
+            uint16_t objLt = 0;
+            uint16_t objRt = 0;
+            uint16_t objTp = 0;
+            uint16_t objBt = 0;
             bool pred_true = true;
             switch (mycmd->cmd) {
 
                 case MOVE_CMD:
-                    CMDFRAMEMAX = 6;
+                    CMDFRAMEMAX = 20;
 
                     //check to see is an object will keep Link from moving
                     myLink->can_move = true; //Link can move unless we find something in his way
+
+
                     for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.size(); obj++) {
                         foz::Object *myObject = &myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects[obj];
-
+                        linkLt = myLink->x;
+                        linkRt = myLink->x + myLink->width;
+                        linkTp = myLink->y + myLink->height;
+                        linkBt = myLink->y;
+                        objLt = myObject->x;
+                        objRt = myObject->x + myObject->width;
+                        objTp = myObject->y + myObject->height;
+                        objBt = myObject->y;
                         //heading south
-                        if ((myLink->direction == DIRECTION_SOUTH)&&(myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y-5 > myObject->y-58)&&(myLink->y-5 < myObject->y+58)) {
+                        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkBt<objTp && linkBt > objBt) {
+                            myLink->y = myObject->y+myObject->height;
                             myLink->can_move = false;
                         }
 
                         //heading east
-                        if ((myLink->direction == DIRECTION_EAST)&&(myLink->x+5 > myObject->x-58)&&(myLink->x+5 < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
+                        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+                            myLink->x = myObject->x - myLink->width;
                             myLink->can_move = false;
                         }
 
                         //heading west
-                        if ((myLink->direction == DIRECTION_WEST)&&(myLink->x-5 > myObject->x-58)&&(myLink->x-5 < myObject->x+58)&&(myLink->y > myObject->y-58)&&(myLink->y < myObject->y+58)) {
+                        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+                            myLink->x = myObject->x + myObject->width;
                             myLink->can_move = false;
                         }
 
                         //heading north
-                        if ((myLink->direction == DIRECTION_NORTH)&&(myLink->x > myObject->x-58)&&(myLink->x < myObject->x+58)&&(myLink->y+5 > myObject->y-58)&&(myLink->y+5 < myObject->y+58)) {
+                        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkTp<=objTp && linkTp >= objBt) {
+                            myLink->y = myObject->y - myLink->height;
                             myLink->can_move = false;
                         }
+
                     }
 
 
@@ -175,13 +198,11 @@ namespace foz {
                         if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
                             myLink->room_y++;
                             myLink->y = 250;
+                        }else if ((myLink->y < -330)&&((myLink->x <= -50)||(myLink->x >= -20))) {
+                            myLink->y = -330;
                         }
-                        else if ((myLink->y < -335)&&((myLink->x <= -50)||(myLink->x >= -20))) {
-                        myLink->y = -330;
-                        }
-                    }
-                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] != 50) {
-                        if ((myLink->y < -335)) {
+                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] != 50) {
+                        if ((myLink->y < -330)) {
                             myLink->y = -330;
                         }
                     }
@@ -191,13 +212,11 @@ namespace foz {
                         if((myLink->x > 370)&&(myLink->y > -50)&&(myLink->y < -15)){
                             myLink->room_x++;
                             myLink->x = -303;
+                        }else if ((myLink->x > 290)&&((myLink->y <= -50)||(myLink->y >= -15))) {
+                            myLink->x = 290;
                         }
-                        else if ((myLink->x > 295)&&((myLink->y <= -50)||(myLink->y >= -15))) {
-                        myLink->x = 290;
-                        }
-                    }
-                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] != 50){
-                        if ((myLink->x > 295)) {
+                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] != 50){
+                        if ((myLink->x > 290)) {
                             myLink->x = 290;
                         }
                     }
@@ -208,13 +227,11 @@ namespace foz {
                         if ((myLink->x < -390)&&(myLink->y > -50)&&(myLink->y < 0 )) {
                             myLink->room_x--;
                             myLink->x = 250;
+                        }else if ((myLink->x < -330)&&((myLink->y <= -50)||(myLink->y >= 0))) {
+                            myLink->x = -330;
                         }
-                        else if ((myLink->x < -335)&&((myLink->y <= -50)||(myLink->y >= 0))) {
-                        myLink->x = -330;
-                        }
-                    }
-                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] != 50) {
-                        if ((myLink->x < -335)) {
+                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] != 50) {
+                        if ((myLink->x < -330)) {
                             myLink->x = -330;
                         }
                     }
@@ -224,13 +241,11 @@ namespace foz {
                         if ((myLink->y > 320)&&(myLink->x > -47)&&(myLink->x < 0)) {
                             myLink->room_y--;
                             myLink->y = -303;
+                        }else if ((myLink->y > 290)&&((myLink->x <= -47)||(myLink->x >= 0))) {
+                            myLink->y = 290;
                         }
-                        else if ((myLink->y > 295)&&((myLink->x <= -47)||(myLink->x >= 0))) {
-                        myLink->y = 290;
-                        }
-                    }
-                    else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] != 50) {
-                        if ((myLink->y > 295)) {
+                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] != 50) {
+                        if ((myLink->y > 290)) {
                             myLink->y = 290;
                         }
                     }
@@ -264,7 +279,6 @@ namespace foz {
                         myTeams[i].cur_cmd++;
                     }
                     break;
-
 
                 case LEFT_CMD:
                 case RIGHT_CMD:

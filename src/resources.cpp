@@ -140,6 +140,10 @@ uint16_t rupee_spriteMap[][4] = {
 
 };
 
+int16_t direction_Modifier[4][2] = {
+{0,1},{1,0},{0,-1},{-1,0}
+};
+
 
 
 
