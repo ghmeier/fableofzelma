@@ -138,14 +138,6 @@ namespace foz {
             foz::Link *myLink = &myLinks[i][myTeams[i].cur_link];
 
             //the vertices of link and each object for easier access
-            uint16_t linkLt = 0;
-            uint16_t linkRt = 0;
-            uint16_t linkTp = 0;
-            uint16_t linkBt = 0;
-            uint16_t objLt = 0;
-            uint16_t objRt = 0;
-            uint16_t objTp = 0;
-            uint16_t objBt = 0;
             bool pred_true = true;
             switch (mycmd->cmd) {
 
@@ -158,38 +150,20 @@ namespace foz {
 
                     for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.size(); obj++) {
                         foz::Object *myObject = &myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects[obj];
-                        linkLt = myLink->x;
-                        linkRt = myLink->x + myLink->width;
-                        linkTp = myLink->y + myLink->height;
-                        linkBt = myLink->y;
-                        objLt = myObject->x;
-                        objRt = myObject->x + myObject->width;
-                        objTp = myObject->y + myObject->height;
-                        objBt = myObject->y;
                         //heading south
-                        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkBt<objTp && linkBt > objBt) {
-                            myLink->y = myObject->y+myObject->height;
-                            myLink->can_move = false;
+                        if (linkColObj(myLink,myObject)) {
+                            if (myObject->status == SOLID) {
+                                myLink->can_move = false;
+                            }else {
+                                if (myObject->texfile==TEX_RUPEE) {
+                                    myTeams[myLink->team].score++;
+                                    myObject->active = false;
+                                }
+                            }
                         }
-
-                        //heading east
-                        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
-                            myLink->x = myObject->x - myLink->width;
-                            myLink->can_move = false;
+                        if (!myObject->active) {
+                            myObject->~Object();
                         }
-
-                        //heading west
-                        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
-                            myLink->x = myObject->x + myObject->width;
-                            myLink->can_move = false;
-                        }
-
-                        //heading north
-                        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkTp<=objTp && linkTp >= objBt) {
-                            myLink->y = myObject->y - myLink->height;
-                            myLink->can_move = false;
-                        }
-
                     }
 
 
@@ -922,9 +896,47 @@ namespace foz {
 
         }
 
+        for (int i=0;i<sizeof(myTeams);i++) {
+            myTeams->score = 0;
+        }
+
 
     }
 
+    /*****************************************************************************
+    * Function: bool Game::linkColObj(Link myLink, Object myObject)
+    * Description: returns true if the link and the object's boxes have collided
+    *****************************************************************************/
+
+    bool Game::linkColObj(Link *myLink, Object *myObject) {
+        if (!myObject->active) {
+            return false;
+        }
+        uint16_t linkLt = myLink->x;
+        uint16_t linkRt = myLink->x + myLink->width;
+        uint16_t linkTp = myLink->y + myLink->height;
+        uint16_t linkBt = myLink->y;
+        uint16_t objLt = myObject->x;
+        uint16_t objRt = myObject->x + myObject->width;
+        uint16_t objTp = myObject->y + myObject->height;
+        uint16_t objBt = myObject->y;
+        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkBt<objTp && linkBt > objBt) {
+            return true;
+        }else
+        //heading east
+        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+            return true;
+        }else
+        //heading west
+        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+            return true;
+        }else
+        //heading north
+        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkTp<=objTp && linkTp >= objBt) {
+            return true;
+        }
+        return false;
+    }
     /*****************************************************************************
     * Function: Game::~Game()
     * Description: Destructor for fvu::Game() class

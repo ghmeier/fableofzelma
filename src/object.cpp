@@ -39,11 +39,14 @@ namespace foz {
         }else if (type>19 &&  type<24) {
             texfile = TEX_RUPEE;
             sprite = (type-20)*3;
+            status = TRANSPARENT;
         }
     }
 
     void Object::draw(){
-
+        if (!active) {
+            return;
+        }
         float texCoords[6];
 
         getTexCoords(texfile, sprite, texCoords);
