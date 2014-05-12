@@ -167,6 +167,7 @@ namespace foz {
             uint8_t id;
             uint32_t status;
             char *name;
+            uint16_t score;
             uint16_t budget;
             uint16_t cur_cmd;
             uint16_t cur_link;
@@ -220,7 +221,6 @@ namespace foz {
             void compileTeams();
             void endGame();
 
-
             /* SFML functions (sfml_utils.cpp) */
             void initSFML();
             void loadResources();
@@ -239,6 +239,8 @@ namespace foz {
             foz::Team myTeams[4];
 
         private:
+            bool linkColObj(Link *myLink, Object *myObject);
+
             foz::Config myConfig;
             foz::World myWorld;
             foz::Camera myCamera;
