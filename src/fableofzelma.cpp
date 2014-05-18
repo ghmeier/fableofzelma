@@ -147,10 +147,14 @@ namespace foz {
                     //check to see is an object will keep Link from moving
                     myLink->can_move = true; //Link can move unless we find something in his way
 
-
-                    for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.size(); obj++) {
-                        foz::Object *myObject = &myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects[obj];
-                        //heading south
+                    if (i==0) {
+                        //printf("RoomX %d RoomY %d Size %d\n",myLink->room_x,myLink->room_y,myLink->id);
+                    }
+                    for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
+                        foz::Object *myObject = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[obj];
+                        if (i==0) {
+                            //printf("%d:type %d\n",obj,myObject->type);
+                        }
                         if (linkColObj(myLink,myObject)) {
                             if (myObject->status == SOLID) {
                                 myLink->can_move = false;
@@ -158,7 +162,7 @@ namespace foz {
                                 if (myObject->texfile==TEX_RUPEE) {
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
-                                    printf("Roomx: %d, Roomy: %d LINK: %d\n",myLink->room_x,myLink->room_y,i);
+                                    //printf("Roomx: %d, Roomy: %d LINK: %d\n",myLink->room_x,myLink->room_y,i);
                                 }
                             }
                         }
@@ -168,61 +172,41 @@ namespace foz {
                         }
                     }
 
-
-                    //Checks for South Door / collision with South Wall
-                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50) {
-                        if ((myLink->y < -390)&&(myLink->x > -50)&&(myLink->x < -20)) {
-                            myLink->room_y++;
-                            myLink->y = 250;
-                        }else if ((myLink->y < -330)&&((myLink->x <= -50)||(myLink->x >= -20))) {
-                            myLink->y = -330;
+                    if (myLink->y < -330) {
+                        if (myLink->direction == DIRECTION_SOUTH) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                                myLink->room_y++;
+                                myLink->y = 329;
+                            }else {
+                                myLink->y = -330;
+                            }
                         }
-                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] != 50) {
-                        if ((myLink->y < -330)) {
-                            myLink->y = -330;
+                    }else if (myLink->y > 290) {
+                        if (myLink->direction == DIRECTION_NORTH) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                                myLink->room_y--;
+                                myLink->y = -329;
+                            }else {
+                                myLink->y = 290;
+                            }
                         }
-                    }
-
-                    //Checks for East Door / collision with East Wall
-                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50){
-                        if((myLink->x > 370)&&(myLink->y > -50)&&(myLink->y < -15)){
-                            myLink->room_x++;
-                            myLink->x = -303;
-                        }else if ((myLink->x > 290)&&((myLink->y <= -50)||(myLink->y >= -15))) {
-                            myLink->x = 290;
+                    }else if (myLink->x > 290) {
+                        if (myLink->direction == DIRECTION_EAST) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                                myLink->room_x++;
+                                myLink->x = -329;
+                            }else {
+                                myLink->x = 290;
+                            }
                         }
-                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] != 50){
-                        if ((myLink->x > 290)) {
-                            myLink->x = 290;
-                        }
-                    }
-
-
-                    //Checks for West Door / collision with West Wall
-                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50) {
-                        if ((myLink->x < -390)&&(myLink->y > -50)&&(myLink->y < 0 )) {
-                            myLink->room_x--;
-                            myLink->x = 250;
-                        }else if ((myLink->x < -330)&&((myLink->y <= -50)||(myLink->y >= 0))) {
-                            myLink->x = -330;
-                        }
-                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] != 50) {
-                        if ((myLink->x < -330)) {
-                            myLink->x = -330;
-                        }
-                    }
-
-                    //Checks for North Door / collision with North Wall
-                    if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50) {
-                        if ((myLink->y > 320)&&(myLink->x > -47)&&(myLink->x < 0)) {
-                            myLink->room_y--;
-                            myLink->y = -303;
-                        }else if ((myLink->y > 290)&&((myLink->x <= -47)||(myLink->x >= 0))) {
-                            myLink->y = 290;
-                        }
-                    }else if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] != 50) {
-                        if ((myLink->y > 290)) {
-                            myLink->y = 290;
+                    }else if (myLink->x < -330) {
+                        if (myLink->direction == DIRECTION_WEST) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                                myLink->room_x--;
+                                myLink->x = 289;
+                            }else {
+                                myLink->x = -329;
+                            }
                         }
                     }
 
@@ -922,19 +906,19 @@ namespace foz {
         uint16_t objRt = myObject->x + myObject->width;
         uint16_t objTp = myObject->y + myObject->height;
         uint16_t objBt = myObject->y;
-        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkBt<objTp && linkBt > objBt) {
+        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkBt<objTp && linkBt> objBt) {
             return true;
         }else
         //heading east
-        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
             return true;
         }else
         //heading west
-        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<objTp))) {
+        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
             return true;
         }else
         //heading north
-        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>=objLt && linkLt<objRt)||(linkRt<=objRt && linkRt>objLt)) && linkTp<=objTp && linkTp >= objBt) {
+        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkTp<objTp && linkTp > objBt) {
             return true;
         }
         return false;

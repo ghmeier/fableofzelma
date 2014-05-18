@@ -29,6 +29,7 @@ namespace foz {
             void updateTransition(uint16_t val);
             void draw();
             void move();
+            void setRoomXY(uint8_t roomx, uint8_t roomy);
 
             bool active;
             uint8_t type;

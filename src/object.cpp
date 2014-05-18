@@ -39,11 +39,15 @@ namespace foz {
             sprite = type;
             status = SOLID;
         }else if (type>=RUPEE_START &&  type<=RUPEE_END) {
-            printf("-------%d-----------\n",type);
             texfile = TEX_RUPEE;
             sprite = (type-RUPEE_START)*3;
             status = TRANSPARENT;
         }
+    }
+
+    void Object::setRoomXY(uint8_t roomx, uint8_t roomy) {
+        room_x = roomx;
+        room_y = roomy;
     }
 
     void Object::draw(){
@@ -72,7 +76,6 @@ namespace foz {
             if (sprite>=(type-RUPEE_START+1)*3) {
                 sprite = (type-RUPEE_START)*3;
             }
-            if (type==23) printf("sprite:%d\n",texfile);
         }
         return;
 

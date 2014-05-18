@@ -256,8 +256,8 @@ namespace foz {
                 texfile = TEX_PURPLE_LINK;
                 room_x = 0;
                 room_y = world_height-1;
-                x = 50.0;
-                y = 50.0;
+                x = -25;
+                y = 83.0;
                 sprite = LINK_WALKING_NORTH_1;
                 direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
@@ -266,8 +266,8 @@ namespace foz {
                 texfile = TEX_BLUE_LINK;
                 room_x = world_width-1;
                 room_y = 0;
-                x = 50.0;
-                y = 50.0;
+                x = -25.0;
+                y = 83.0;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -277,8 +277,8 @@ namespace foz {
                 texfile = TEX_RED_LINK;
                 room_x = world_width-1;
                 room_y = world_height-1;
-                x = 50.0;
-                y = 50.0;
+                x = -25.0;
+                y = 83.0;
                 sprite = LINK_WALKING_NORTH_1;
                 direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
