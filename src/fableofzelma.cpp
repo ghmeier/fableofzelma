@@ -158,11 +158,13 @@ namespace foz {
                                 if (myObject->texfile==TEX_RUPEE) {
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
+                                    printf("Roomx: %d, Roomy: %d LINK: %d\n",myLink->room_x,myLink->room_y,i);
                                 }
                             }
                         }
                         if (!myObject->active) {
-                            myObject->~Object();
+                            myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.erase(myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.begin()+obj);
+                            obj--;
                         }
                     }
 

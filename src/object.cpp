@@ -19,6 +19,8 @@
 
 #define GLOBALHEIGHT 58.0
 #define GLOBALWIDTH 58.0
+#define RUPEE_START 21
+#define RUPEE_END 24
 
 namespace foz {
 
@@ -32,13 +34,14 @@ namespace foz {
         y = myY;
         depth = 3;
 
-        if (type>12 && type<20) {
+        if (type>12 && type<RUPEE_START) {
             texfile = TEX_BASIC_ROOM;
             sprite = type;
             status = SOLID;
-        }else if (type>19 &&  type<24) {
+        }else if (type>=RUPEE_START &&  type<=RUPEE_END) {
+            printf("-------%d-----------\n",type);
             texfile = TEX_RUPEE;
-            sprite = (type-20)*3;
+            sprite = (type-RUPEE_START)*3;
             status = TRANSPARENT;
         }
     }
@@ -66,9 +69,10 @@ namespace foz {
         glEnd();
         if (texfile == TEX_RUPEE) {
             sprite++;
-            if (sprite>=(type-19)*3) {
-                sprite = (type-20)*3;
+            if (sprite>=(type-RUPEE_START+1)*3) {
+                sprite = (type-RUPEE_START)*3;
             }
+            if (type==23) printf("sprite:%d\n",texfile);
         }
         return;
 

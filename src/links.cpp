@@ -246,8 +246,8 @@ namespace foz {
                 texfile = TEX_GREEN_LINK;
                 room_x = 0;
                 room_y = 0;
-                x = 50.0;
-                y = 50.0;
+                x = -25.0;
+                y = -83.0;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
