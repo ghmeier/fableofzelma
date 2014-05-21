@@ -19,7 +19,7 @@
 
 /* Command types and spellings */
 #define NUM_CMD_SPELLINGS 3
-typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, NUM_CMD_TYPES} CMD_TYPE;
+typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, WAIT_CMD, NUM_CMD_TYPES} CMD_TYPE;
 extern std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
 
 /* Predicate types and spellings */

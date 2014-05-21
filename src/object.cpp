@@ -17,8 +17,8 @@
 #include "fableofzelma.hpp"
 #include "resources.hpp"
 
-#define GLOBALHEIGHT 58.0
-#define GLOBALWIDTH 58.0
+#define GLOBALHEIGHT 59.0
+#define GLOBALWIDTH 59.0
 #define RUPEE_START 21
 #define RUPEE_END 24
 

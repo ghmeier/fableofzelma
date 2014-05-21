@@ -17,7 +17,7 @@
 
 #include "fableofzelma.hpp"
 #define GLOBALHEIGHT 64.0
-#define GLOBALWIDTH 58.0
+#define GLOBALWIDTH 59.0
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}
@@ -41,8 +41,8 @@ namespace foz {
         switch (cmd) {
 
             case MOVE_CMD:
-                 height = 64.0;
-                 width = 58.0;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_WALKING_NORTH_6) {
                         sprite = LINK_WALKING_NORTH_1;
@@ -178,8 +178,8 @@ namespace foz {
                 break;
 
         case LEFT_CMD:
-             height = 64.0;
-             width = 58.0;
+            height = GLOBALHEIGHT;
+            width = GLOBALWIDTH;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_WEST;
                 sprite = LINK_WALKING_WEST_1;
@@ -199,8 +199,8 @@ namespace foz {
             break;
 
         case RIGHT_CMD:
-             height = 64.0;
-             width = 58.0;
+            height = GLOBALHEIGHT;
+            width = GLOBALWIDTH;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_EAST;
                 sprite = LINK_WALKING_WEST_1;
@@ -215,6 +215,19 @@ namespace foz {
             }
             else if (direction == DIRECTION_EAST) {
                 direction = DIRECTION_SOUTH;
+                sprite = LINK_WALKING_SOUTH_1;
+            }
+            break;
+        case WAIT_CMD:
+            height = GLOBALHEIGHT;
+            width = GLOBALWIDTH;
+            if (direction == DIRECTION_EAST) {
+                sprite = LINK_WALKING_WEST_1;
+            }else if (direction == DIRECTION_WEST) {
+                sprite = LINK_WALKING_WEST_1;
+            }else if (direction== DIRECTION_NORTH) {
+                sprite = LINK_WALKING_NORTH_1;
+            }else if (direction == DIRECTION_SOUTH) {
                 sprite = LINK_WALKING_SOUTH_1;
             }
             break;
@@ -238,7 +251,7 @@ namespace foz {
 
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
-        speed = 2.9;
+        speed = 2.95;
 
         switch(team) {
             case 0:

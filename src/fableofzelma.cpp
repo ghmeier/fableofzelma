@@ -16,7 +16,7 @@
  *****************************************************************************/
 
 #include "fableofzelma.hpp"
-
+#include "time.h"
 foz::Game *myGame;
 
 int main(int argc, char *argv[]) {
@@ -118,7 +118,7 @@ namespace foz {
     void Game::updateGame() {
 
         int CMDFRAMEMAX;
-
+        uint64_t frameStartTime = time(NULL) ;
         // Command loop: grab the next cmd for each team.
         for (uint16_t i = 0; i < 4; i++) {
 
@@ -147,14 +147,8 @@ namespace foz {
                     //check to see is an object will keep Link from moving
                     myLink->can_move = true; //Link can move unless we find something in his way
 
-                    if (i==0) {
-                        //printf("RoomX %d RoomY %d Size %d\n",myLink->room_x,myLink->room_y,myLink->id);
-                    }
                     for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
                         foz::Object *myObject = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[obj];
-                        if (i==0) {
-                            //printf("%d:type %d\n",obj,myObject->type);
-                        }
                         if (linkColObj(myLink,myObject)) {
                             if (myObject->status == SOLID) {
                                 myLink->can_move = false;
@@ -162,7 +156,6 @@ namespace foz {
                                 if (myObject->texfile==TEX_RUPEE) {
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
-                                    //printf("Roomx: %d, Roomy: %d LINK: %d\n",myLink->room_x,myLink->room_y,i);
                                 }
                             }
                         }
@@ -172,46 +165,54 @@ namespace foz {
                         }
                     }
 
-                    if (myLink->y < -330) {
+                    //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
+                    //**If you're planning on changing this be sure you have a good reason to or write these values down.**
+                    if (myLink->y <= -328) {
                         if (myLink->direction == DIRECTION_SOUTH) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y++;
-                                myLink->y = 329;
+                                myLink->y = 266;
                             }else {
-                                myLink->y = -330;
+                                myLink->can_move = false;
+                                myLink->y = -328;
                             }
                         }
-                    }else if (myLink->y > 290) {
+                    }else if (myLink->y >= 266) {
                         if (myLink->direction == DIRECTION_NORTH) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y--;
-                                myLink->y = -329;
+                                myLink->y = -328;
                             }else {
-                                myLink->y = 290;
+                                myLink->can_move = false;
+                                myLink->y = 266;
                             }
                         }
-                    }else if (myLink->x > 290) {
+                    }else if (myLink->x >= 270) {
                         if (myLink->direction == DIRECTION_EAST) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x++;
-                                myLink->x = -329;
+                                myLink->x = -321;
                             }else {
-                                myLink->x = 290;
+                                myLink->can_move = false;
+                                myLink->x = 270;
                             }
                         }
-                    }else if (myLink->x < -330) {
+                    }else if (myLink->x <= -321) {
                         if (myLink->direction == DIRECTION_WEST) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x--;
-                                myLink->x = 289;
+                                myLink->x = 270;
                             }else {
-                                myLink->x = -329;
+                                myLink->can_move = false;
+                                myLink->x = -321;
                             }
                         }
                     }
 
                     if (myLink->can_move) {
                         myLink->update(mycmd->cmd);
+                    }else {
+                        myLink->update(WAIT_CMD);
                     }
 
                     myTeams[i].cur_cmdframe++;
@@ -242,10 +243,21 @@ namespace foz {
 
                 case LEFT_CMD:
                 case RIGHT_CMD:
-                    myLink->update(mycmd->cmd);
-                    myTeams[i].cur_cmd++;
-                    break;
+                case WAIT_CMD:
+                    CMDFRAMEMAX = 20;
+                    if (myTeams[i].cur_cmdframe==0) {
+                        myLink->update(mycmd->cmd);
+                    }
+                    //myTeams[i].cur_cmd++;
 
+                    myTeams[i].cur_cmdframe++;
+                    // Have we reached the end of a CMDFRAME?
+                    // If so, see how many squares we have left to go.
+                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
+                        myTeams[i].cur_cmdframe = 0;
+                        myTeams[i].cur_cmd++;
+                    }
+                    break;
                 default:
                     bool pred_true = true;
 
@@ -733,7 +745,12 @@ namespace foz {
                         valid_cmd = true;
                     }
                     break;
-
+                  case WAIT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
                   case GOTO_CMD:
                     place_str[0] = 0;
                     target_str[0] = 0;
@@ -898,27 +915,22 @@ namespace foz {
         if (!myObject->active) {
             return false;
         }
+
         uint16_t linkLt = myLink->x;
         uint16_t linkRt = myLink->x + myLink->width;
-        uint16_t linkTp = myLink->y + myLink->height;
+        uint16_t linkTp = myLink->y + myLink->height - 6;//subtract 6 because link's head is taller than the blocks
         uint16_t linkBt = myLink->y;
         uint16_t objLt = myObject->x;
         uint16_t objRt = myObject->x + myObject->width;
         uint16_t objTp = myObject->y + myObject->height;
         uint16_t objBt = myObject->y;
-        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkBt<objTp && linkBt> objBt) {
+        if ((myLink->direction == DIRECTION_SOUTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkBt+1<objTp && linkBt+1> objBt) {
             return true;
-        }else
-        //heading east
-        if ((myLink->direction == DIRECTION_EAST)&&linkRt>objLt && linkRt<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+        }else if ((myLink->direction == DIRECTION_EAST)&&linkRt+1>objLt && linkRt+1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
             return true;
-        }else
-        //heading west
-        if ((myLink->direction == DIRECTION_WEST)&&linkLt>objLt && linkLt<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+        }else if ((myLink->direction == DIRECTION_WEST)&&linkLt-1>objLt && linkLt-1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
             return true;
-        }else
-        //heading north
-        if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkTp<objTp && linkTp > objBt) {
+        }else if ((myLink->direction == DIRECTION_NORTH)&&((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkTp-1<objTp && linkTp-1> objBt) {
             return true;
         }
         return false;
