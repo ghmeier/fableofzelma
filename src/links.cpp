@@ -17,7 +17,7 @@
 
 #include "fableofzelma.hpp"
 #define GLOBALHEIGHT 64.0
-#define GLOBALWIDTH 59.0
+#define GLOBALWIDTH 58.0
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}

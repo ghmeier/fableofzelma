@@ -29,7 +29,7 @@ namespace foz {
         type = myType;
         width = GLOBALWIDTH;
         height = GLOBALHEIGHT;
-
+        active = true;
         x = myX;
         y = myY;
         depth = 3;
@@ -42,6 +42,10 @@ namespace foz {
             texfile = TEX_RUPEE;
             sprite = (type-RUPEE_START)*3;
             status = TRANSPARENT;
+        }else {
+            texfile = TEX_BASIC_ROOM;
+            sprite = type;
+            status = SOLID;
         }
     }
 
