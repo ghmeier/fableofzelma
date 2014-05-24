@@ -37,6 +37,7 @@ namespace foz {
     class Link {
         public:
             Link(uint8_t type, uint16_t myid, uint8_t myteam, uint8_t world_width, uint8_t world_height);
+            Link(uint16_t type, float x, float y);
             ~Link(){};
             void update(uint8_t cmd);
             void updateTransition(uint16_t val);
@@ -64,6 +65,7 @@ namespace foz {
             uint16_t delay;
             uint16_t move_count;
             uint8_t frameCount;
+            uint16_t numKeys; // number of keys to open chests that link has
     };
 
 }

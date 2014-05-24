@@ -19,7 +19,7 @@
 
 /* Command types and spellings */
 #define NUM_CMD_SPELLINGS 3
-typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, WAIT_CMD, DEATH_CMD, NUM_CMD_TYPES} CMD_TYPE;
+typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, WAIT_CMD, ACTIVATE_CMD, DEATH_CMD, NUM_CMD_TYPES} CMD_TYPE;
 extern std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
 
 /* Predicate types and spellings */
@@ -37,7 +37,7 @@ typedef enum {MUSIC_MAIN=0, MUSIC_ANNIVERSARY, NUM_MUSIC} MUSIC_ENUM;
 extern std::string musicFiles[NUM_MUSIC];
 
  /* Texture file enum */
-typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, TEX_RUPEE, NUM_TEXTURES} TEXTURE_ENUM;
+typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, TEX_RUPEE, TEX_ENEMIES, NUM_TEXTURES} TEXTURE_ENUM;
 extern std::string texFiles[NUM_TEXTURES];
 
 /* Depth enum */
@@ -88,7 +88,8 @@ DOOR_RIGHT, WALL_LEFT, FLOOR_TILE, WALL_RIGHT, DOOR_BOTTOM,                     
 WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST, CHEST_OPEN, POT, POT_TILE,
 BUTTON, TORCH_UNLIT, TORCH_LIT,DEFAULT_BLOCK, VOID_BLOCK, RUPEE_GREEN_1,RUPEE_GREEN_2,
 RUPEE_GREEN_3,RUPEE_PURPLE_1,RUPEE_PURPLE_2,RUPEE_PURPLE_3, RUPEE_BLUE_1,RUPEE_BLUE_2,
-RUPEE_BLUE_3, RUPEE_ORANGE_1,RUPEE_ORANGE_2,RUPEE_ORANGE_3, RUPEE_RED_1,RUPEE_RED_2,RUPEE_RED_3}                                                                                                                   //3
+RUPEE_BLUE_3, RUPEE_ORANGE_1,RUPEE_ORANGE_2,RUPEE_ORANGE_3, RUPEE_RED_1,RUPEE_RED_2,
+RUPEE_RED_3, KEY}                                                                                                                   //3
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 
@@ -112,6 +113,16 @@ RUPEE_BLUE_ONE, RUPEE_BLUE_TWO, RUPEE_BLUE_THREE,
 RUPEE_RED_ONE, RUPEE_RED_TWO, RUPEE_RED_THREE}                                                                                                               //3
 RUPEE_SPRITE_ENUM ;
 extern uint16_t rupee_spriteMap[][4];
+
+typedef enum {BSKEL=0}ENEMY_TYPE;
+
+typedef enum
+{BSKEL_EAST_1=0,BSKEL_EAST_2,BSKEL_EAST_3,
+BSKEL_NORTH_1,BSKEL_NORTH_2,BKEL_NORTH_3,
+BSKEL_SOUTH_1,BSKEL_SOUTH_2,BSKEL_SOUTH_3,
+BSKEL_WEST_1,BSKEL_WEST_2,BSKEL_WEST_3
+} ENEMY_SPRITE_ENUM;
+extern uint16_t enemy_spriteMap[][4];
 
 /*Sets the collision type of the object.*/
 typedef enum {TRANSPARENT=0,SOLID}OBJECT_STATUS;

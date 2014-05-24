@@ -125,10 +125,10 @@ namespace foz {
                         x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
                         y =  y +(-(link_object_spriteMap[sprite - 1][1] - link_object_spriteMap_centers[sprite - 1][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
-                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
-
+                    width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                    height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
                 }
+
                 if (direction == DIRECTION_SOUTH) {
                         tempSprite = sprite;
                     if (sprite >= LINK_SLASH_SOUTH_20){
@@ -149,11 +149,10 @@ namespace foz {
 
 
                     }
-
-                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
-
+                    width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                    height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
                 }
+
                 if (direction == DIRECTION_WEST) {
                     if (sprite >= LINK_SLASH_WEST_20){
                         sprite = LINK_SLASH_WEST_1;
@@ -166,9 +165,8 @@ namespace foz {
                         x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
                         y =  y +3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
                     }
-                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
-
+                    width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                    height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
                 }
 
                 if (direction == DIRECTION_EAST) {
@@ -183,12 +181,9 @@ namespace foz {
                         x =  x + 3.05*(-(-link_object_spriteMap[sprite - 1][2] + link_object_spriteMap_centers[sprite - 1][0]) + (-link_object_spriteMap[sprite][2] + link_object_spriteMap_centers[sprite][0]));
                         y =  y +3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
                     }
-                width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
-                height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
-
-                    }
-
-
+                    width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
+                    height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
+                }
                 break;
 
         case LEFT_CMD:
@@ -253,9 +248,6 @@ namespace foz {
     }
 
 
-
-
-
     /*****************************************************************************
     * Function: Link::Link
     * Description: Class constructor. Uses an enum type to set link-specific
@@ -317,6 +309,35 @@ namespace foz {
         }
 
 
+    }
+
+    /*****************************************************************************
+    * Function Link:Link
+    * Description: The Enemy constructor. Constructs things on the enemy team.
+    ******************************************************************************/
+    Link::Link(uint16_t mytype, float myx, float myy) {
+        type = mytype-100;
+        id = 1;
+        team = -1;
+        height = GLOBALHEIGHT;
+        width = GLOBALWIDTH;
+        speed = 2.95;
+        x = myx;
+        y = myy;
+        team = -1;
+        texfile = TEX_ENEMIES;
+        printf("made skel\n");
+
+        switch (type) {
+            case BSKEL:
+
+                health = 20;
+                sprite = BSKEL_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                break;
+            default:
+                break;
+        }
     }
 
     /*****************************************************************************

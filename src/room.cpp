@@ -92,8 +92,13 @@ namespace foz {
 
                     }else {
                         myTiles[tile_i].push_back(FLOOR_TILE);
-                        Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
-                        myObjects.push_back(toPush);
+                       if (tile_tok<100) {
+                            Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
+                            myObjects.push_back(toPush);
+                        }else {
+                            //Link toAdd(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
+                            //myEnemies.push_back(toAdd);
+                        }
                     }
                     linebuf_temp = strtok(NULL, " ,.-");
                 }
@@ -350,6 +355,10 @@ namespace foz {
                 //printf("Before %d improtant\n",i);
                 myObjects[i].draw();
                // printf("This is%d improtant\n",i);
+        }
+
+        for (uint16_t i=0;i<myEnemies.size(); i++) {
+            myEnemies[i].draw();
         }
 
         glEnd();

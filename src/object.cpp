@@ -46,6 +46,8 @@ namespace foz {
         }else if (type>=RUPEE_GREEN_1 &&  type<=RUPEE_RED_3) {
             status = TRANSPARENT;
             sprite += rand() % 3;
+        }else if (type==KEY) {
+            status = TRANSPARENT;
         }else {
             status = SOLID;
         }

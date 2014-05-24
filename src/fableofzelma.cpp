@@ -139,6 +139,7 @@ namespace foz {
 
             //the vertices of link and each object for easier access
             bool pred_true = true;
+            Object* lookChest = NULL;
 
             myLink->can_move = true; //Link can move unless we find something in his way
                     for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
@@ -146,18 +147,20 @@ namespace foz {
                         if (linkColObj(myLink,myObject)) {
                             if (myObject->status == SOLID) {
                                 myLink->can_move = false;
+                                if (myObject->type == CHEST) {
+                                    lookChest = myObject;
+                                }
                             }else {
                                 if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
                                 }else if (myObject->type == VOID_BLOCK) {
                                     myLink->health = -1;
+                                }else if (myObject->type == KEY) {
+                                    myObject->active = false;
+                                    myLink->numKeys++;
                                 }
                             }
-                        }
-                        if (!myObject->active) {
-                            //myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.erase(myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.begin()+obj);
-                            //obj--;
                         }
                     }
 
@@ -222,7 +225,6 @@ namespace foz {
 
                 case MOVE_CMD:
                     CMDFRAMEMAX = 20;
-
                     //check to see is an object will keep Link from moving
 
                     if (myLink->can_move) {
@@ -265,7 +267,28 @@ namespace foz {
                     if (myTeams[i].cur_cmdframe==0) {
                         myLink->update(mycmd->cmd);
                     }
-                    //myTeams[i].cur_cmd++;
+
+                    myTeams[i].cur_cmdframe++;
+                    // Have we reached the end of a CMDFRAME?
+                    // If so, see how many squares we have left to go.
+                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
+                        myTeams[i].cur_cmdframe = 0;
+                        myTeams[i].cur_cmd++;
+                    }
+                    break;
+                case ACTIVATE_CMD:
+                    CMDFRAMEMAX = 20;
+
+                    if (lookChest!=NULL && myLink->numKeys>0) {
+                        lookChest->type = CHEST_OPEN;
+                        lookChest->sprite = CHEST_OPEN;
+                        myTeams[myLink->team].score +=5;
+                        myLink->numKeys--;
+                    }
+
+                    if (myTeams[i].cur_cmdframe==0) {
+                        myLink->update(mycmd->cmd);
+                    }
 
                     myTeams[i].cur_cmdframe++;
                     // Have we reached the end of a CMDFRAME?
@@ -763,6 +786,18 @@ namespace foz {
                     }
                     break;
                   case WAIT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
+                 case DEATH_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
+                 case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
