@@ -43,6 +43,7 @@ namespace foz {
             uint16_t row, col;
             uint8_t room_x, room_y;
             float x, y;
+            uint8_t frameCount;
 
     };
 };

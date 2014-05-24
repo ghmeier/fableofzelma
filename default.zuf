@@ -3,13 +3,12 @@ select L2 Regular
 select L3 Regular
 select L4 Regular
 
-start: move l1 5
-right l1
-move l1 6
+start: left l1
+move l1 1
 left l1
-move l1 2
-left l1
-move l1 11
+move l1 1
 right l1
-move l1 5
+move l1 10
+left l1
+move l1 1
 goto start

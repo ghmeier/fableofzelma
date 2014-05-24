@@ -19,8 +19,8 @@
 
 #define GLOBALHEIGHT 59.0
 #define GLOBALWIDTH 59.0
-#define RUPEE_START 21
-#define RUPEE_END 24
+#define RUPEE_START 22
+#define RUPEE_END 25
 
 namespace foz {
 
@@ -33,18 +33,20 @@ namespace foz {
         x = myX;
         y = myY;
         depth = 3;
+        texfile = TEX_BASIC_ROOM;
+        sprite = type;
+        if(type>12 && type<RUPEE_GREEN_1) {
 
-        if (type>12 && type<RUPEE_START) {
-            texfile = TEX_BASIC_ROOM;
             sprite = type;
-            status = SOLID;
-        }else if (type>=RUPEE_START &&  type<=RUPEE_END) {
-            texfile = TEX_RUPEE;
-            sprite = (type-RUPEE_START)*3;
+            if (type == VOID_BLOCK) {
+                status = TRANSPARENT;
+            }else {
+                status = SOLID;
+            }
+        }else if (type>=RUPEE_GREEN_1 &&  type<=RUPEE_RED_3) {
             status = TRANSPARENT;
+            sprite += rand() % 3;
         }else {
-            texfile = TEX_BASIC_ROOM;
-            sprite = type;
             status = SOLID;
         }
     }
@@ -56,6 +58,7 @@ namespace foz {
 
     void Object::draw(){
         if (!active) {
+            delete this;
             return;
         }
         float texCoords[6];
@@ -75,10 +78,17 @@ namespace foz {
                 glVertex3f(x, y + height, depth);
 
         glEnd();
-        if (texfile == TEX_RUPEE) {
-            sprite++;
-            if (sprite>=(type-RUPEE_START+1)*3) {
-                sprite = (type-RUPEE_START)*3;
+        if (type >= RUPEE_GREEN_1 && type <=RUPEE_RED_3) {
+            if (frameCount%18 == 3) {
+                sprite++;
+                if (sprite>=type+3) {
+                    sprite = type;
+                }
+            }
+            if (frameCount>FRAME_RATE) {
+                frameCount = 0;
+            }else {
+                frameCount++;
             }
         }
         return;

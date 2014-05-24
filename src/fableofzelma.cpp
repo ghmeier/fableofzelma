@@ -147,15 +147,17 @@ namespace foz {
                             if (myObject->status == SOLID) {
                                 myLink->can_move = false;
                             }else {
-                                if (myObject->texfile==TEX_RUPEE) {
+                                if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
+                                }else if (myObject->type == VOID_BLOCK) {
+                                    myLink->health = -1;
                                 }
                             }
                         }
                         if (!myObject->active) {
-                            myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.erase(myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.begin()+obj);
-                            obj--;
+                            //myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.erase(myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.begin()+obj);
+                            //obj--;
                         }
                     }
 
@@ -191,26 +193,28 @@ namespace foz {
                         if (myLink->direction == DIRECTION_EAST) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x++;
-                                myLink->x = -321.0;
+                                myLink->x = -379.0;
+                                myLink->y = -33;
                             }else {
                                 myLink->can_move = false;
                                 myLink->x = 270.0;
                             }
                         }else {
-                        myLink->x = 270.0;
+                        //myLink->x = 270.0;
                         }
                     }
                     if (myLink->x <= -321.0) {
                         if (myLink->direction == DIRECTION_WEST) {
                             if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x--;
-                                myLink->x = 270.0;
+                                myLink->x = 328.0;
+                                myLink->y = -33;
                             }else {
                                 myLink->can_move = false;
                                 myLink->x = -321.0;
                             }
                         }else {
-                            myLink->x = -321;
+                            //myLink->x = -321;
                         }
                     }
 
@@ -220,7 +224,6 @@ namespace foz {
                     CMDFRAMEMAX = 20;
 
                     //check to see is an object will keep Link from moving
-
 
                     if (myLink->can_move) {
                         myLink->update(mycmd->cmd);
@@ -240,6 +243,7 @@ namespace foz {
                             myTeams[i].cur_cmdopt = 0;
                         }
                     }
+
                     break;
 
                 case ATTACK_CMD:

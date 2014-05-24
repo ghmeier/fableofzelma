@@ -18,6 +18,7 @@
 #include "fableofzelma.hpp"
 #define GLOBALHEIGHT 64.0
 #define GLOBALWIDTH 58.0
+#define MAX_HEALTH 50
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}
@@ -38,56 +39,69 @@ namespace foz {
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
         uint16_t tempSprite;
+
+        if (health<=0) {
+            delete this;
+            //cmd = DEATH_CMD;
+        }
+
         switch (cmd) {
 
             case MOVE_CMD:
                 height = GLOBALHEIGHT;
                 width = GLOBALWIDTH;
-                if (direction == DIRECTION_NORTH) {
-                    if (sprite >= LINK_WALKING_NORTH_6) {
-                        sprite = LINK_WALKING_NORTH_1;
+                if (frameCount%8==3) {
+                    if (direction == DIRECTION_NORTH) {
+                        if (sprite >= LINK_WALKING_NORTH_6) {
+                            sprite = LINK_WALKING_NORTH_1;
+                        }
+                        else if (sprite < LINK_WALKING_NORTH_1) {
+                            sprite = LINK_WALKING_NORTH_1;
+                        }
+                        else {
+                            sprite++;
+                        }
                     }
-                    else if (sprite < LINK_WALKING_NORTH_1) {
-                        sprite = LINK_WALKING_NORTH_1;
+                    if (direction == DIRECTION_SOUTH) {
+                        if (sprite >= LINK_WALKING_SOUTH_6) {
+                            sprite = LINK_WALKING_SOUTH_1;
+                        }
+                        else if (sprite < LINK_WALKING_SOUTH_1) {
+                            sprite = LINK_WALKING_SOUTH_1;
+                        }
+                        else {
+                            sprite++;
+                        }
                     }
-                    else {
-                        sprite++;
-                    }
-                }
-                if (direction == DIRECTION_SOUTH) {
-                    if (sprite >= LINK_WALKING_SOUTH_6) {
-                        sprite = LINK_WALKING_SOUTH_1;
-                    }
-                    else if (sprite < LINK_WALKING_SOUTH_1) {
-                        sprite = LINK_WALKING_SOUTH_1;
-                    }
-                    else {
-                        sprite++;
-                    }
-                }
-                if (direction == DIRECTION_WEST) {
-                    if (sprite >= LINK_WALKING_WEST_6) {
-                        sprite = LINK_WALKING_WEST_1;
-                    }
-                    else if (sprite < LINK_WALKING_WEST_1) {
-                        sprite = LINK_WALKING_WEST_1;
-                    }
-                    else {
-                        sprite++;
-                    }
+                    if (direction == DIRECTION_WEST) {
+                        if (sprite >= LINK_WALKING_WEST_6) {
+                            sprite = LINK_WALKING_WEST_1;
+                        }
+                        else if (sprite < LINK_WALKING_WEST_1) {
+                            sprite = LINK_WALKING_WEST_1;
+                        }
+                        else {
+                            sprite++;
+                        }
 
+                    }
+                    if (direction == DIRECTION_EAST) {
+                        if (sprite >= LINK_WALKING_WEST_6) {
+                            sprite = LINK_WALKING_WEST_1;
+                        }
+                        else if (sprite < LINK_WALKING_WEST_1) {
+                            sprite = LINK_WALKING_WEST_1;
+                        }
+                        else {
+                            sprite++;
+                        }
+                    }
                 }
-                if (direction == DIRECTION_EAST) {
-                    if (sprite >= LINK_WALKING_WEST_6) {
-                        sprite = LINK_WALKING_WEST_1;
+                    if ( frameCount>FRAME_RATE) {
+                        frameCount = 0;
+                    }else {
+                        frameCount++;
                     }
-                    else if (sprite < LINK_WALKING_WEST_1) {
-                        sprite = LINK_WALKING_WEST_1;
-                    }
-                    else {
-                        sprite++;
-                    }
-                }
                 x = x + speed*direction_Modifier[direction][0];
                 y = y + speed*direction_Modifier[direction][1];
 
@@ -231,6 +245,10 @@ namespace foz {
                 sprite = LINK_WALKING_SOUTH_1;
             }
             break;
+        case DEATH_CMD:
+            printf("YOU DIED!");
+            //delete this;
+            break;
         }
     }
 
@@ -248,7 +266,7 @@ namespace foz {
         type = mytype;
         id = myid;
         team = myteam;
-
+        health = MAX_HEALTH;
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
         speed = 2.95;
@@ -269,10 +287,10 @@ namespace foz {
                 texfile = TEX_PURPLE_LINK;
                 room_x = 0;
                 room_y = world_height-1;
-                x = -25;
-                y = 83.0;
-                sprite = LINK_WALKING_NORTH_1;
-                direction = DIRECTION_NORTH;
+                x = -25.0;
+                y = -83.0;
+                sprite = LINK_WALKING_SOUTH_1;
+                direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
             case 2:
@@ -280,7 +298,7 @@ namespace foz {
                 room_x = world_width-1;
                 room_y = 0;
                 x = -25.0;
-                y = 83.0;
+                y = -83.0;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -292,8 +310,8 @@ namespace foz {
                 room_y = world_height-1;
                 x = -25.0;
                 y = 83.0;
-                sprite = LINK_WALKING_NORTH_1;
-                direction = DIRECTION_NORTH;
+                sprite = LINK_WALKING_SOUTH_1;
+                direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
         }

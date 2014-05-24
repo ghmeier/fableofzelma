@@ -63,6 +63,7 @@ namespace foz {
             float dir;
             uint16_t delay;
             uint16_t move_count;
+            uint8_t frameCount;
     };
 
 }
