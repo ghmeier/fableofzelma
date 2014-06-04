@@ -6,7 +6,7 @@
 
 
 /*****************************************************************************
- * fableofzelma.hpp - The Fable of Zelda application. Takes as input move files
+ * resources.hpp - The Fable of Zelda application. Takes as input move files
  * and an optional map file and runs a Legend of Zelda-style simulation
  * for up to four teams.
  *
@@ -114,7 +114,8 @@ RUPEE_RED_ONE, RUPEE_RED_TWO, RUPEE_RED_THREE}                                  
 RUPEE_SPRITE_ENUM ;
 extern uint16_t rupee_spriteMap[][4];
 
-typedef enum {BSKEL=0}ENEMY_TYPE;
+typedef enum {BSKEL=0,NUM_ENEMIES}ENEMY_TYPE;
+extern char* enemy_filePath[NUM_ENEMIES];
 
 typedef enum
 {BSKEL_EAST_1=0,BSKEL_EAST_2,BSKEL_EAST_3,
@@ -123,6 +124,9 @@ BSKEL_SOUTH_1,BSKEL_SOUTH_2,BSKEL_SOUTH_3,
 BSKEL_WEST_1,BSKEL_WEST_2,BSKEL_WEST_3
 } ENEMY_SPRITE_ENUM;
 extern uint16_t enemy_spriteMap[][4];
+
+/*The enemy names and their commands*/
+extern char* enemyNames[NUM_ENEMIES];
 
 /*Sets the collision type of the object.*/
 typedef enum {TRANSPARENT=0,SOLID}OBJECT_STATUS;

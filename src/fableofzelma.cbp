@@ -37,6 +37,8 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="camera.cpp" />
+		<Unit filename="enemy.cpp" />
+		<Unit filename="enemy.h" />
 		<Unit filename="fableofzelma.cpp" />
 		<Unit filename="fableofzelma.hpp" />
 		<Unit filename="links.cpp" />

@@ -153,6 +153,14 @@ uint16_t enemy_spriteMap[][4] = {
 {144,3,159,28},{160,3,175,28},{176,3,192,28}
 };
 
+char* enemy_filePath[NUM_ENEMIES] {
+    "scripts/enemies/blue_skel_commands.zef"
+};
+
+char* enemyNames[NUM_ENEMIES] {
+    "blue_skel"
+};
+
 int16_t direction_Modifier[4][2] = {
 {0,1},{1,0},{0,-1},{-1,0}
 };

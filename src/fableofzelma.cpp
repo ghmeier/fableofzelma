@@ -46,7 +46,7 @@ namespace foz {
         srand(0);
         myWorld.compile(&myConfig, &myStatus);
         compileTeams();
-
+        compileEnemies();
         // Initialize game status
         myStatus.mode = GAME_START;
         framecount = 0;
@@ -402,10 +402,17 @@ namespace foz {
         myConfig.screen_width = SCREEN_WIDTH_DEFAULT;
         myConfig.screen_depth = SCREEN_DEPTH_DEFAULT;
         myConfig.map_fname = (char *)malloc(strlen(MAP_FNAME_DEFAULT)+1);
+        printf("\n--------**********____________%d\n",NUM_ENEMIES);
+        for (int i=0;i<NUM_ENEMIES;i++) {
+            myConfig.enemy_fname[i] = (char *)malloc(strlen(enemy_filePath[i])+1);
+            strcpy(myConfig.enemy_fname[i],enemy_filePath[i]);
+            printf("________88*****\n");
+        }
 
         if (!myConfig.map_fname) {
             raise_error(ERR_NOMEM, NULL);
         }
+
         strcpy(myConfig.map_fname, MAP_FNAME_DEFAULT);
         for (i = 0; i < 4; i++) {
             myConfig.team_fname[i] = (char *)malloc(strlen(TEAM_FNAME_DEFAULT)+1);
@@ -422,6 +429,7 @@ namespace foz {
             }
 
             /* Decode the single dash arguments */
+
             if (argv[i][1] != '-') {
                 /* Single dash arguments should have just one character after the dash */
                 if (strlen(argv[i]) > 2) {
@@ -505,8 +513,8 @@ namespace foz {
 
     /*****************************************************************************
     * Function: Game::compileTeams()
-    * Description: Compiles the 4 team .fpl files to initialize commands and
-    * other per-team information
+    * Description: If Type 0 Compiles the 4 team .zuf files to initialize commands and
+    * other per-team information. if Type 1 compiles .zef files
     *****************************************************************************/
     void Game::compileTeams() {
         foz::Team *team;
@@ -514,13 +522,14 @@ namespace foz {
 
         for (uint8_t i_team = 0; i_team < 4; i_team++) {
             bool first_link = true;
-
+            enemyCommands.push_back(std::vector<cmd_type>());
             /* Open and compile the team file */
             if (myConfig.debug_level > 1) {
                 printf("\n\nCompiling team file %s\n", myConfig.team_fname[i_team]);
             }
 
             team_file = fopen(myConfig.team_fname[i_team], "r");
+
             if (!team_file) {
                 raise_error(ERR_NOFILE2, myConfig.team_fname[i_team]);
             }
@@ -955,6 +964,339 @@ namespace foz {
             myTeams->score = 0;
         }
 
+
+    }
+
+    /*****************************************************************************
+    *Function:  void compileEnemies()
+    *Description: compiles the files in scripts/enemies and stores the commands in
+    *             enemyCmds array
+    ******************************************************************************/
+    void Game::compileEnemies() {
+        std::string enemyName;
+        FILE *enemy_file;
+
+        for (uint8_t i = 0; i<NUM_ENEMIES; i++) {
+
+            /* Open and compile the team file */
+            if (myConfig.debug_level > 1) {
+                printf("\n\nCompiling enemy file %s\n", myConfig.enemy_fname[i]);
+            }
+
+            enemy_file = fopen(myConfig.enemy_fname[i], "r");
+
+            if (!enemy_file) {
+                raise_error(ERR_NOFILE2, myConfig.enemy_fname[i]);
+            }
+
+            bool select_done = false;
+            bool start_done = false;
+            for (uint32_t line_count=1; !feof(enemy_file); line_count++) {
+
+                char *fgets_ret;
+                char linebuf[256], select_str1[16], select_str2[16], start_str[256];
+                char place_str[16], label_str[256], target_str[256];
+                char cmd_str[256], cmd_str2[256], pred_str[256];
+                uint8_t select_ntok, start_ntok, label_ntok, pred_ntok, cmd_ntok;
+                uint16_t select_tok;
+                fgets_ret = fgets(linebuf, 256, enemy_file);
+                select_str1[0] = 0;select_str2[0] = 0;
+                strlower(linebuf);
+
+                // If we have a '#', the line is a comment and we can skip it
+                // We can also skip blank lines
+                if ((fgets_ret == NULL) || (linebuf == 0) || (linebuf[0] == '#') ||
+                    (linebuf[0] == 10) || (linebuf[0] == 13)) {
+                    continue;
+                }
+
+                bool select_match = false;
+                bool enemy_match = false;
+
+                // Until we reach the start line, we do not support predicates
+                foz::cmd_type *local_cmd;
+                start_str[0] = 0;
+                start_ntok = 0;
+                if (start_done == false) {
+                    start_ntok = sscanf(linebuf, " start: %[^\t\n]", start_str);
+                    if (start_ntok == 1) {
+                        start_done = true;
+                    }
+                }
+
+                // Everything from here on out is a proper command, with potentially labels and predicates
+                cmd_str[0] = 0;label_str[0] = 0;
+                bool has_label = false;
+                label_ntok = sscanf(linebuf, "%[^:]: %[^\t\n]", label_str, cmd_str);
+                if (label_ntok == 2) {
+                    has_label = true;
+                }
+                else {
+                    if (start_str[0] > 0) {
+                        strcpy(label_str ,"start");
+                        strcpy(cmd_str , start_str);
+                        start_str[0] = 0;
+                    } else{
+                        sscanf(linebuf, " %[^\t\n]", cmd_str);
+                    }
+                }
+
+                // Check for an if statement
+                cmd_str2[0] = 0;
+                pred_str[0] = 0;
+                bool has_pred = false;
+                bool inv_pred = false;
+                bool has_enemy_pred = false;
+                uint16_t pred_tok;
+                uint16_t enemy_pred = 0;
+                pred_ntok = sscanf(cmd_str, " if not l%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                if (pred_ntok == 3) {
+                    has_pred = true;
+                    has_enemy_pred = true;
+                    enemy_pred = pred_tok;
+                    inv_pred = true;
+                }
+                else {
+                    pred_ntok = sscanf(cmd_str, " if l%hu.%[^,], %[^\t\n]", &pred_tok, pred_str, cmd_str2);
+                    if (pred_ntok == 3) {
+                        has_pred = true;
+                        has_enemy_pred = true;
+                        enemy_pred = pred_tok;
+                        inv_pred = false;
+                    }
+                    else {
+                        pred_ntok = sscanf(cmd_str, " if not %[^,], %[^\t\n]", pred_str, cmd_str2);
+                        if (pred_ntok == 2) {
+                            has_pred = true;
+                            inv_pred = true;
+                        }
+                        else {
+                            pred_ntok = sscanf(cmd_str, " if %[^,], %[^\t\n]", pred_str, cmd_str2);
+                            if (pred_ntok == 2) {
+                                has_pred = true;
+                                inv_pred = false;
+                            }
+                            else {
+                                sscanf(cmd_str, " %[^\t\n]", cmd_str2);
+                            }
+                        }
+                    }
+                }
+                // If there is a predicate, check if the condition is valid
+                bool pred_match = false;
+
+                uint8_t pred = ALWAYS_PRED;
+                if (has_pred == true) {
+                    for (pred = 0; pred < NUM_PRED_TYPES; pred++) {
+                        for (uint8_t i = 0; i < NUM_PRED_SPELLINGS; i++) {
+                            if (!strcmp(pred_str, predNames[pred][i].c_str())) {
+                                pred_match = true;
+                                break;
+                            }
+                        }
+                        if (pred_match == true) {
+                            break;
+                        }
+                    }
+                    if (pred_match == false) {
+                        printf("Error compiling %s, line %d\n", myConfig.enemy_fname[i], line_count);
+                        printf("  invalid condition of %s\n", pred_str);
+                        raise_error(ERR_BADFILE2, myConfig.enemy_fname[i]);
+                    }
+                }
+
+                // Now we can attempt to match the actual string
+                uint8_t cmd;
+                bool cmd_match = false;
+                for (cmd = 0; cmd < NUM_CMD_TYPES; cmd++) {
+                    for (uint8_t i = 0; i < NUM_CMD_SPELLINGS; i++) {
+                        if (!strncmp(cmd_str2, cmdNames[cmd][i].c_str(), cmdNames[cmd][i].size())) {
+                            cmd_match = true;
+                            break;
+                        }
+                    }
+                    if (cmd_match == true) {
+                        break;
+                    }
+                }
+                if (cmd_match == false) {
+                    printf("Error compiling %s, line %d\n", myConfig.enemy_fname[i], line_count);
+                    printf("  invalid command of %s\n", cmd_str2);
+                    raise_error(ERR_BADFILE2, myConfig.enemy_fname[i]);
+                }
+
+                // Based on the command we matched, we can grab the target of the command.
+                // We know we spelled the command correctly at this point so just grab everything else
+                bool valid_cmd = false;
+                uint16_t opt[2] = {0, 0};
+                uint16_t link = 0;
+                switch (cmd) {
+                  case SELECT_CMD:
+                  default:
+                    valid_cmd = false;
+                    break;
+                  case MOVE_CMD:
+                    place_str[0] = 0;
+                    cmd_ntok = sscanf(cmd_str2, "%s %hu", place_str,  &opt[0]);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
+                  case LEFT_CMD:
+                    place_str[0] = 0;
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                  case RIGHT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                  case ATTACK_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                  case WAIT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                 case DEATH_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                 case ACTIVATE_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                  case GOTO_CMD:
+                    place_str[0] = 0;
+                    target_str[0] = 0;
+                    cmd_ntok = sscanf(cmd_str2, "%s %s", place_str, target_str);
+                    if (cmd_ntok == 2) {
+                        // Note that goto is not necessarily valid, depending on the target string which we can only check later
+                        valid_cmd = true;
+                    }
+                    break;
+                }
+
+                if (valid_cmd == false) {
+                    printf("Error compiling %s, line %d\n", myConfig.enemy_fname[i], line_count);
+                    printf("  invalid command options of %s\n", cmd_str2);
+                    raise_error(ERR_BADFILE2, myConfig.team_fname[i]);
+                }
+
+                // FINALLY, we can allocate and add a new command to the cmds structure
+                local_cmd = new cmd_type;
+                local_cmd->has_label = has_label;
+                if (has_label == true)
+                    strncpy(local_cmd->label_str, label_str, 16);
+                if (cmd == GOTO_CMD) {
+                    strncpy(local_cmd->target_str, target_str, 16);
+                }
+                local_cmd->inv_pred = inv_pred;
+                local_cmd->has_pred = has_pred;
+                local_cmd->has_link_pred = has_enemy_pred;
+                local_cmd->link_pred = enemy_pred;
+                local_cmd->cmd = cmd;
+                local_cmd->pred = pred;
+                local_cmd->link = NULL;
+                local_cmd->line = line_count;
+                local_cmd->opt[0] = opt[0];
+                local_cmd->opt[1] = opt[1];
+
+                enemyCommands[i].push_back(*local_cmd);
+                delete local_cmd;
+
+            }
+
+
+            // Only after the file is compiled can we do a second pass and verify the target strings and plant targets
+            for (uint16_t iEnemy = 0; iEnemy < enemyCommands[i].size(); i++) {
+                printf("over and over %d\n",enemyCommands[i][iEnemy].cmd);
+                if (enemyCommands[i][iEnemy].cmd == GOTO_CMD) {
+                    printf("it's goto now\n");
+                    bool goto_valid = false;
+                    for (uint16_t j = 0; j < enemyCommands[i].size(); j++) {
+
+                        if (enemyCommands[i][j].has_label == true) {
+                            if (!strcmp(enemyCommands[i][j].label_str, enemyCommands[i][iEnemy].target_str)) {
+                                enemyCommands[i][iEnemy].opt[0] = j;
+                                goto_valid = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (goto_valid == false) {
+                        printf("Error compiling %s, line %d\n", myConfig.enemy_fname[i], enemyCommands[i][iEnemy].line);
+                        printf("  goto target of %s not found\n", enemyCommands[i][iEnemy].target_str);
+                        raise_error(ERR_BADFILE2, myConfig.enemy_fname[i]);
+                    }
+                }
+                printf("past?\n");
+            }
+            printf("mmmm\n");
+            // Third pass, have we duplicated any labels?
+            for (uint16_t iEnemy = 0; iEnemy < enemyCommands[i].size(); iEnemy++) {
+
+                if (enemyCommands[i][iEnemy].has_label == true) {
+                    for (uint16_t j = 0; j < enemyCommands[i].size(); j++) {
+                        if (iEnemy == j) continue;
+                        if (enemyCommands[i][j].has_label == true) {
+                            if (!strcmp(enemyCommands[i][iEnemy].label_str, enemyCommands[i][j].label_str)) {
+                                printf("Error compiling %s, line %d\n", myConfig.enemy_fname[i], enemyCommands[i][j].line);
+                                printf("  duplicate command label of %s\n", enemyCommands[i][iEnemy].label_str);
+                                raise_error(ERR_BADFILE2, myConfig.enemy_fname[i]);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (myConfig.debug_level > 50) {
+                printf("\nCommands are as follows: \n");
+                printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
+                for (uint16_t iE = 0; iE < enemyCommands[i].size(); iE++) {
+                    printf("cmd-%03u: | ", iE);
+                    printf(" %3u | ", enemyCommands[i][iE].line);
+                    if (enemyCommands[i][iE].has_label == true)
+                        printf("%9s | ", enemyCommands[i][iE].label_str);
+                    else
+                        printf("%9s | ", "none");
+                    if (enemyCommands[i][iE].has_pred == true) {
+                        if (enemyCommands[i][iE].has_link_pred == true)
+                            printf("%3hu | ", enemyCommands[i][iE].link_pred);
+                        else
+                            printf("%3s | ", "yes");
+                    }
+                    else {
+                        printf("%3s | ", "no");
+                    }
+                    if (enemyCommands[i][iE].inv_pred == true)
+                        printf("%4s | ", "yes");
+                    else
+                        printf("%4s | ", "no");
+
+                    printf("%8s | ", predNames[enemyCommands[i][iE].pred][0].c_str());
+                    printf("%7s | ", cmdNames[enemyCommands[i][iE].cmd][0].c_str());
+                    printf("[%hu, %hu]", enemyCommands[i][iE].opt[0], enemyCommands[i][iE].opt[1]);
+                    printf("\n");
+                }
+                printf("\n");
+            }
+
+        }
 
     }
 

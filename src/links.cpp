@@ -254,7 +254,6 @@ namespace foz {
     * parameters
     *****************************************************************************/
     Link::Link(uint8_t mytype, uint16_t myid, uint8_t myteam, uint8_t world_width, uint8_t world_height) {
-
         type = mytype;
         id = myid;
         team = myteam;
@@ -318,26 +317,16 @@ namespace foz {
     Link::Link(uint16_t mytype, float myx, float myy) {
         type = mytype-100;
         id = 1;
-        team = -1;
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
         speed = 2.95;
         x = myx;
         y = myy;
-        team = -1;
+        room_x = 0;
+        room_y = 0;
+        team = 255;
         texfile = TEX_ENEMIES;
-        printf("made skel\n");
 
-        switch (type) {
-            case BSKEL:
-
-                health = 20;
-                sprite = BSKEL_SOUTH_1;
-                direction = DIRECTION_SOUTH;
-                break;
-            default:
-                break;
-        }
     }
 
     /*****************************************************************************

@@ -135,7 +135,7 @@ namespace foz {
         myTextures[TEX_RED_LINK].spriteMap = link_object_spriteMap;
         myTextures[TEX_FONTS].spriteMap = font_spriteMap;
         myTextures[TEX_RUPEE].spriteMap = rupee_spriteMap;
-
+        myTextures[TEX_ENEMIES].spriteMap = enemy_spriteMap;
         if (myConfig.debug_level > 3)
             printf("done.\n");
 
@@ -236,10 +236,10 @@ namespace foz {
 
 
         // Hard-Coded Scores and Names
-        myStatus.scores[0] = 4001;
-        myStatus.scores[1] = -234;
-        myStatus.scores[2] = 3;
-        myStatus.scores[3] = 1122;
+        myStatus.scores[0] = myTeams[0].score;
+        myStatus.scores[1] = myTeams[1].score;
+        myStatus.scores[2] = myTeams[2].score;
+        myStatus.scores[3] = myTeams[3].score;
 
         /* Draw the team names */
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);

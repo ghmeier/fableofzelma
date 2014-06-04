@@ -86,7 +86,6 @@ float *getTexCoords(uint8_t texID, uint16_t spriteID, float *texCoords);
 
 namespace foz {
 
-
     /* Game configuration information */
     class Config {
         public:
@@ -96,6 +95,7 @@ namespace foz {
             uint8_t screen_depth;
             char *team_fname[4];
             char *map_fname;
+            char *enemy_fname[NUM_ENEMIES];
     };
 
 
@@ -176,7 +176,6 @@ namespace foz {
             uint16_t cur_cmdopt;
             bool cmds_done;
             std::vector<foz::cmd_type> cmds;
-
     };
 
     /* Camera information */
@@ -196,7 +195,6 @@ namespace foz {
     };
 
 
-
     /* Texture structure, so that we can more easily swap textures out */
     class Texture {
         public:
@@ -207,6 +205,14 @@ namespace foz {
             uint16_t (*spriteMap)[4];
     };
 
+    class Enemy : public Link{
+        public:
+
+            Enemy(uint16_t mytype, float myx, float myy);
+            void compileEnemies();
+            ~Enemy();
+
+    };
 
     /* Main Game class */
     class Game {
@@ -214,12 +220,14 @@ namespace foz {
             /* Main functions (fableofzelma.cpp) */
             Game(int argc, char **argv);
             ~Game();
+            std::vector< std::vector<foz::cmd_type> > enemyCommands;
             void init();
             void reset();
             void mainLoop();
             void updateGame();
             void restartGame();
             void compileTeams();
+            void compileEnemies();
             void endGame();
 
             /* SFML functions (sfml_utils.cpp) */
@@ -256,13 +264,6 @@ namespace foz {
     };
 
 
-     class Drawable {
-        public:
-            virtual void  drawSelf();
-    };
-
 } // namespace foz
-
-
 extern foz::Game *myGame;
 
