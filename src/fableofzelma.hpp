@@ -104,9 +104,13 @@ namespace foz {
             Enemy(uint16_t mytype, float myx, float myy);
             void compileEnemies();
             void update(uint8_t cmd);
+            void draw();
             ~Enemy();
 
             uint16_t cmdIter;
+            uint16_t cur_cmdframe;
+            bool cmds_done;
+            uint16_t cur_cmdopt;
 
     };
 
@@ -127,6 +131,7 @@ namespace foz {
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
+        void updateEnemies();
         ~Room();
     };
 
@@ -237,7 +242,7 @@ namespace foz {
             void loadResources();
             void drawScoreboard();
             void processEvents();
-
+            bool linkColObj(Link *myLink, Object *myObject);
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
@@ -248,9 +253,10 @@ namespace foz {
             foz::Status myStatus;
             std::vector<Link> myLinks[4];
             foz::Team myTeams[4];
+            std::vector< std::vector<foz::cmd_type> > enemyCommands;
 
         private:
-            bool linkColObj(Link *myLink, Object *myObject);
+
 
             foz::Config myConfig;
             foz::World myWorld;
@@ -268,5 +274,5 @@ namespace foz {
 
 } // namespace foz
 extern foz::Game *myGame;
-extern std::vector< std::vector<foz::cmd_type> > enemyCommands;
+
 

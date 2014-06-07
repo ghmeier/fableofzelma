@@ -39,7 +39,6 @@ namespace foz {
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
         uint16_t tempSprite;
-
         if (health<=0) {
             delete this;
             //cmd = DEATH_CMD;
@@ -319,6 +318,7 @@ namespace foz {
         id = 1;
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
+        depth = FRONT_DEPTH;
         speed = 2.95;
         x = myx;
         y = myy;
@@ -326,6 +326,7 @@ namespace foz {
         room_y = 0;
         team = 255;
         texfile = TEX_ENEMIES;
+
 
     }
 
@@ -341,7 +342,6 @@ namespace foz {
         glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
         glBegin(GL_QUADS);
-
             if (direction == DIRECTION_EAST) {
                 glTexCoord2d(texCoords[2], texCoords[1]);
                 glVertex3f(x, y, depth);

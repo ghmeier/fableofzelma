@@ -356,17 +356,162 @@ namespace foz {
                 myObjects[i].draw();
         }
 
-        /*Draw Enemies*/
-        for (uint16_t i=0;i<myEnemies.size(); i++) {
-            Enemy e = (Enemy)myEnemies[i];
-            e.cmdIter++;
-            e.update(enemyCommands[e.type][e.cmdIter].cmd);
-            e.draw();
-        }
+        //handle everything to do with enemies
+        updateEnemies();
 
         glEnd();
 
         return;
+    }
+
+    /***********************************************************************
+    * Function: Room::updateEnemies()
+    * Description: Draw, change commands, and check collisions for enemies
+    ************************************************************************/
+    void Room::updateEnemies(){
+        for (uint16_t i=0;i<myEnemies.size(); i++) {
+            int CMDFRAMEMAX  =20;
+            // If we are done with the commands, move on to the next team
+            if (myEnemies[i].cmds_done == true) {
+                continue;
+            }
+
+            Enemy *e = &myEnemies[i];
+            cmd_type *curCmd = &myGame->enemyCommands[e->type][e->cmdIter];
+
+            //check for collisions :)
+
+            e->can_move = true; //Link can move unless we find something in his way
+                    for (uint16_t obj = 0; obj < this->myObjects.size(); obj++) {
+                        foz::Object *myObject = &this->myObjects[obj];
+                        if (myGame->linkColObj(e,myObject)) {
+                            if (myObject->status == SOLID) {
+                                e->can_move = false;
+                            }else {
+                                if (myObject->type == VOID_BLOCK) {
+                                    e->health = -1;
+                                }
+                            }
+                        }
+                    }
+
+                    //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
+                    //**If you're planning on changing this be sure you have a good reason to or write these values down.**
+                    if (e->y <= -328.0) {
+                        if (e->direction == DIRECTION_SOUTH) {
+                            if (this->myTiles[6][12] == 50 && (e->x > -50)&&(e->x < 0)) {
+                                e->room_y++;
+                                e->y = 266.0;
+                            }else {
+                                e->can_move = false;
+                                e->y = -328.0;
+                            }
+                        }else {
+                            e->y = -328.0;
+                        }
+                    }
+                    if (e->y >= 266.0) {
+                        if (e->direction == DIRECTION_NORTH) {
+                            if (this->myTiles[6][0] == 50 && (e->x > -50)&&(e->x < 0)) {
+                                e->room_y--;
+                                e->y = -328.0;
+                            }else {
+                                e->can_move = false;
+                                e->y = 266.0;
+                            }
+                        }else {
+                            e-> y = 266.0;
+                        }
+                    }
+                    if (e->x >= 270.0) {
+                        if (e->direction == DIRECTION_EAST) {
+                            if (this->myTiles[12][6] == 50 && (e->y > -50) && (e->y < 0)) {
+                                e->room_x++;
+                                e->x = -379.0;
+                                e->y = -33;
+                            }else {
+                                e->can_move = false;
+                                e->x = 270.0;
+                            }
+                        }else {
+                        //e->x = 270.0;
+                        }
+                    }
+                    if (e->x <= -321.0) {
+                        if (e->direction == DIRECTION_WEST) {
+                            if (this->myTiles[0][6] == 50 && (e->y > -50) && (e->y < 0)) {
+                                e->room_x--;
+                                e->x = 328.0;
+                                e->y = -33;
+                            }else {
+                                e->can_move = false;
+                                e->x = -321.0;
+                            }
+                        }else {
+                            //e->x = -321;
+                        }
+                    }
+
+
+            switch (curCmd->cmd) {
+                case MOVE_CMD:
+                    if (e->can_move) {
+                        e->update(curCmd->cmd);
+                    }else {
+                        e->update(WAIT_CMD);
+                    }
+                    e->cur_cmdframe++;
+                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                        e->cur_cmdframe = 0;
+                        e->cur_cmdopt++;
+                        if (e->cur_cmdopt >= curCmd->opt[0]) {
+                            e->cmdIter++;
+                            e->cur_cmdopt = 0;
+                        }
+                    }
+                    break;
+                case LEFT_CMD:
+                case RIGHT_CMD:
+                case WAIT_CMD:
+                case ACTIVATE_CMD:
+                    if (e->cur_cmdframe==0) {
+                        e->update(curCmd->cmd);
+                    }
+
+                    e->cur_cmdframe++;
+                    // Have we reached the end of a CMDFRAME?
+                    // If so, see how many squares we have left to go.
+                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                        e->cur_cmdframe = 0;
+                        e->cmdIter++;
+                    }
+                    break;
+
+                default:
+                    if (curCmd->cmd == GOTO_CMD){
+                        for (uint16_t j = 0; j < myGame->enemyCommands[e->type].size(); j++) {
+                            if (strcmp(myGame->enemyCommands[e->type][j].label_str,curCmd->target_str)==0){
+                                e->cmdIter = j;
+                                curCmd = &myGame->enemyCommands[e->type][e->cmdIter];
+                                break;
+                            }
+                        }
+                    }
+                    e->cur_cmdframe++;
+                    // Have we reached the end of a CMDFRAME?
+                    // If so, see how many squares we have left to go.
+                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                        e->cur_cmdframe = 0;
+                        e->cmdIter++;
+                    }
+                    break;
+            }
+            if (i==0)
+                printf("sprite: %d\n",e->sprite);
+
+            e->draw();
+        }
+
     }
 
     /*****************************************************************************
