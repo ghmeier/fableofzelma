@@ -1,0 +1,13 @@
+start: left
+move 1
+left
+move 3
+left
+attack
+move 3
+left
+move 3
+left
+move 2
+activate
+goto start

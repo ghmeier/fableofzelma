@@ -220,7 +220,7 @@ namespace foz {
     class Game {
         public:
             /* Main functions (fableofzelma.cpp) */
-            static std::vector< std::vector<foz::cmd_type> > enemyCommands;
+
             Game(int argc, char **argv);
             ~Game();
             void init();
@@ -268,4 +268,5 @@ namespace foz {
 
 } // namespace foz
 extern foz::Game *myGame;
+extern std::vector< std::vector<foz::cmd_type> > enemyCommands;
 
