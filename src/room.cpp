@@ -358,7 +358,10 @@ namespace foz {
 
         /*Draw Enemies*/
         for (uint16_t i=0;i<myEnemies.size(); i++) {
-            myEnemies[i].draw();
+            Enemy e = (Enemy)myEnemies[i];
+            e.cmdIter++;
+            e.update(Game::enemyCommands[e.type][e.cmdIter].cmd);
+            e.draw();
         }
 
         glEnd();

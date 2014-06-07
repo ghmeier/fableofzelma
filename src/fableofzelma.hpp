@@ -98,6 +98,17 @@ namespace foz {
             char *enemy_fname[NUM_ENEMIES];
     };
 
+    class Enemy : public Link{
+        public:
+
+            Enemy(uint16_t mytype, float myx, float myy);
+            void compileEnemies();
+            void update(uint8_t cmd);
+            ~Enemy();
+
+            uint16_t cmdIter;
+
+    };
 
     /* Room information */
     class Room {
@@ -106,7 +117,7 @@ namespace foz {
         uint16_t width, height;
         std::vector< std::vector<uint16_t> > myTiles;
         std::vector<Object> myObjects;
-        std::vector<Link> myEnemies;
+        std::vector<Enemy> myEnemies;
 
         Room *north;
         Room *south;
@@ -205,22 +216,13 @@ namespace foz {
             uint16_t (*spriteMap)[4];
     };
 
-    class Enemy : public Link{
-        public:
-
-            Enemy(uint16_t mytype, float myx, float myy);
-            void compileEnemies();
-            ~Enemy();
-
-    };
-
     /* Main Game class */
     class Game {
         public:
             /* Main functions (fableofzelma.cpp) */
+            static std::vector< std::vector<foz::cmd_type> > enemyCommands;
             Game(int argc, char **argv);
             ~Game();
-            std::vector< std::vector<foz::cmd_type> > enemyCommands;
             void init();
             void reset();
             void mainLoop();

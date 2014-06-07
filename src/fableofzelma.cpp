@@ -1214,7 +1214,6 @@ namespace foz {
                 local_cmd->line = line_count;
                 local_cmd->opt[0] = opt[0];
                 local_cmd->opt[1] = opt[1];
-
                 enemyCommands[i].push_back(*local_cmd);
                 delete local_cmd;
 
@@ -1222,10 +1221,8 @@ namespace foz {
 
 
             // Only after the file is compiled can we do a second pass and verify the target strings and plant targets
-            for (uint16_t iEnemy = 0; iEnemy < enemyCommands[i].size(); i++) {
-                printf("over and over %d\n",enemyCommands[i][iEnemy].cmd);
+            for (uint16_t iEnemy = 0; iEnemy < enemyCommands[i].size(); iEnemy++) {
                 if (enemyCommands[i][iEnemy].cmd == GOTO_CMD) {
-                    printf("it's goto now\n");
                     bool goto_valid = false;
                     for (uint16_t j = 0; j < enemyCommands[i].size(); j++) {
 
@@ -1243,9 +1240,8 @@ namespace foz {
                         raise_error(ERR_BADFILE2, myConfig.enemy_fname[i]);
                     }
                 }
-                printf("past?\n");
             }
-            printf("mmmm\n");
+
             // Third pass, have we duplicated any labels?
             for (uint16_t iEnemy = 0; iEnemy < enemyCommands[i].size(); iEnemy++) {
 
@@ -1267,6 +1263,7 @@ namespace foz {
             if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
                 printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
+                printf("size: %d",enemyCommands[i].size());
                 for (uint16_t iE = 0; iE < enemyCommands[i].size(); iE++) {
                     printf("cmd-%03u: | ", iE);
                     printf(" %3u | ", enemyCommands[i][iE].line);
