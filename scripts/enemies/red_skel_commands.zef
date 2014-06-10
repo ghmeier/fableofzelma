@@ -1,0 +1,5 @@
+start: right
+move 10
+right
+move 5
+goto start

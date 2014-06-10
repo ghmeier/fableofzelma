@@ -402,7 +402,7 @@ namespace foz {
         myConfig.screen_width = SCREEN_WIDTH_DEFAULT;
         myConfig.screen_depth = SCREEN_DEPTH_DEFAULT;
         myConfig.map_fname = (char *)malloc(strlen(MAP_FNAME_DEFAULT)+1);
-        printf("\n--------**********____________%d\n",NUM_ENEMIES);
+        printf("NUM ENEMIES: %d\n",NUM_ENEMIES);
         for (int i=0;i<NUM_ENEMIES;i++) {
             myConfig.enemy_fname[i] = (char *)malloc(strlen(enemy_filePath[i])+1);
             strcpy(myConfig.enemy_fname[i],enemy_filePath[i]);

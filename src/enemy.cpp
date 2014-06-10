@@ -38,6 +38,15 @@ namespace foz {
                 height = GLOBALHEIGHT;
                 width = GLOBALWIDTH;
                 break;
+            case RSKEL:
+                cmdIter;
+                health = 20;
+                texfile = TEX_ENEMIES;
+                sprite = RSKEL_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
+                break;
             default:
                 break;
         }
@@ -60,6 +69,9 @@ namespace foz {
                     if (this->type == BSKEL) {
                         if (this->sprite>=(this->direction)*6+3)
                             this->sprite = this->direction*6;
+                    }else  if (this->type == RSKEL) {
+                        if (this->sprite>=(this->direction)*6+ 3 + RSKEL_NORTH_1)
+                            this->sprite = this->direction*6 + RSKEL_NORTH_1;
                     }
                 }
                 this->x = this->x + this->speed*direction_Modifier[direction][0];
@@ -69,9 +81,15 @@ namespace foz {
 
             case ATTACK_CMD:
                 sprite++;
+                if (this->type == BSKEL) {
                     if (sprite< direction * 6 +3 || sprite >= (direction) * 6 + 6) {
                         sprite = (direction) * 6 + 3;
                     }
+                }else if (this->type==RSKEL) {
+                    if (sprite< direction * 6 +3 + RSKEL_NORTH_1 || sprite >= (direction) * 6 + 6 + RSKEL_NORTH_1) {
+                        sprite = (direction) * 6 + 3 + RSKEL_NORTH_1;
+                    }
+                }
                     printf("attacking...%d..\n",sprite);
                 break;
             case LEFT_CMD:
@@ -90,6 +108,10 @@ namespace foz {
                 else if (direction == DIRECTION_EAST) {
                     direction = DIRECTION_NORTH;
                     sprite = BSKEL_NORTH_1;
+                }
+
+                if (this->type==RSKEL) {
+                    sprite += RSKEL_NORTH_1;
                 }
 
                 break;
@@ -111,9 +133,17 @@ namespace foz {
                     sprite = BSKEL_SOUTH_1;
                 }
 
+                if (this->type==RSKEL) {
+                    sprite += RSKEL_NORTH_1;
+                }
+
                 break;
             case WAIT_CMD:
                 sprite = direction * 6;
+
+                if (this->type==RSKEL) {
+                    sprite += RSKEL_NORTH_1;
+                }
                 break;
         }
     }
