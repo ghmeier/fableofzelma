@@ -1,13 +1,5 @@
 start: left
-move 1
-left
-move 3
-left
+move 10
 attack
-move 3
-left
-move 3
-left
-move 2
-activate
+right
 goto start

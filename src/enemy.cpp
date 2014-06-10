@@ -27,6 +27,7 @@ namespace foz {
         frameCount = 0;
         cmds_done = false;
         cur_cmdopt = 0;
+        cur_cmdframe = 0;
         switch (type) {
             case BSKEL:
                 cmdIter;
@@ -47,49 +48,72 @@ namespace foz {
         if (health<=0) {
             delete this;
         }
-
-        switch (cmd) {
-            case MOVE_CMD:
-
-
-                if (frameCount%8==3) {
-                    this->sprite++;
-                    if (this->type == BSKEL) {
-                        if (this->sprite>=(this->direction+1)*3)
-                            this->sprite = this->direction*3;
-                    }
-                }
-                this->x = this->x + this->speed*direction_Modifier[direction][0];
-                this->y = this->y + this->speed*direction_Modifier[direction][1];
                 if ( frameCount>FRAME_RATE) {
                     frameCount = 0;
                 }else {
                     frameCount++;
                 }
+        switch (cmd) {
+            case MOVE_CMD:
+                if (frameCount%8==3) {
+                    this->sprite++;
+                    if (this->type == BSKEL) {
+                        if (this->sprite>=(this->direction)*6+3)
+                            this->sprite = this->direction*6;
+                    }
+                }
+                this->x = this->x + this->speed*direction_Modifier[direction][0];
+                this->y = this->y + this->speed*direction_Modifier[direction][1];
+
                 break;
 
             case ATTACK_CMD:
-
-                printf("ATTACKING\n");
+                sprite++;
+                    if (sprite< direction * 6 +3 || sprite >= (direction) * 6 + 6) {
+                        sprite = (direction) * 6 + 3;
+                    }
+                    printf("attacking...%d..\n",sprite);
                 break;
             case LEFT_CMD:
-                direction--;
-                printf("left, direction %d\n",direction);
-                if (direction>3){
-                    direction = 3;
+                if (direction == DIRECTION_NORTH) {
+                    direction = DIRECTION_WEST;
+                    sprite = BSKEL_WEST_1;
                 }
-                sprite = direction*3;
+                else if (direction == DIRECTION_SOUTH) {
+                    direction = DIRECTION_EAST;
+                    sprite = BSKEL_WEST_1;
+                }
+                else if (direction == DIRECTION_WEST) {
+                    direction = DIRECTION_SOUTH;
+                    sprite = BSKEL_SOUTH_1;
+                }
+                else if (direction == DIRECTION_EAST) {
+                    direction = DIRECTION_NORTH;
+                    sprite = BSKEL_NORTH_1;
+                }
+
                 break;
             case RIGHT_CMD:
-                this->direction++;
-                printf("right, direction %d\n",direction);
-                if (this->direction>3) {
-                    this->direction = 0;
+                if (direction == DIRECTION_NORTH) {
+                    direction = DIRECTION_EAST;
+                    sprite = BSKEL_WEST_1;
                 }
-                sprite = direction * 3;
+                else if (direction == DIRECTION_SOUTH) {
+                    direction = DIRECTION_WEST;
+                    sprite = BSKEL_WEST_1;
+                }
+                else if (direction == DIRECTION_WEST) {
+                    direction = DIRECTION_NORTH;
+                    sprite = BSKEL_NORTH_1;
+                }
+                else if (direction == DIRECTION_EAST) {
+                    direction = DIRECTION_SOUTH;
+                    sprite = BSKEL_SOUTH_1;
+                }
+
                 break;
             case WAIT_CMD:
-                sprite = direction * 3;
+                sprite = direction * 6;
                 break;
         }
     }

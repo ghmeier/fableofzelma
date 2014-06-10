@@ -474,17 +474,32 @@ namespace foz {
                 case RIGHT_CMD:
                 case WAIT_CMD:
                 case ACTIVATE_CMD:
+
                     if (e->cur_cmdframe==0) {
                         e->update(curCmd->cmd);
                     }
 
                     e->cur_cmdframe++;
+
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {
                         e->cur_cmdframe = 0;
                         e->cmdIter++;
                     }
+                    break;
+
+                case ATTACK_CMD:
+                    e->update(curCmd->cmd);
+                    e->cur_cmdframe++;
+
+                    // Have we reached the end of a CMDFRAME?
+                    // If so, see how many squares we have left to go.
+                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                        e->cur_cmdframe = 0;
+                        e->cmdIter++;
+                    }
+                    break;
                     break;
 
                 default:
@@ -493,22 +508,21 @@ namespace foz {
                             if (strcmp(myGame->enemyCommands[e->type][j].label_str,curCmd->target_str)==0){
                                 e->cmdIter = j;
                                 curCmd = &myGame->enemyCommands[e->type][e->cmdIter];
+                                e->cur_cmdframe = 0;
                                 break;
                             }
                         }
-                    }
-                    e->cur_cmdframe++;
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
-                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
-                        e->cur_cmdframe = 0;
-                        e->cmdIter++;
+                    }else {
+                        e->cur_cmdframe++;
+                        // Have we reached the end of a CMDFRAME?
+                        // If so, see how many squares we have left to go.
+                        if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                            e->cur_cmdframe = 0;
+                            e->cmdIter++;
+                        }
                     }
                     break;
             }
-            if (i==0)
-                printf("sprite: %d\n",e->sprite);
-
             e->draw();
         }
 

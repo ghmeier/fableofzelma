@@ -19,7 +19,6 @@
 #pragma once
 
 
-
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
@@ -89,6 +88,7 @@ namespace foz {
     /* Game configuration information */
     class Config {
         public:
+            std::string  someanem;
             int32_t debug_level;
             uint16_t screen_width;
             uint16_t screen_height;
