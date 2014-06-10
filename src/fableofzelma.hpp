@@ -243,6 +243,7 @@ namespace foz {
             void drawScoreboard();
             void processEvents();
             bool linkColObj(Link *myLink, Object *myObject);
+            bool linkColLink(Link *myLink, Link *other);
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();

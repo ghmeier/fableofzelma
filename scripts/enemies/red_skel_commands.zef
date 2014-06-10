@@ -1,5 +1,4 @@
 start: right
 move 10
-right
-move 5
+attack
 goto start

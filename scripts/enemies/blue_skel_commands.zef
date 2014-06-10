@@ -1,5 +1,5 @@
-start: left
-move 10
-attack
-right
+start: move 3
+left
+move 7
+left
 goto start

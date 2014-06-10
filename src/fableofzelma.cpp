@@ -140,8 +140,9 @@ namespace foz {
             //the vertices of link and each object for easier access
             bool pred_true = true;
             Object* lookChest = NULL;
-
+            Enemy* toHit = NULL;
             myLink->can_move = true; //Link can move unless we find something in his way
+
                     for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
                         foz::Object *myObject = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[obj];
                         if (linkColObj(myLink,myObject)) {
@@ -161,6 +162,14 @@ namespace foz {
                                     myLink->numKeys++;
                                 }
                             }
+                        }
+                    }
+
+                    for (uint16_t ene = 0; ene < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); ene++) {
+                        foz::Enemy *enemy = &myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies[ene];
+                        if (linkColLink(myLink,enemy)) {
+                            myLink->can_move = false;
+                            toHit = enemy;
                         }
                     }
 
@@ -253,6 +262,10 @@ namespace foz {
 
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
+
+                    if (myTeams[i].cur_cmdframe == 0 & toHit!= NULL) {
+                        toHit->health -= 10;
+                    }
 
                     if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
                         myTeams[i].cur_cmdframe = 0;
@@ -1294,6 +1307,57 @@ namespace foz {
             }
 
         }
+
+    }
+
+    /****************************************************************************
+    * Function: bool Game::linkColLink(Link myLink, Link other)
+    * Description returns true if the two link's collision boxes overlap
+    *****************************************************************************/
+    bool Game::linkColLink(Link *myLink, Link *other) {
+        if (!myLink->active) {
+            return false;
+        }
+
+        float myLt = myLink->x;
+        float myRt = myLink->x + myLink->width;
+        float myTp = myLink->y + myLink->height - 6.0;
+        float myBt = myLink->y;
+        float othLt = other->x;
+        float othRt = other->x + other->width;
+        float othTp = other->y + other->height;
+        float othBt = other->y;
+
+        if (((myLt>othLt && myLt<othRt)||(myRt<othRt && myRt>othLt)) && myBt-1.1<othTp && myBt-1.1> othBt) {
+            if (myLink->direction == DIRECTION_SOUTH) {
+                return true;
+            }else {
+
+            }
+        }
+        if (myRt+1.1>othLt && myRt+1.1<othRt && ((myTp>othBt && myTp<othTp)||(myBt>othBt && myBt<othTp))) {
+           if (myLink->direction == DIRECTION_EAST ) {
+                return true;
+           }else {
+
+           }
+        }
+        if (myLt-1.1>othLt && myLt-1.1<othRt && ((myTp>othBt && myTp<othTp)||(myBt>othBt && myBt<othTp))) {
+           if (myLink->direction == DIRECTION_WEST) {
+            return true;
+           }else {
+
+           }
+        }
+        if (((myLt>othLt && myLt<othRt)||(myRt<othRt && myRt>othLt)) && myTp+1.1<othTp && myTp+1.1> othBt) {
+            if (myLink->direction == DIRECTION_NORTH) {
+                    return true;
+            }else {
+
+            }
+        }
+        return false;
+
 
     }
 

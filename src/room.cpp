@@ -399,54 +399,32 @@ namespace foz {
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (e->y <= -328.0) {
                         if (e->direction == DIRECTION_SOUTH) {
-                            if (this->myTiles[6][12] == 50 && (e->x > -50)&&(e->x < 0)) {
-                                e->room_y++;
-                                e->y = 266.0;
-                            }else {
                                 e->can_move = false;
                                 e->y = -328.0;
-                            }
                         }else {
                             e->y = -328.0;
                         }
                     }
                     if (e->y >= 266.0) {
                         if (e->direction == DIRECTION_NORTH) {
-                            if (this->myTiles[6][0] == 50 && (e->x > -50)&&(e->x < 0)) {
-                                e->room_y--;
-                                e->y = -328.0;
-                            }else {
                                 e->can_move = false;
                                 e->y = 266.0;
-                            }
                         }else {
                             e-> y = 266.0;
                         }
                     }
                     if (e->x >= 270.0) {
                         if (e->direction == DIRECTION_EAST) {
-                            if (this->myTiles[12][6] == 50 && (e->y > -50) && (e->y < 0)) {
-                                e->room_x++;
-                                e->x = -379.0;
-                                e->y = -33;
-                            }else {
                                 e->can_move = false;
                                 e->x = 270.0;
-                            }
                         }else {
-                        //e->x = 270.0;
+                            e->x = 270.0;
                         }
                     }
                     if (e->x <= -321.0) {
                         if (e->direction == DIRECTION_WEST) {
-                            if (this->myTiles[0][6] == 50 && (e->y > -50) && (e->y < 0)) {
-                                e->room_x--;
-                                e->x = 328.0;
-                                e->y = -33;
-                            }else {
                                 e->can_move = false;
                                 e->x = -321.0;
-                            }
                         }else {
                             //e->x = -321;
                         }
@@ -499,7 +477,6 @@ namespace foz {
                         e->cur_cmdframe = 0;
                         e->cmdIter++;
                     }
-                    break;
                     break;
 
                 default:

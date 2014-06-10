@@ -80,17 +80,20 @@ namespace foz {
                 break;
 
             case ATTACK_CMD:
-                sprite++;
-                if (this->type == BSKEL) {
-                    if (sprite< direction * 6 +3 || sprite >= (direction) * 6 + 6) {
-                        sprite = (direction) * 6 + 3;
-                    }
-                }else if (this->type==RSKEL) {
-                    if (sprite< direction * 6 +3 + RSKEL_NORTH_1 || sprite >= (direction) * 6 + 6 + RSKEL_NORTH_1) {
-                        sprite = (direction) * 6 + 3 + RSKEL_NORTH_1;
+
+                if (frameCount%6 == 3) {
+                    this->sprite++;
+                    if (this->type == BSKEL) {
+                        if (sprite< direction * 6 +3 || sprite >= (direction+1) * 6) {
+                            sprite = (direction) * 6 + 3;
+                        }
+                    }else if (this->type==RSKEL) {
+                        if (sprite< direction * 6 +3 + RSKEL_NORTH_1 || sprite >= (direction+1) * 6 + RSKEL_NORTH_1) {
+                            sprite = (direction) * 6 + 3 + RSKEL_NORTH_1;
+                        }
                     }
                 }
-                    printf("attacking...%d..\n",sprite);
+                //printf("attacking...%d..\n",sprite);
                 break;
             case LEFT_CMD:
                 if (direction == DIRECTION_NORTH) {
