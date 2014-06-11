@@ -378,6 +378,7 @@ namespace foz {
 
             Enemy *e = &myEnemies[i];
             cmd_type *curCmd = &myGame->enemyCommands[e->type][e->cmdIter];
+            Link *toHit = NULL;
 
             //check for collisions :)
 
@@ -395,6 +396,16 @@ namespace foz {
                         }
                     }
 
+                    for (uint16_t teams = 0; teams<4; teams++) {
+                        for (uint16_t link = 0; link < myGame->myLinks[teams].size();link++) {
+                               Link* current =  &myGame->myLinks[teams][link];
+                            if (current->active && myGame->linkColLink(e,current)) {
+                                e->can_move = false;
+                                toHit = current;
+                            }
+
+                        }
+                    }
                     //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (e->y <= -328.0) {
@@ -470,7 +481,9 @@ namespace foz {
                 case ATTACK_CMD:
                     e->update(curCmd->cmd);
                     e->cur_cmdframe++;
-
+                    if (toHit != NULL) {
+                        toHit->health -= 10;
+                    }
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {

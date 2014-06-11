@@ -53,15 +53,18 @@ namespace foz {
     };
 
     void Enemy::update(uint8_t cmd){
-
         if (health<=0) {
-            delete this;
+           // printf("the skeleton died!\n");
+            this->active = false;
+            //delete this;
         }
-                if ( frameCount>FRAME_RATE) {
-                    frameCount = 0;
-                }else {
-                    frameCount++;
-                }
+
+        if ( frameCount>FRAME_RATE) {
+            frameCount = 0;
+        }else {
+            frameCount++;
+        }
+
         switch (cmd) {
             case MOVE_CMD:
                 if (frameCount%8==3) {
@@ -152,22 +155,25 @@ namespace foz {
     }
 
     void Enemy::draw(){
-        float texCoords[6];
-        getTexCoords(texfile, sprite, texCoords);
-        glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
-        glBegin(GL_QUADS);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(x, y, depth);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(x + width, y, depth);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(x + width, y + height, depth);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(x, y + height, depth);
+        if (this->active) {
+            float texCoords[6];
+            getTexCoords(texfile, sprite, texCoords);
+            glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
+
+            glBegin(GL_QUADS);
+                glTexCoord2d(texCoords[0], texCoords[1]);
+                glVertex3f(x, y, depth);
+                glTexCoord2d(texCoords[2], texCoords[1]);
+                glVertex3f(x + width, y, depth);
+                glTexCoord2d(texCoords[2], texCoords[3]);
+                glVertex3f(x + width, y + height, depth);
+                glTexCoord2d(texCoords[0], texCoords[3]);
+                glVertex3f(x, y + height, depth);
 
 
-        glEnd();
+            glEnd();
+        }
     }
 
     Enemy::~Enemy(){

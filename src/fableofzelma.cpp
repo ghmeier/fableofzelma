@@ -263,7 +263,7 @@ namespace foz {
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
 
-                    if (myTeams[i].cur_cmdframe == 0 & toHit!= NULL) {
+                    if (toHit!= NULL) {
                         toHit->health -= 10;
                     }
 
