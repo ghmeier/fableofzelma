@@ -169,11 +169,12 @@ uint16_t enemy_spriteMap[][4] = {
 
 char* enemy_filePath[NUM_ENEMIES] {
     "scripts/enemies/blue_skel_commands.zef",
-    "scripts/enemies/red_skel_commands.zef"
+    "scripts/enemies/red_skel_commands.zef",
+    "scripts/enemies/green_eyegore_commands.zef"
 };
 
 char* enemyNames[NUM_ENEMIES] {
-    "blue_skel","red_skel"
+    "blue_skel","red_skel","green_eyegore"
 };
 
 int16_t direction_Modifier[4][2] = {

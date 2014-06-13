@@ -299,7 +299,7 @@ namespace foz {
                 room_x = world_width-1;
                 room_y = world_height-1;
                 x = -25.0;
-                y = 83.0;
+                y = -83.0;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
