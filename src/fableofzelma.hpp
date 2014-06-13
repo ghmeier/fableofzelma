@@ -153,8 +153,6 @@ namespace foz {
       public:
         uint16_t width, height;
         std::vector< std::vector<Room> > myRooms;
-
-        /* Main functions (world.cpp) */
         void compile(Config *myConfig, Status *myStatus);
         void draw();
         ~World();

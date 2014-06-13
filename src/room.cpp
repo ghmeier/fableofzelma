@@ -539,6 +539,18 @@ namespace foz {
             myTiles[i].clear();
         }
         myTiles.clear();
+        /*for (int i=0;i<myEnemies.size();i++) {
+            delete &myEnemies[i];
+        }
+        myEnemies.clear();
+        for (int i=0;i<myObjects.size();i++) {
+            delete &myObjects[i];
+        }
+        myObjects.clear();
+        delete north;
+        delete south;
+        delete east;
+        delete west;*/
 
     }
 

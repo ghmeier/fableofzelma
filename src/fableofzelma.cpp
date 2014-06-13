@@ -1415,6 +1415,15 @@ namespace foz {
     * Description: Destructor for fvu::Game() class
     *****************************************************************************/
     Game::~Game() {
+        /*for (int i=0; i<myLinks->size();i++) {
+            myLinks[i].clear();
+        }
+
+        for (int i=0;i<enemyCommands.size();i++) {
+            for (int j=0;j<enemyCommands[i].size();j++) {
+               delete &enemyCommands[i][j];
+            }
+        }*/
     }
 
 } //namespace foz    test
