@@ -30,7 +30,6 @@ namespace foz {
         cur_cmdframe = 0;
         switch (type) {
             case BSKEL:
-                cmdIter;
                 health = 20;
                 texfile = TEX_ENEMIES;
                 sprite = BSKEL_SOUTH_1;
@@ -39,10 +38,17 @@ namespace foz {
                 width = GLOBALWIDTH;
                 break;
             case RSKEL:
-                cmdIter;
                 health = 20;
                 texfile = TEX_ENEMIES;
                 sprite = RSKEL_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
+                break;
+           case GEYEGORE:
+                health = 100;
+                texfile = TEX_ENEMIES;
+                sprite = GEYEGORE_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 height = GLOBALHEIGHT;
                 width = GLOBALWIDTH;
@@ -75,6 +81,9 @@ namespace foz {
                     }else  if (this->type == RSKEL) {
                         if (this->sprite>=(this->direction)*6+ 3 + RSKEL_NORTH_1)
                             this->sprite = this->direction*6 + RSKEL_NORTH_1;
+                    }else if (this->type == GEYEGORE) {
+                         if (this->sprite>=(this->direction+1)*3 + GEYEGORE_NORTH_1)
+                            this->sprite = this->direction*3 + GEYEGORE_NORTH_1;
                     }
                 }
                 this->x = this->x + this->speed*direction_Modifier[direction][0];
@@ -94,9 +103,13 @@ namespace foz {
                         if (sprite< direction * 6 +3 + RSKEL_NORTH_1 || sprite >= (direction+1) * 6 + RSKEL_NORTH_1) {
                             sprite = (direction) * 6 + 3 + RSKEL_NORTH_1;
                         }
+                    }else if (this->type==GEYEGORE) {
+                        if (sprite< direction * 3  + GEYEGORE_NORTH_1 || sprite >= (direction+1) * 3 + GEYEGORE_NORTH_1) {
+                            sprite = (direction) * 3  + GEYEGORE_NORTH_1;
+                        }
                     }
                 }
-                //printf("attacking...%d..\n",sprite);
+
                 break;
             case LEFT_CMD:
                 if (direction == DIRECTION_NORTH) {
@@ -118,6 +131,8 @@ namespace foz {
 
                 if (this->type==RSKEL) {
                     sprite += RSKEL_NORTH_1;
+                }else if (this->type==GEYEGORE) {
+                    sprite = direction*3 + GEYEGORE_NORTH_1;
                 }
 
                 break;
@@ -141,6 +156,8 @@ namespace foz {
 
                 if (this->type==RSKEL) {
                     sprite += RSKEL_NORTH_1;
+                }else if (this->type==GEYEGORE) {
+                    sprite = direction*3 + GEYEGORE_NORTH_1;
                 }
 
                 break;
@@ -149,6 +166,8 @@ namespace foz {
 
                 if (this->type==RSKEL) {
                     sprite += RSKEL_NORTH_1;
+                }else if (this->type==GEYEGORE) {
+                    sprite = direction*3 + GEYEGORE_NORTH_1;
                 }
                 break;
         }

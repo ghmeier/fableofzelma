@@ -406,6 +406,14 @@ namespace foz {
 
                         }
                     }
+                    for (uint16_t link = 0; link < myEnemies.size(); link++) {
+                        if (link!=i) {
+                            Link* current = &myEnemies[link];
+                            if (current->active && myGame->linkColLink(e,current)) {
+                                e->can_move = false;
+                            }
+                        }
+                    }
                     //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (e->y <= -328.0) {
