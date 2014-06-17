@@ -39,8 +39,12 @@ namespace foz {
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
         uint16_t tempSprite;
+        if (!active) {
+            return;
+        }
         if (health<=0) {
-            delete this;
+            //delete this;
+            this->active = false;
             //cmd = DEATH_CMD;
         }
 
@@ -335,37 +339,37 @@ namespace foz {
     * Description: Link drawing function.
     *****************************************************************************/
     void Link::draw(){
+        if (active) {
+            float texCoords[6];
 
-        float texCoords[6];
+            getTexCoords(texfile, sprite, texCoords);
+            glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
-        getTexCoords(texfile, sprite, texCoords);
-        glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
+            glBegin(GL_QUADS);
+                if (direction == DIRECTION_EAST) {
+                    glTexCoord2d(texCoords[2], texCoords[1]);
+                    glVertex3f(x, y, depth);
+                    glTexCoord2d(texCoords[0], texCoords[1]);
+                    glVertex3f(x + width, y, depth);
+                    glTexCoord2d(texCoords[0], texCoords[3]);
+                    glVertex3f(x + width, y + height, depth);
+                    glTexCoord2d(texCoords[2], texCoords[3]);
+                    glVertex3f(x, y + height, depth);
+                }
 
-        glBegin(GL_QUADS);
-            if (direction == DIRECTION_EAST) {
-                glTexCoord2d(texCoords[2], texCoords[1]);
-                glVertex3f(x, y, depth);
-                glTexCoord2d(texCoords[0], texCoords[1]);
-                glVertex3f(x + width, y, depth);
-                glTexCoord2d(texCoords[0], texCoords[3]);
-                glVertex3f(x + width, y + height, depth);
-                glTexCoord2d(texCoords[2], texCoords[3]);
-                glVertex3f(x, y + height, depth);
-            }
+                else {
+                    glTexCoord2d(texCoords[0], texCoords[1]);
+                    glVertex3f(x, y, depth);
+                    glTexCoord2d(texCoords[2], texCoords[1]);
+                    glVertex3f(x + width, y, depth);
+                    glTexCoord2d(texCoords[2], texCoords[3]);
+                    glVertex3f(x + width, y + height, depth);
+                    glTexCoord2d(texCoords[0], texCoords[3]);
+                    glVertex3f(x, y + height, depth);
+                }
 
-            else {
-                glTexCoord2d(texCoords[0], texCoords[1]);
-                glVertex3f(x, y, depth);
-                glTexCoord2d(texCoords[2], texCoords[1]);
-                glVertex3f(x + width, y, depth);
-                glTexCoord2d(texCoords[2], texCoords[3]);
-                glVertex3f(x + width, y + height, depth);
-                glTexCoord2d(texCoords[0], texCoords[3]);
-                glVertex3f(x, y + height, depth);
-            }
-
-        glEnd();
-
+            glEnd();
+        }
         return;
 
     }

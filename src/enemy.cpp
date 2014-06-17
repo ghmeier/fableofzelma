@@ -60,7 +60,7 @@ namespace foz {
 
     void Enemy::update(uint8_t cmd){
         if (health<=0) {
-           // printf("the skeleton died!\n");
+            //printf("the skeleton died!\n");
             this->active = false;
             //delete this;
         }

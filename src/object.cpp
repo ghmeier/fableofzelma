@@ -24,6 +24,10 @@
 
 namespace foz {
 
+    void Object::setDirection(uint8_t dir) {
+        direction =dir;
+    }
+
     Object::Object(uint8_t myType, float myX, float myY)
     {
         type = myType;
@@ -35,7 +39,8 @@ namespace foz {
         depth = 3;
         texfile = TEX_BASIC_ROOM;
         sprite = type;
-        if(type>12 && type<RUPEE_GREEN_1) {
+        active = true;
+        if(type>12 && type<RUPEE_GREEN_1 || type >KEY) {
 
             sprite = type;
             if (type == VOID_BLOCK) {
@@ -49,6 +54,7 @@ namespace foz {
         }else if (type==KEY) {
             status = TRANSPARENT;
         }else {
+            sprite = type;
             status = SOLID;
         }
     }
@@ -60,9 +66,36 @@ namespace foz {
 
     void Object::draw(){
         if (!active) {
-            delete this;
+            //delete this;
             return;
         }
+
+        if (type == ARROW_EAST || type == ARROW_WEST || type == ARROW_NORTH || type == ARROW_SOUTH) {
+                    if (this->y <= -328.0) {
+                        if (this->direction == DIRECTION_SOUTH) {
+                                this->active = false;
+                        }
+                    }
+                    if (this->y >= 266.0) {
+                        if (this->direction == DIRECTION_NORTH) {
+                             this->active = false;
+                        }
+                    }
+                    if (this->x >= 270.0) {
+                        if (this->direction == DIRECTION_EAST) {
+                                this->active = false;
+                        }
+                    }
+                    if (this->x <= -321.0) {
+                        if (this->direction == DIRECTION_WEST) {
+                                this->active = false;
+                        }
+                    }
+
+                x += 3.0*direction_Modifier[direction][0];
+                y += 3.0*direction_Modifier[direction][1];
+        }
+
         float texCoords[6];
 
         getTexCoords(texfile, sprite, texCoords);
@@ -99,7 +132,7 @@ namespace foz {
 
     Object::~Object()
     {
-        //dtor
+
     }
 
 }

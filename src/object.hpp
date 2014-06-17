@@ -30,6 +30,7 @@ namespace foz {
             void draw();
             void move();
             void setRoomXY(uint8_t roomx, uint8_t roomy);
+            void setDirection(uint8_t dir);
 
             bool active;
             uint8_t type;

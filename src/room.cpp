@@ -89,7 +89,6 @@ namespace foz {
                     }
                     if (tile_tok<=12 || tile_tok==50) {//12 is the number of background sprites and 50 is the doors
                         myTiles[tile_i].push_back(tile_tok);
-
                     }else {
                         myTiles[tile_i].push_back(FLOOR_TILE);
                        if (tile_tok<100) {
@@ -370,6 +369,7 @@ namespace foz {
     ************************************************************************/
     void Room::updateEnemies(){
         for (uint16_t i=0;i<myEnemies.size(); i++) {
+
             int CMDFRAMEMAX  =20;
             // If we are done with the commands, move on to the next team
             if (myEnemies[i].cmds_done == true) {
@@ -377,11 +377,15 @@ namespace foz {
             }
 
             Enemy *e = &myEnemies[i];
+
+            if (!e->active) {
+                continue;
+            }
+
             cmd_type *curCmd = &myGame->enemyCommands[e->type][e->cmdIter];
             Link *toHit = NULL;
 
             //check for collisions :)
-
             e->can_move = true; //Link can move unless we find something in his way
                     for (uint16_t obj = 0; obj < this->myObjects.size(); obj++) {
                         foz::Object *myObject = &this->myObjects[obj];
@@ -406,6 +410,7 @@ namespace foz {
 
                         }
                     }
+
                     for (uint16_t link = 0; link < myEnemies.size(); link++) {
                         if (link!=i) {
                             Link* current = &myEnemies[link];
@@ -414,6 +419,7 @@ namespace foz {
                             }
                         }
                     }
+
                     //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (e->y <= -328.0) {
@@ -448,7 +454,6 @@ namespace foz {
                             //e->x = -321;
                         }
                     }
-
 
             switch (curCmd->cmd) {
                 case MOVE_CMD:
@@ -522,8 +527,10 @@ namespace foz {
                     break;
             }
             e->draw();
+            if (!e->active) {
+                //delete e;
+            }
         }
-
     }
 
     /*****************************************************************************
@@ -539,19 +546,14 @@ namespace foz {
             myTiles[i].clear();
         }
         myTiles.clear();
-        /*for (int i=0;i<myEnemies.size();i++) {
-            delete &myEnemies[i];
+        for (int i=0;i<myEnemies.size();i++) {
+            myEnemies[i].~Enemy();
         }
         myEnemies.clear();
         for (int i=0;i<myObjects.size();i++) {
-            delete &myObjects[i];
+            myObjects[i].~Object();
         }
         myObjects.clear();
-        delete north;
-        delete south;
-        delete east;
-        delete west;*/
-
     }
 
 

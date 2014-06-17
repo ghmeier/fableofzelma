@@ -19,7 +19,7 @@
 
 /* Command types and spellings */
 #define NUM_CMD_SPELLINGS 3
-typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, WAIT_CMD, ACTIVATE_CMD, DEATH_CMD, NUM_CMD_TYPES} CMD_TYPE;
+typedef enum {SELECT_CMD=0, MOVE_CMD, LEFT_CMD, RIGHT_CMD, ATTACK_CMD, GOTO_CMD, WAIT_CMD, ACTIVATE_CMD, DEATH_CMD, SHOOT_CMD, NUM_CMD_TYPES} CMD_TYPE;
 extern std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS];
 
 /* Predicate types and spellings */
@@ -89,7 +89,7 @@ WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT, CHEST, CHEST_OPEN, POT, POT_TI
 BUTTON, TORCH_UNLIT, TORCH_LIT,DEFAULT_BLOCK, VOID_BLOCK, RUPEE_GREEN_1,RUPEE_GREEN_2,
 RUPEE_GREEN_3,RUPEE_PURPLE_1,RUPEE_PURPLE_2,RUPEE_PURPLE_3, RUPEE_BLUE_1,RUPEE_BLUE_2,
 RUPEE_BLUE_3, RUPEE_ORANGE_1,RUPEE_ORANGE_2,RUPEE_ORANGE_3, RUPEE_RED_1,RUPEE_RED_2,
-RUPEE_RED_3, KEY}                                                                                                                   //3
+RUPEE_RED_3,KEY,ARROW_NORTH,ARROW_EAST,ARROW_SOUTH,ARROW_WEST}                                                                                                                   //3
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 

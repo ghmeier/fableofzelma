@@ -5,6 +5,7 @@ select L4 Regular
 
 start: left l1
 move l1 1
+shoot l1
 left l1
 move l1 3
 left l1

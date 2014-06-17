@@ -137,6 +137,9 @@ namespace foz {
             foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
             foz::Link *myLink = &myLinks[i][myTeams[i].cur_link];
 
+            if (!myLink->active){
+                continue;
+            }
             //the vertices of link and each object for easier access
             bool pred_true = true;
             Object* lookChest = NULL;
@@ -230,6 +233,7 @@ namespace foz {
                         }
                     }
 
+            Object * arrow;
             switch (mycmd->cmd) {
 
                 case MOVE_CMD:
@@ -272,7 +276,22 @@ namespace foz {
                         myTeams[i].cur_cmd++;
                     }
                     break;
+                case SHOOT_CMD:
+                    CMDFRAMEMAX = 20;
 
+                    if (myTeams[i].cur_cmdframe==0) {
+                        myLink->update(mycmd->cmd);
+                        arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
+                        arrow->setDirection(myLink->direction);
+                        myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.push_back(*arrow);
+                    }
+
+                    myTeams[i].cur_cmdframe++;
+                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
+                        myTeams[i].cur_cmdframe = 0;
+                        myTeams[i].cur_cmd++;
+                    }
+                  break;
                 case LEFT_CMD:
                 case RIGHT_CMD:
                 case WAIT_CMD:
@@ -819,6 +838,12 @@ namespace foz {
                         valid_cmd = true;
                     }
                     break;
+                 case SHOOT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                    }
+                    break;
                  case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
@@ -1192,7 +1217,13 @@ namespace foz {
                         valid_cmd = true;
                     }
                     break;
-                  case GOTO_CMD:
+                 case SHOOT_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s", place_str);
+                    if (cmd_ntok == 1) {
+                        valid_cmd = true;
+                    }
+                    break;
+                 case GOTO_CMD:
                     place_str[0] = 0;
                     target_str[0] = 0;
                     cmd_ntok = sscanf(cmd_str2, "%s %s", place_str, target_str);
@@ -1415,15 +1446,15 @@ namespace foz {
     * Description: Destructor for fvu::Game() class
     *****************************************************************************/
     Game::~Game() {
-        /*for (int i=0; i<myLinks->size();i++) {
+        for (int i=0; i<myLinks->size();i++) {
             myLinks[i].clear();
         }
 
         for (int i=0;i<enemyCommands.size();i++) {
             for (int j=0;j<enemyCommands[i].size();j++) {
-               delete &enemyCommands[i][j];
+               enemyCommands[i][j].~cmd_type();
             }
-        }*/
+        }
     }
 
 } //namespace foz    test
