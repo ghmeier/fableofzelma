@@ -166,6 +166,14 @@ namespace foz {
                                 }
                             }
                         }
+                        if (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST) {
+                            for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
+                                if (obj!=j && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
+                                    myObject->active = false;
+                                }
+                            }
+                        }
+
                     }
 
                     for (uint16_t ene = 0; ene < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); ene++) {
@@ -1441,6 +1449,56 @@ namespace foz {
         }
         return false;
     }
+
+    /*****************************************************************************
+    *
+    *
+    *****************************************************************************/
+    bool Game::objColObj(Object *myLink, Object *myObject) {
+        if (!myObject->active) {
+            return false;
+        }
+
+        float linkLt = myLink->x;
+        float linkRt = myLink->x + myLink->width;
+        float linkTp = myLink->y + myLink->height - 6.0;//subtract 6 because link's head is taller than the blocks
+        float linkBt = myLink->y;
+        float objLt = myObject->x;
+        float objRt = myObject->x + myObject->width;
+        float objTp = myObject->y + myObject->height;
+        float objBt = myObject->y;
+
+        if (((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkBt-1.1<objTp && linkBt-1.1> objBt) {
+            if (myLink->direction == DIRECTION_SOUTH) {
+                return true;
+            }else {
+
+            }
+        }
+        if (linkRt+1.1>objLt && linkRt+1.1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+           if (myLink->direction == DIRECTION_EAST ) {
+                return true;
+           }else {
+
+           }
+        }
+        if (linkLt-1.1>objLt && linkLt-1.1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+           if (myLink->direction == DIRECTION_WEST) {
+            return true;
+           }else {
+
+           }
+        }
+        if (((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkTp+1.1<objTp && linkTp+1.1> objBt) {
+            if (myLink->direction == DIRECTION_NORTH) {
+                    return true;
+            }else {
+
+            }
+        }
+        return false;
+    }
+
     /*****************************************************************************
     * Function: Game::~Game()
     * Description: Destructor for fvu::Game() class

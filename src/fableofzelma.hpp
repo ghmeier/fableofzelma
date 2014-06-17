@@ -242,6 +242,7 @@ namespace foz {
             void processEvents();
             bool linkColObj(Link *myLink, Object *myObject);
             bool linkColLink(Link *myLink, Link *other);
+            bool objColObj(Object *myLink, Object *myObject);
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
