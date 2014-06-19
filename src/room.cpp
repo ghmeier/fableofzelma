@@ -40,7 +40,7 @@ namespace foz {
         uint8_t size_ntok, tiles_ntok;
         uint16_t width_tok, height_tok, tile_tok;
         uint16_t tile_i=0, tile_j=0;
-        bool size_flag=false, tile_flag=false, obj_flag = false;
+        bool size_flag=false, tile_flag=false;
 
         /* Does the file exist in the current directory? */
         fname1 = (char *)malloc(12);
@@ -368,9 +368,8 @@ namespace foz {
     * Description: Draw, change commands, and check collisions for enemies
     ************************************************************************/
     void Room::updateEnemies(){
+        int CMDFRAMEMAX  =20;
         for (uint16_t i=0;i<myEnemies.size(); i++) {
-
-            int CMDFRAMEMAX  =20;
             // If we are done with the commands, move on to the next team
             if (myEnemies[i].cmds_done == true) {
                 continue;
@@ -476,15 +475,11 @@ namespace foz {
                 case RIGHT_CMD:
                 case WAIT_CMD:
                 case ACTIVATE_CMD:
-
                     if (e->cur_cmdframe==0) {
                         e->update(curCmd->cmd);
                     }
 
                     e->cur_cmdframe++;
-
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {
                         e->cur_cmdframe = 0;
                         e->cmdIter++;
@@ -494,11 +489,11 @@ namespace foz {
                 case ATTACK_CMD:
                     e->update(curCmd->cmd);
                     e->cur_cmdframe++;
-                    if (toHit != NULL) {
-                        toHit->health -= 10;
+                    if (e->cur_cmdframe==10) {
+                        if (toHit != NULL) {
+                            toHit->health -= e->damage;
+                        }
                     }
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {
                         e->cur_cmdframe = 0;
                         e->cmdIter++;

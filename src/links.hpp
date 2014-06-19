@@ -52,6 +52,7 @@ namespace foz {
             uint8_t team;
             uint8_t status;
             int16_t health;
+            int16_t damage;
             uint16_t sprite;
             uint32_t depth;
             uint8_t texfile;

@@ -256,8 +256,6 @@ namespace foz {
             std::vector< std::vector<foz::cmd_type> > enemyCommands;
 
         private:
-
-
             foz::Config myConfig;
             foz::World myWorld;
             foz::Camera myCamera;
@@ -266,8 +264,8 @@ namespace foz {
             sf::ContextSettings mySettings;
             sf::RenderWindow myWindow;
             sf::Music myMusic[2];
-            sf::SoundBuffer mySoundBuffers[5];
-            sf::Sound mySounds[6];
+            sf::SoundBuffer mySoundBuffers[NUM_SFX];
+            sf::Sound mySounds[NUM_SOUNDS];
             sf::Clock myClock;
     };
 

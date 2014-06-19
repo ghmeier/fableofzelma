@@ -151,14 +151,13 @@ namespace foz {
     * Description: Plays a specific sound effect and updates the sound buffer
     *****************************************************************************/
     void Game::playSound(uint16_t sfxID, uint8_t vol, bool force) {
-
-    /*    if ((mySounds[myStatus.music_buffer].getStatus() == sf::Sound::Stopped) || (force == true)) {
+       if ((mySounds[myStatus.music_buffer].getStatus() == sf::Sound::Stopped) || (force == true)) {
             mySounds[myStatus.music_buffer].setBuffer(mySoundBuffers[sfxID]);
             mySounds[myStatus.music_buffer].setVolume(vol);
             mySounds[myStatus.music_buffer].play();
             myStatus.music_buffer++;
             myStatus.music_buffer %= NUM_SOUNDS;
-        }*/
+        }
     }
 
 

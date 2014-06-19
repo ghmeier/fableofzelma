@@ -49,6 +49,9 @@ namespace foz {
         compileEnemies();
         // Initialize game status
         myStatus.mode = GAME_START;
+        myStatus.music_buffer = 0;
+        myStatus.end_music = false;
+        myStatus.vol_counter = 110;
         framecount = 0;
         for (uint8_t i = 0; i < 4; i++) {
             myStatus.scores[i] = 0;
@@ -93,7 +96,6 @@ namespace foz {
                     myCamera.update(false);
                     myWorld.draw();
                     drawScoreboard();
-
                     updateGame();
                    break;
                 case GAME_END:
@@ -118,7 +120,6 @@ namespace foz {
     void Game::updateGame() {
 
         int CMDFRAMEMAX;
-        uint64_t frameStartTime = time(NULL) ;
         // Command loop: grab the next cmd for each team.
         for (uint16_t i = 0; i < 4; i++) {
 
@@ -141,7 +142,6 @@ namespace foz {
                 continue;
             }
             //the vertices of link and each object for easier access
-            bool pred_true = true;
             Object* lookChest = NULL;
             Enemy* toHit = NULL;
             myLink->can_move = true; //Link can move unless we find something in his way
@@ -156,20 +156,23 @@ namespace foz {
                                 }
                             }else {
                                 if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
+                                    playSound(SFX_GETRUPEE,100,true);
                                     myTeams[myLink->team].score++;
                                     myObject->active = false;
                                 }else if (myObject->type == VOID_BLOCK) {
                                     myLink->health = -1;
                                 }else if (myObject->type == KEY) {
+                                    playSound(SFX_GETITEM,100,true);
                                     myObject->active = false;
                                     myLink->numKeys++;
                                 }
                             }
                         }
-                        if (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST) {
+                        if (myObject->active && myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST) {
                             for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
                                 if (obj!=j && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
                                     myObject->active = false;
+                                    //playSound(SFX_LINKARROW,100,true);
                                 }
                             }
                         }
@@ -188,8 +191,9 @@ namespace foz {
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (myLink->y <= -328.0) {
                         if (myLink->direction == DIRECTION_SOUTH) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y++;
+                                playSound(SFX_HEY,100,true);
                                 myLink->y = 266.0;
                             }else {
                                 myLink->can_move = false;
@@ -201,8 +205,9 @@ namespace foz {
                     }
                     if (myLink->y >= 266.0) {
                         if (myLink->direction == DIRECTION_NORTH) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y--;
+                                playSound(SFX_HEY,100,true);
                                 myLink->y = -328.0;
                             }else {
                                 myLink->can_move = false;
@@ -214,8 +219,9 @@ namespace foz {
                     }
                     if (myLink->x >= 270.0) {
                         if (myLink->direction == DIRECTION_EAST) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x++;
+                                playSound(SFX_HEY,100,true);
                                 myLink->x = -379.0;
                                 myLink->y = -33;
                             }else {
@@ -228,8 +234,9 @@ namespace foz {
                     }
                     if (myLink->x <= -321.0) {
                         if (myLink->direction == DIRECTION_WEST) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x--;
+                                playSound(SFX_HEY,100,true);
                                 myLink->x = 328.0;
                                 myLink->y = -33;
                             }else {
@@ -243,12 +250,12 @@ namespace foz {
 
             Object * arrow;
             switch (mycmd->cmd) {
-
                 case MOVE_CMD:
                     CMDFRAMEMAX = 20;
                     //check to see is an object will keep Link from moving
 
                     if (myLink->can_move) {
+
                         myLink->update(mycmd->cmd);
                     }else {
                         myLink->update(WAIT_CMD);
@@ -258,6 +265,9 @@ namespace foz {
 
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.
+                    if (myTeams[i].cur_cmdframe%10 == 0) {
+                        playSound(SFX_STONESTEP,100,true);
+                    }
                     if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
                         myTeams[i].cur_cmdframe = 0;
                         myTeams[i].cur_cmdopt++;
@@ -267,6 +277,7 @@ namespace foz {
                         }
                     }
 
+
                     break;
 
                 case ATTACK_CMD:
@@ -274,10 +285,13 @@ namespace foz {
 
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
-
-                    if (toHit!= NULL) {
-                        toHit->health -= 10;
-                    }
+                        if (toHit!= NULL) {
+                            playSound(SFX_LINKSLASH_1,100,true);
+                            toHit->health -= myLink->damage;
+                            if (toHit->health <= 0  && toHit->active) {
+                                myTeams[i].score+=1;
+                            }
+                        }
 
                     if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
                         myTeams[i].cur_cmdframe = 0;
@@ -291,7 +305,7 @@ namespace foz {
                         myLink->update(mycmd->cmd);
                         arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
                         arrow->setDirection(myLink->direction);
-                        myWorld.myRooms[myLink->room_x][myLink->room_y].myObjects.push_back(*arrow);
+                        myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
                     }
 
                     myTeams[i].cur_cmdframe++;
@@ -1451,8 +1465,8 @@ namespace foz {
     }
 
     /*****************************************************************************
-    *
-    *
+    * Function: bool objColObj(Object *myLink, Object *myObject)
+    * Description: Returns true when one object traveling in a direction collides with another
     *****************************************************************************/
     bool Game::objColObj(Object *myLink, Object *myObject) {
         if (!myObject->active) {

@@ -40,7 +40,7 @@ namespace foz {
         texfile = TEX_BASIC_ROOM;
         sprite = type;
         active = true;
-        if(type>12 && type<RUPEE_GREEN_1 || type >KEY) {
+        if((type>12 && type<RUPEE_GREEN_1) || type >KEY) {
 
             sprite = type;
             if (type == VOID_BLOCK) {

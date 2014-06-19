@@ -29,7 +29,9 @@ extern std::string predNames[NUM_PRED_TYPES][NUM_PRED_SPELLINGS];
 
 
 /* Sound effect file enum */
-typedef enum {SFX_BIGITEM=0, SFX_SMALLITEM, SFX_LINKDIES1, SFX_LINKDIES2, NUM_SFX} SFX_ENUM;
+typedef enum {SFX_ARROWHIT, SFX_GETITEM, SFX_GETRUPEE, SFX_LINKARROW, SFX_LINKCHOKE, SFX_HEY,
+SFX_LINKHURT_1, SFX_LINKSLASH_1, SFX_LINKSLASH_2, SFX_LINKSLASH3, SFX_LINKSLASH4, SFX_OPENCHEST,
+SFX_STONESTEP, NUM_SFX} SFX_ENUM;
 extern std::string sfxFiles[NUM_SFX];
 
 /* Music file enum */
@@ -145,6 +147,7 @@ extern uint16_t enemy_spriteMap[][4];
 /*The enemy names and their commands*/
 extern char* enemyNames[NUM_ENEMIES];
 
+extern uint8_t enemyDamage[NUM_ENEMIES];
+
 /*Sets the collision type of the object.*/
 typedef enum {TRANSPARENT=0,SOLID}OBJECT_STATUS;
-

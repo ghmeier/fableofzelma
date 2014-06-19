@@ -38,7 +38,6 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
-        uint16_t tempSprite;
         if (!active) {
             return;
         }
@@ -133,7 +132,6 @@ namespace foz {
                 }
 
                 if (direction == DIRECTION_SOUTH) {
-                        tempSprite = sprite;
                     if (sprite >= LINK_SLASH_SOUTH_20){
                         sprite = LINK_SLASH_SOUTH_1;
                         //x =  x + 3.05*(-(link_object_spriteMap[tempSprite][0] - link_object_spriteMap_centers[tempSprite][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
@@ -264,6 +262,7 @@ namespace foz {
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
         speed = 2.95;
+        damage = 30;
 
         switch(team) {
             case 0:
@@ -330,7 +329,7 @@ namespace foz {
         room_y = 0;
         team = 255;
         texfile = TEX_ENEMIES;
-
+        damage = enemyDamage[type];
 
     }
 

@@ -64,6 +64,21 @@ std::string texFiles[NUM_TEXTURES] = {
     "sprites/enemies.png"
     };
 
+std::string sfxFiles[NUM_SFX]{
+    "audio/arrowHit.ogg",
+    "audio/getItem.ogg",
+    "audio/getRupee.ogg",
+    "audio/linkArrow.ogg",
+    "audio/linkChoke.ogg",
+    "audio/linkHey.ogg",
+    "audio/linkHurt1.ogg",
+    "audio/linkSlash1.ogg",
+    "audio/linkSlash2.ogg",
+    "audio/linkSlash3.ogg",
+    "audio/linkSlash4.ogg",
+    "audio/openChest.ogg",
+    "audio/stoneStep.ogg",
+};
 /* Sprite map for LINK objects */
 uint16_t link_object_spriteMap[][4] = {
 {4,23,22,46}        ,{36,17,54,46}        ,{71,10,88,46}        ,{112,16,130,45}      ,{148,18,166,46}      , //1
@@ -137,8 +152,7 @@ uint16_t room_object_spriteMap[][4] = {
 {686,502,744,560}   ,{622,502,680,560}    ,{2,854,36,918}       ,{44,854,78,918}      ,{87,854,121,918}     ,//20-24
 {129,854,163,918}   ,{171,854,208,918}    ,{216,854,251,918}    ,{2,924,36,987}       ,{44,924,78,987}      ,//25-29
 {87,924,121,987}    ,{129,924,163,987}    ,{171,924,208,987}    ,{216,924,247,987}    ,{2,993,36,1057}      ,//30-34
-{44,993,78,1057}    ,{87,993,121,1057}    ,{622,564,680,622}    ,{346,607,403,664},{404,607,461,664},
-{462,607,419,664},{288,607,345,664}//35-37
+{44,993,78,1057}    ,{87,993,121,1057}    ,{622,564,680,622}    ,{346,607,403,664},{404,607,461,664}    ,{462,607,519,664},{288,607,345,664}//35-37
 };
 
 uint16_t rupee_spriteMap[][4] = {
@@ -182,6 +196,10 @@ char* enemy_filePath[NUM_ENEMIES] {
 
 char* enemyNames[NUM_ENEMIES] {
     "blue_skel","red_skel","green_eyegore"
+};
+
+uint8_t enemyDamage[NUM_ENEMIES]{
+    10,10,30
 };
 
 int16_t direction_Modifier[4][2] = {

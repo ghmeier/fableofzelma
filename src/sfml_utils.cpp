@@ -149,6 +149,16 @@ namespace foz {
     *****************************************************************************/
     void Game::initSFML() {
 
+        if (myConfig.debug_level > 3) {
+            printf("Loading Sound buffers...\n");
+        }
+
+        for (uint16_t i=0; i<NUM_SFX;i++) {
+            if (!mySoundBuffers[i].loadFromFile(sfxFiles[i])) {
+                raise_error(ERR_AUDIO,sfxFiles[i].c_str());
+            }
+        }
+
         // Attempt to create the user-specified window
         std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
         bool foundMode = false;
