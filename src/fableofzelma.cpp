@@ -170,9 +170,9 @@ namespace foz {
                         }
                         if (myObject->active && myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST) {
                             for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
-                                if (obj!=j && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
+                                if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
                                     myObject->active = false;
-                                    //playSound(SFX_LINKARROW,100,true);
+                                    playSound(SFX_LINKARROW,100,true);
                                 }
                             }
                         }
@@ -191,7 +191,7 @@ namespace foz {
                     //**If you're planning on changing this be sure you have a good reason to or write these values down.**
                     if (myLink->y <= -328.0) {
                         if (myLink->direction == DIRECTION_SOUTH) {
-                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y++;
                                 playSound(SFX_HEY,100,true);
                                 myLink->y = 266.0;
@@ -205,7 +205,7 @@ namespace foz {
                     }
                     if (myLink->y >= 266.0) {
                         if (myLink->direction == DIRECTION_NORTH) {
-                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                 myLink->room_y--;
                                 playSound(SFX_HEY,100,true);
                                 myLink->y = -328.0;
@@ -219,7 +219,7 @@ namespace foz {
                     }
                     if (myLink->x >= 270.0) {
                         if (myLink->direction == DIRECTION_EAST) {
-                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x++;
                                 playSound(SFX_HEY,100,true);
                                 myLink->x = -379.0;
@@ -234,7 +234,7 @@ namespace foz {
                     }
                     if (myLink->x <= -321.0) {
                         if (myLink->direction == DIRECTION_WEST) {
-                            if (myWorld.myRooms[myLink->room_y][myLink->room_x].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                 myLink->room_x--;
                                 playSound(SFX_HEY,100,true);
                                 myLink->x = 328.0;
@@ -302,12 +302,11 @@ namespace foz {
                     CMDFRAMEMAX = 20;
 
                     if (myTeams[i].cur_cmdframe==0) {
-                        myLink->update(mycmd->cmd);
                         arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
                         arrow->setDirection(myLink->direction);
                         myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
                     }
-
+                    myLink->update(mycmd->cmd);
                     myTeams[i].cur_cmdframe++;
                     if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
                         myTeams[i].cur_cmdframe = 0;
@@ -1527,6 +1526,27 @@ namespace foz {
                enemyCommands[i][j].~cmd_type();
             }
         }
+
+        /*for (int i=0;i<NUM_TEXTURES;i++) {
+            myTextures[i].~Texture();
+        }
+
+        for (int i =0; i<4;i++) {
+            myTeams[i].~Team();
+        }
+
+        myConfig.~Config();
+        myWorld.~World();
+        myCamera.~Camera();
+        myTime.~Time();
+
+        for (int i=0;i<NUM_SFX;i++) {
+            mySoundBuffers[i].~SoundBuffer();
+        }
+
+        for (int i=0;i<NUM_SOUNDS;i++) {
+            mySounds[i].~Sound();
+        }*/
     }
 
 } //namespace foz    test

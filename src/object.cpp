@@ -74,21 +74,25 @@ namespace foz {
                     if (this->y <= -328.0) {
                         if (this->direction == DIRECTION_SOUTH) {
                                 this->active = false;
+                                myGame->playSound(SFX_LINKARROW,100,true);
                         }
                     }
                     if (this->y >= 266.0) {
                         if (this->direction == DIRECTION_NORTH) {
                              this->active = false;
+                             myGame->playSound(SFX_LINKARROW,100,true);
                         }
                     }
                     if (this->x >= 270.0) {
                         if (this->direction == DIRECTION_EAST) {
                                 this->active = false;
+                                myGame->playSound(SFX_LINKARROW,100,true);
                         }
                     }
                     if (this->x <= -321.0) {
                         if (this->direction == DIRECTION_WEST) {
                                 this->active = false;
+                                myGame->playSound(SFX_LINKARROW,100,true);
                         }
                     }
 

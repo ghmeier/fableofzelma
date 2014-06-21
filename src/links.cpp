@@ -228,6 +228,23 @@ namespace foz {
                 sprite = LINK_WALKING_SOUTH_1;
             }
             break;
+        case SHOOT_CMD:
+            sprite++;
+            if(direction==DIRECTION_NORTH){
+                if (sprite > LINK_ARROW_NORTH_6 || sprite < LINK_ARROW_NORTH_1){
+                    sprite = LINK_ARROW_NORTH_1;
+                }
+            }else if (direction == DIRECTION_EAST || direction == DIRECTION_WEST){
+                if (sprite > LINK_ARROW_WEST_6 || sprite < LINK_ARROW_WEST_1) {
+                    sprite = LINK_ARROW_WEST_1;
+                }
+            }else if (direction == DIRECTION_SOUTH) {
+                if (sprite > LINK_ARROW_SOUTH_6 || sprite < LINK_ARROW_SOUTH_1) {
+                    sprite = LINK_ARROW_SOUTH_1;
+                }
+            }
+            sprite ++;
+            break;
         case WAIT_CMD:
             height = GLOBALHEIGHT;
             width = GLOBALWIDTH;

@@ -77,7 +77,9 @@ LINK_WALKING_WEST_6,                                                            
 LINK_WALKING_SOUTH_1, LINK_WALKING_SOUTH_2, LINK_WALKING_SOUTH_3, LINK_WALKING_SOUTH_4, LINK_WALKING_SOUTH_5,                                                                   //17
 LINK_WALKING_SOUTH_6,                                                                                                                                                           //18
 LINK_DYING_1, LINK_DYING_2, LINK_DYING_3, LINK_DYING_4, LINK_DYING_5,                                                                                                           //19
-LINK_DYING_6}                                                                                                                                                                   //20
+LINK_DYING_6,LINK_ARROW_NORTH_1,LINK_ARROW_NORTH_2,LINK_ARROW_NORTH_3,LINK_ARROW_NORTH_4,LINK_ARROW_NORTH_5,LINK_ARROW_NORTH_6,
+LINK_ARROW_WEST_1,LINK_ARROW_WEST_2,LINK_ARROW_WEST_3,LINK_ARROW_WEST_4,LINK_ARROW_WEST_5,LINK_ARROW_WEST_6,
+LINK_ARROW_SOUTH_1,LINK_ARROW_SOUTH_2,LINK_ARROW_SOUTH_3,LINK_ARROW_SOUTH_4,LINK_ARROW_SOUTH_5,LINK_ARROW_SOUTH_6}                                                                                                                                                                   //20
 LINK_SPRITE_ENUM;
 extern uint16_t link_object_spriteMap[][4];
 extern uint16_t link_object_spriteMap_centers[][2];

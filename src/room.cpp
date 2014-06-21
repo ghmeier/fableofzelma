@@ -388,8 +388,12 @@ namespace foz {
             e->can_move = true; //Link can move unless we find something in his way
                     for (uint16_t obj = 0; obj < this->myObjects.size(); obj++) {
                         foz::Object *myObject = &this->myObjects[obj];
-                        if (myGame->linkColObj(e,myObject)) {
-                            if (myObject->status == SOLID) {
+                        if (myObject->active && myGame->linkColObj(e,myObject)) {
+                            if ( myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST){
+                                myObject->active = false;
+                                e->health-=10;
+                                myGame->playSound(SFX_ARROWHIT,100,true);
+                            }else if (myObject->status == SOLID) {
                                 e->can_move = false;
                             }else {
                                 if (myObject->type == VOID_BLOCK) {
