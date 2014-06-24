@@ -265,7 +265,7 @@ namespace foz {
 
                     // Have we reached the end of a CMDFRAME?
                     // If so, see how many squares we have left to go.
-                    if (myTeams[i].cur_cmdframe%10 == 0) {
+                    if (myTeams[i].cur_cmdframe%15 == 0) {
                         playSound(SFX_STONESTEP,100,true);
                     }
                     if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
@@ -286,9 +286,8 @@ namespace foz {
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
                         if (toHit!= NULL) {
-                            playSound(SFX_LINKSLASH_1,100,true);
-                            toHit->health -= myLink->damage;
-                            if (toHit->health <= 0  && toHit->active) {
+                            toHit->doDamage(myLink->damage);
+                            if (myTeams[i].cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
                                 myTeams[i].score+=1;
                             }
                         }

@@ -59,11 +59,23 @@ namespace foz {
     };
 
     void Enemy::update(uint8_t cmd){
-        if (health<=0) {
-            //printf("the skeleton died!\n");
+        if (health<=0 && active) {
+            switch (type) {
+                case BSKEL:
+                case RSKEL:
+                    myGame->playSound(SFX_ENEMYKILL,100,true);
+                    break;
+                case GEYEGORE:
+                    myGame->playSound(SFX_ENEMYKILL,100,true);
+                    break;
+                default:
+                    break;
+            }
             this->active = false;
-            //delete this;
         }
+
+        if (!this->active)
+            return;
 
         if ( frameCount>FRAME_RATE) {
             frameCount = 0;
@@ -104,8 +116,8 @@ namespace foz {
                             sprite = (direction) * 6 + 3 + RSKEL_NORTH_1;
                         }
                     }else if (this->type==GEYEGORE) {
-                        if (sprite< direction * 3  + GEYEGORE_NORTH_1 || sprite >= (direction+1) * 3 + GEYEGORE_NORTH_1) {
-                            sprite = (direction) * 3  + GEYEGORE_NORTH_1;
+                        if (sprite< direction * 3  + GEYEGORE_NORTH_ATTACK_1 || sprite >= (direction+1) * 3 + GEYEGORE_NORTH_ATTACK_1) {
+                            sprite = (direction) * 3  + GEYEGORE_NORTH_ATTACK_1;
                         }
                     }
                 }
@@ -192,6 +204,21 @@ namespace foz {
 
 
             glEnd();
+        }
+    }
+
+    void Enemy::doDamage(int16_t amount) {
+        this->health -= amount;
+        switch (type) {
+            case RSKEL:
+            case BSKEL:
+                myGame->playSound(SFX_ENEMYHIT,100,true);
+                break;
+            case GEYEGORE:
+                myGame->playSound(SFX_ENEMYHIT,100,true);
+                break;
+            default:
+                break;
         }
     }
 

@@ -265,6 +265,11 @@ namespace foz {
         }
     }
 
+    void Link::doDamage(int16_t amount) {
+        this->health -= amount;
+        myGame->playSound(SFX_LINKHURT_1,100,true);
+    }
+
 
     /*****************************************************************************
     * Function: Link::Link

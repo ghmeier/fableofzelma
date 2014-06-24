@@ -42,6 +42,7 @@ namespace foz {
             void update(uint8_t cmd);
             void updateTransition(uint16_t val);
             void draw();
+            void doDamage(int16_t amount);
             void move();
 
             bool active;

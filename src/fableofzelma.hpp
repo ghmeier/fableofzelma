@@ -105,6 +105,7 @@ namespace foz {
             void compileEnemies();
             void update(uint8_t cmd);
             void draw();
+            void doDamage(int16_t amount);
             ~Enemy();
 
             uint16_t cmdIter;

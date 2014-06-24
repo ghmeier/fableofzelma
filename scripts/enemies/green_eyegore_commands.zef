@@ -2,4 +2,7 @@ start: move 3
 left
 move 7
 left
+attack
+move 1
+attack
 goto start

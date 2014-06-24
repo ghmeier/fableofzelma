@@ -391,8 +391,7 @@ namespace foz {
                         if (myObject->active && myGame->linkColObj(e,myObject)) {
                             if ( myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST){
                                 myObject->active = false;
-                                e->health-=10;
-                                myGame->playSound(SFX_ARROWHIT,100,true);
+                                e->doDamage(10);
                             }else if (myObject->status == SOLID) {
                                 e->can_move = false;
                             }else {
@@ -495,7 +494,7 @@ namespace foz {
                     e->cur_cmdframe++;
                     if (e->cur_cmdframe==10) {
                         if (toHit != NULL) {
-                            toHit->health -= e->damage;
+                            toHit->doDamage(e->damage);
                         }
                     }
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {

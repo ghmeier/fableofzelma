@@ -78,6 +78,11 @@ std::string sfxFiles[NUM_SFX]{
     "audio/linkSlash4.ogg",
     "audio/openChest.ogg",
     "audio/stoneStep.ogg",
+    "audio/eyegoreAttack.wav",
+    "audio/skelAttack.wav",
+    "audio/shootFire.wav",
+    "audio/enemyHit.wav",
+    "audio/enemyKill.wav"
 };
 /* Sprite map for LINK objects */
 uint16_t link_object_spriteMap[][4] = {
@@ -188,7 +193,11 @@ uint16_t enemy_spriteMap[][4] = {
 {168,62,191,86},{192,62,215,86},{216,62,239,86},
 {48,62,71,86},{72,62,95,86},{48,62,71,86},
 {96,62,119,86},{120,62,143,86},{144,62,167,86},
-{240,62,263,86},{264,62,287,86},{240,62,263,86}
+{240,62,263,86},{264,62,287,86},{240,62,263,86},
+
+{264,62,287,86},{288,62,311,86},{312,62,335,86},
+{336,62,359,86},{360,62,383,86},{384,62,407,86},
+{408,62,431,86},{432,62,455,86},{456,62,479,86}
 };
 
 char* enemy_filePath[NUM_ENEMIES] {
