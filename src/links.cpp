@@ -19,6 +19,9 @@
 #define GLOBALHEIGHT 64.0
 #define GLOBALWIDTH 58.0
 #define MAX_HEALTH 50
+#define LINK_START_X -25.0
+#define LINK_START_Y -83.0
+#define GLOBALSPEED 2.95
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
     {"regular", "link", "normal", "default"}
@@ -38,13 +41,16 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
+
+        //link shouldn't update unless it is active
         if (!active) {
             return;
         }
+
+        //don't worry about Link if it's out of health
         if (health<=0) {
             //delete this;
             this->active = false;
-            //cmd = DEATH_CMD;
         }
 
         switch (cmd) {
@@ -115,12 +121,9 @@ namespace foz {
                 if (direction == DIRECTION_NORTH) {
                     if (sprite >= LINK_SLASH_NORTH_20){
                         sprite = LINK_SLASH_NORTH_1;
-
-
                     }
                     else if (sprite < LINK_SLASH_NORTH_1) {
                         sprite = LINK_SLASH_NORTH_1;
-
                     }
                     else {
                         sprite++;
@@ -134,21 +137,14 @@ namespace foz {
                 if (direction == DIRECTION_SOUTH) {
                     if (sprite >= LINK_SLASH_SOUTH_20){
                         sprite = LINK_SLASH_SOUTH_1;
-                        //x =  x + 3.05*(-(link_object_spriteMap[tempSprite][0] - link_object_spriteMap_centers[tempSprite][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
-                        //y =  y +3.2*(-(link_object_spriteMap[tempSprite][1] - link_object_spriteMap_centers[tempSprite][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
                     else if (sprite < LINK_SLASH_SOUTH_1) {
                         sprite = LINK_SLASH_SOUTH_1;
-                        //x =  x + 3.05*(-(link_object_spriteMap[tempSprite][0] - link_object_spriteMap_centers[tempSprite][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
-                        //y =  y +3.2*(-(link_object_spriteMap[tempSprite][1] - link_object_spriteMap_centers[tempSprite][1]) + (link_object_spriteMap[sprite][1] - link_object_spriteMap_centers[sprite][1]));
                     }
                     else {
                         sprite++;
                         x =  x + 3.05*(-(link_object_spriteMap[sprite - 1][0] - link_object_spriteMap_centers[sprite - 1][0]) + (link_object_spriteMap[sprite][0] - link_object_spriteMap_centers[sprite][0]));
                         y =  y + 3.05*(-(-link_object_spriteMap[sprite - 1][3] + link_object_spriteMap_centers[sprite - 1][1]) + (-link_object_spriteMap[sprite][3] + link_object_spriteMap_centers[sprite][1]));
-
-
-
                     }
                     width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
                     height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
@@ -259,12 +255,15 @@ namespace foz {
             }
             break;
         case DEATH_CMD:
-            printf("YOU DIED!");
             //delete this;
             break;
         }
     }
 
+    /*****************************************************************************
+    * Function: Link::doDamage(int16_t amount)
+    * Description: remove amount from link's health
+    *****************************************************************************/
     void Link::doDamage(int16_t amount) {
         this->health -= amount;
         myGame->playSound(SFX_LINKHURT_1,100,true);
@@ -283,8 +282,9 @@ namespace foz {
         health = MAX_HEALTH;
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
-        speed = 2.95;
+        speed = GLOBALSPEED;
         damage = 30;
+        active = true;
 
         switch(team) {
             case 0:
@@ -292,8 +292,8 @@ namespace foz {
                 texfile = TEX_GREEN_LINK;
                 room_x = 0;
                 room_y = 0;
-                x = -25.0;
-                y = -83.0;
+                x = LINK_START_X;
+                y = LINK_START_Y;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -302,8 +302,8 @@ namespace foz {
                 texfile = TEX_PURPLE_LINK;
                 room_x = 0;
                 room_y = world_height-1;
-                x = -25.0;
-                y = -83.0;
+                x = LINK_START_X;
+                y = LINK_START_Y;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -312,8 +312,8 @@ namespace foz {
                 texfile = TEX_BLUE_LINK;
                 room_x = world_width-1;
                 room_y = 0;
-                x = -25.0;
-                y = -83.0;
+                x = LINK_START_X;
+                y = LINK_START_Y;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -323,8 +323,8 @@ namespace foz {
                 texfile = TEX_RED_LINK;
                 room_x = world_width-1;
                 room_y = world_height-1;
-                x = -25.0;
-                y = -83.0;
+                x = LINK_START_X;
+                y = LINK_START_Y;
                 sprite = LINK_WALKING_SOUTH_1;
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
@@ -344,7 +344,7 @@ namespace foz {
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
         depth = FRONT_DEPTH;
-        speed = 2.95;
+        speed = GLOBALSPEED;
         x = myx;
         y = myy;
         room_x = 0;
@@ -352,7 +352,7 @@ namespace foz {
         team = 255;
         texfile = TEX_ENEMIES;
         damage = enemyDamage[type];
-
+        active = true;
     }
 
     /*****************************************************************************

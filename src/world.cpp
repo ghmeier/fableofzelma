@@ -240,23 +240,6 @@ namespace foz {
             printf("Map file compilation complete\n");
         }
 
-        for (room_i = 0; room_i < height; room_i++) {
-            for (room_j = 0; room_j < width; room_j++) {
-                if (room_i > 0) {
-                    myRooms[room_i][room_j].north = &myRooms[room_i-1][room_j];
-                }
-                if (room_i < (height-1)) {
-                    myRooms[room_i][room_j].south = &myRooms[room_i+1][room_j];
-                }
-                if (room_j > 0) {
-                    myRooms[room_i][room_j].west = &myRooms[room_i][room_j-1];
-                }
-                if (room_j < (width-1)) {
-                    myRooms[room_i][room_j].east = &myRooms[room_i][room_j+1];
-                }
-            }
-        }
-
         return;
     }
 

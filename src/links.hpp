@@ -26,12 +26,6 @@
 typedef enum {REGULAR_LINK=0, NUM_LINK_TYPE} LINK_TYPE;
 extern std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS];
 
-/* Data arrays for the main link types */
-extern uint16_t linkCosts[NUM_LINK_TYPE];
-extern int16_t linkHealths[NUM_LINK_TYPE];
-extern uint16_t linkSpeeds[NUM_LINK_TYPE];
-
-
 namespace foz {
 
     class Link {
@@ -40,34 +34,27 @@ namespace foz {
             Link(uint16_t type, float x, float y);
             ~Link(){};
             void update(uint8_t cmd);
-            void updateTransition(uint16_t val);
             void draw();
             void doDamage(int16_t amount);
-            void move();
 
-            bool active;
-            bool can_move;
-            uint16_t action_count;
-            uint8_t type;
-            uint8_t direction;
-            uint8_t team;
-            uint8_t status;
-            int16_t health;
-            int16_t damage;
-            uint16_t sprite;
-            uint32_t depth;
-            uint8_t texfile;
-            float width, height;
-            uint16_t id;
-            uint16_t row, col;
-            uint8_t room_x, room_y;
-            float x, y;
-            float speed;
-            float dir;
-            uint16_t delay;
-            uint16_t move_count;
-            uint8_t frameCount;
-            uint16_t numKeys; // number of keys to open chests that link has
+            bool active;            //draws the link when true, and ignores when false
+            bool can_move;          //used to determine when link is colliding with anything
+            uint8_t type;           //determines which type of link it is, CURRENTLY - only 0
+            uint8_t direction;      //links directional facing, corresponds to the ENUM
+            uint8_t team;           //reference to links team (0-3) corresponds with loaded teams
+            uint8_t status;         //only saving this in the event that link gets status effects
+            int16_t health;         //link's integer health value
+            int16_t damage;         //the amount link takes down enemy's health when attacking
+            uint16_t sprite;        //current sprite being drawn to the screen, see link_object ENUM
+            uint32_t depth;         //used for layering
+            uint8_t texfile;        //which texture link is using, red, green, blue, purple
+            float width, height;    //in pixels. determines links size both visually and in collisions
+            uint16_t id;            //link's identifier on the team (not sure if this works yet)
+            uint8_t room_x, room_y; //these are used to place link in a room
+            float x, y;             //link's coordinate position within the room
+            float speed;            //amount link can move per frame, currently moves him ~59 pixels per move call
+            uint8_t frameCount;     //modulates the way sprites change on link to slow them down to normal speed
+            uint16_t numKeys;       //number of keys to open chests that link has
     };
 
 }

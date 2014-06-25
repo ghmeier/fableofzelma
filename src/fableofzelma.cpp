@@ -168,7 +168,7 @@ namespace foz {
                                 }
                             }
                         }
-                        if (myObject->active && myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST) {
+                        if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST)) {
                             for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
                                 if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
                                     myObject->active = false;
@@ -667,7 +667,7 @@ namespace foz {
                                 }
                             }
 
-                            myTeams[i_team].budget += linkCosts[l];
+                            myTeams[i_team].budget += 0;
                             if (myTeams[i_team].budget > myStatus.budget) {
                                 printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], line_count);
                                 printf("  team is over budget\n");

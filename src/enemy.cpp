@@ -58,6 +58,10 @@ namespace foz {
         }
     };
 
+    /**********************************************
+    * Function Enemy::update(uint8_t cmd)
+    * Description: based on the given command, handles the results for each enemy.
+    ***********************************************/
     void Enemy::update(uint8_t cmd){
         if (health<=0 && active) {
             switch (type) {
@@ -185,6 +189,10 @@ namespace foz {
         }
     }
 
+    /*****************************************
+    * Function: Enemy::draw()
+    * Description: handles drawing the enemy to the screen in GL
+    ******************************************/
     void Enemy::draw(){
 
         if (this->active) {
@@ -207,6 +215,10 @@ namespace foz {
         }
     }
 
+    /*****************************************
+    * Function: Enemy::doDamage(int16_t amount)
+    * Description: removes amount from enemy's health and plays corresponding sound
+    ******************************************/
     void Enemy::doDamage(int16_t amount) {
         this->health -= amount;
         switch (type) {

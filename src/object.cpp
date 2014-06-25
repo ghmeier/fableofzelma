@@ -59,11 +59,6 @@ namespace foz {
         }
     }
 
-    void Object::setRoomXY(uint8_t roomx, uint8_t roomy) {
-        room_x = roomx;
-        room_y = roomy;
-    }
-
     void Object::draw(){
         if (!active) {
             //delete this;

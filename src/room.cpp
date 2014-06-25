@@ -149,13 +149,6 @@ namespace foz {
             std::reverse(myTiles.begin(), myTiles.end());
         }
 
-
-        // Initialize the room pointers
-        north = NULL;
-        south = NULL;
-        west = NULL;
-        east = NULL;
-
         return;
 
     }

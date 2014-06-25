@@ -88,19 +88,21 @@ namespace foz {
     /* Game configuration information */
     class Config {
         public:
-            std::string  someanem;
             int32_t debug_level;
             uint16_t screen_width;
             uint16_t screen_height;
             uint8_t screen_depth;
+            //reference to each team's .zuf file
             char *team_fname[4];
+            //filepath to world map
             char *map_fname;
+            //enemy command files
             char *enemy_fname[NUM_ENEMIES];
     };
 
+    /* Enemy extends Link and is used for any enemy objects */
     class Enemy : public Link{
         public:
-
             Enemy(uint16_t mytype, float myx, float myy);
             void compileEnemies();
             void update(uint8_t cmd);
@@ -123,11 +125,6 @@ namespace foz {
         std::vector< std::vector<uint16_t> > myTiles;
         std::vector<Object> myObjects;
         std::vector<Enemy> myEnemies;
-
-        Room *north;
-        Room *south;
-        Room *west;
-        Room *east;
 
         /* Main functions (room.cpp) */
         void compile(uint16_t id, bool rev, bool flip);
@@ -154,6 +151,7 @@ namespace foz {
       public:
         uint16_t width, height;
         std::vector< std::vector<Room> > myRooms;
+
         void compile(Config *myConfig, Status *myStatus);
         void draw();
         ~World();
@@ -241,16 +239,20 @@ namespace foz {
             void loadResources();
             void drawScoreboard();
             void processEvents();
-            bool linkColObj(Link *myLink, Object *myObject);
-            bool linkColLink(Link *myLink, Link *other);
-            bool objColObj(Object *myLink, Object *myObject);
+
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
             void printConfig();
             void printStatus();
 
+            /* Collision helper functions*/
+            bool linkColObj(Link *myLink, Object *myObject);
+            bool linkColLink(Link *myLink, Link *other);
+            bool objColObj(Object *myLink, Object *myObject);
+
              /* Globally declare Textures */
             foz::Texture myTextures[NUM_TEXTURES];
+
             foz::Status myStatus;
             std::vector<Link> myLinks[4];
             foz::Team myTeams[4];

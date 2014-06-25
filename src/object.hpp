@@ -26,10 +26,7 @@ namespace foz {
             Object(uint8_t myType, float myX, float myY);
             ~Object();
             void update(uint8_t cmd);
-            void updateTransition(uint16_t val);
             void draw();
-            void move();
-            void setRoomXY(uint8_t roomx, uint8_t roomy);
             void setDirection(uint8_t dir);
 
             bool active;
@@ -40,8 +37,6 @@ namespace foz {
             uint32_t depth;
             uint8_t texfile;
             float width, height;
-            uint16_t id;
-            uint16_t row, col;
             uint8_t room_x, room_y;
             float x, y;
             uint8_t frameCount;
