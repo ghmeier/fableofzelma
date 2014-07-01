@@ -143,6 +143,7 @@ namespace foz {
             }
             //the vertices of link and each object for easier access
             Object* lookChest = NULL;
+            Object* toCollect = NULL;
             Enemy* toHit = NULL;
             myLink->can_move = true; //Link can move unless we find something in his way
 
@@ -155,16 +156,13 @@ namespace foz {
                                     lookChest = myObject;
                                 }
                             }else {
+                                myLink->can_move = true;
                                 if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
-                                    playSound(SFX_GETRUPEE,100,true);
-                                    myTeams[myLink->team].score++;
-                                    myObject->active = false;
+                                    toCollect = myObject;
                                 }else if (myObject->type == VOID_BLOCK) {
-                                    myLink->health = -1;
+                                    toCollect = myObject;
                                 }else if (myObject->type == KEY) {
-                                    playSound(SFX_GETITEM,100,true);
-                                    myObject->active = false;
-                                    myLink->numKeys++;
+                                    toCollect = myObject;
                                 }
                             }
                         }
@@ -249,14 +247,86 @@ namespace foz {
                     }
 
             Object * arrow;
+
+            bool canProceed = true;
+            if (mycmd->has_pred) {
+                switch (mycmd->pred){
+                case ALWAYS_PRED:
+                    canProceed = true;
+                    break;
+                case NEVER_PRED:
+                    canProceed = false;
+                    break;
+                case READY_PRED:
+                    canProceed = myLink->active;
+                    break;
+                case ALIVE_PRED:
+                    canProceed = myLink->health > 0;
+                    break;
+                case DEAD_PRED:
+                    canProceed = myLink->health<=0;
+                    break;
+                case DAMAGE_PRED:
+                    canProceed = !myLink->wasHitLast;
+                    break;
+                case HIT_PRED:
+                    canProceed = toHit != NULL;
+                    break;
+                case SCORE_PRED:
+                    canProceed = myTeams[i].prevScore < myTeams[i].score;
+                case WINNING_PRED:
+                    for (int curTeam=0;curTeam<4;curTeam++) {
+                        if (curTeam!=i) {
+                            canProceed = canProceed && myTeams[i].score > myTeams[curTeam].score;
+                        }
+                    }
+                    break;
+                case LOSING_PRED:
+                    for (int curTeam=0;curTeam<4;curTeam++) {
+                        if (curTeam!=i) {
+                            canProceed = canProceed && myTeams[i].score < myTeams[curTeam].score;
+                        }
+                    }
+                    break;
+                case BLOCKED_PRED:
+                    canProceed = myLink->can_move || toCollect->type == VOID_BLOCK;
+                case COLLECT_PRED:
+                    canProceed = toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3);
+
+                default:
+                    break;
+                }
+                canProceed = canProceed && mycmd->inv_pred;
+            }
+
+            myTeams[i].prevScore = myTeams[i].score;
+            myLink->wasHitLast = false;
+
+            if (!canProceed) {
+                continue;
+            }
+            //AND BEGIN PARSING LINK COMMANDS
+
             switch (mycmd->cmd) {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 20;
                     //check to see is an object will keep Link from moving
 
                     if (myLink->can_move) {
-
                         myLink->update(mycmd->cmd);
+                        if (toCollect != NULL){
+                            if (toCollect->type>=RUPEE_GREEN_1 && toCollect->type<=RUPEE_RED_3) {
+                                playSound(SFX_GETRUPEE,100,true);
+                                myTeams[myLink->team].score++;
+                                toCollect->active = false;
+                            }else if (toCollect->type == VOID_BLOCK) {
+                                myLink->health = -1;
+                            }else if (toCollect->type == KEY) {
+                                playSound(SFX_GETITEM,100,true);
+                                toCollect->active = false;
+                                myLink->numKeys++;
+                            }
+                        }
                     }else {
                         myLink->update(WAIT_CMD);
                     }
@@ -286,6 +356,7 @@ namespace foz {
                     myTeams[i].cur_cmdframe++;
                     myLink->update(mycmd->cmd);
                         if (toHit!= NULL) {
+                            toHit->wasHitLast = true;
                             toHit->doDamage(myLink->damage);
                             if (myTeams[i].cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
                                 myTeams[i].score+=1;
@@ -454,11 +525,9 @@ namespace foz {
         myConfig.screen_width = SCREEN_WIDTH_DEFAULT;
         myConfig.screen_depth = SCREEN_DEPTH_DEFAULT;
         myConfig.map_fname = (char *)malloc(strlen(MAP_FNAME_DEFAULT)+1);
-        printf("NUM ENEMIES: %d\n",NUM_ENEMIES);
         for (int i=0;i<NUM_ENEMIES;i++) {
             myConfig.enemy_fname[i] = (char *)malloc(strlen(enemy_filePath[i])+1);
             strcpy(myConfig.enemy_fname[i],enemy_filePath[i]);
-            printf("________88*****\n");
         }
 
         if (!myConfig.map_fname) {
@@ -989,23 +1058,26 @@ namespace foz {
                 for (uint16_t i = 0; i < myTeams[i_team].cmds.size(); i++) {
                     printf("cmd-%03u: | ", i);
                     printf(" %3u | ", myTeams[i_team].cmds[i].line);
-                    if (myTeams[i_team].cmds[i].has_label == true)
+                    if (myTeams[i_team].cmds[i].has_label == true){
                         printf("%9s | ", myTeams[i_team].cmds[i].label_str);
-                    else
+                    }else{
                         printf("%9s | ", "none");
-                    if (myTeams[i_team].cmds[i].has_pred == true) {
-                        if (myTeams[i_team].cmds[i].has_link_pred == true)
-                            printf("%3hu | ", myTeams[i_team].cmds[i].link_pred);
-                        else
-                            printf("%3s | ", "yes");
                     }
-                    else {
+                    if (myTeams[i_team].cmds[i].has_pred == true) {
+                        if (myTeams[i_team].cmds[i].has_link_pred == true){
+                            printf("%3hu | ", myTeams[i_team].cmds[i].link_pred);
+                        }else{
+                            printf("%3s | ", "yes");
+                        }
+                    }else {
                         printf("%3s | ", "no");
                     }
-                    if (myTeams[i_team].cmds[i].inv_pred == true)
+
+                    if (myTeams[i_team].cmds[i].inv_pred == true){
                         printf("%4s | ", "yes");
-                    else
+                    }else{
                         printf("%4s | ", "no");
+                    }
 
                     printf("%8s | ", predNames[myTeams[i_team].cmds[i].pred][0].c_str());
                     printf("%7s | ", cmdNames[myTeams[i_team].cmds[i].cmd][0].c_str());

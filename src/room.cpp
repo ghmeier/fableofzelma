@@ -488,6 +488,7 @@ namespace foz {
                     if (e->cur_cmdframe==10) {
                         if (toHit != NULL) {
                             toHit->doDamage(e->damage);
+                            toHit->wasHitLast = true;
                         }
                     }
                     if (e->cur_cmdframe >= CMDFRAMEMAX) {

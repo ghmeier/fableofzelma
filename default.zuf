@@ -14,6 +14,6 @@ move l1 3
 left l1
 move l1 3
 left l1
-move l1 2
+if not alive, move l1 2
 activate l1
 goto start

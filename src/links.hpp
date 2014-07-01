@@ -55,6 +55,7 @@ namespace foz {
             float speed;            //amount link can move per frame, currently moves him ~59 pixels per move call
             uint8_t frameCount;     //modulates the way sprites change on link to slow them down to normal speed
             uint16_t numKeys;       //number of keys to open chests that link has
+            bool wasHitLast;        //true if the link was hit by an enemy's last command
     };
 
 }

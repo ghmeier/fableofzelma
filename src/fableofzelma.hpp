@@ -114,7 +114,6 @@ namespace foz {
             uint16_t cur_cmdframe;
             bool cmds_done;
             uint16_t cur_cmdopt;
-
     };
 
     /* Room information */
@@ -182,6 +181,7 @@ namespace foz {
             uint32_t status;
             char *name;
             uint16_t score;
+            uint16_t prevScore;
             uint16_t budget;
             uint16_t cur_cmd;
             uint16_t cur_link;
