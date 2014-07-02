@@ -237,6 +237,7 @@ namespace foz {
                                 playSound(SFX_HEY,100,true);
                                 myLink->x = 328.0;
                                 myLink->y = -33;
+                                myLink->can_move = true;
                             }else {
                                 myLink->can_move = false;
                                 myLink->x = -321.0;
@@ -247,7 +248,6 @@ namespace foz {
                     }
 
             Object * arrow;
-
             bool canProceed = true;
             if (mycmd->has_pred) {
                 switch (mycmd->pred){
@@ -289,24 +289,34 @@ namespace foz {
                     }
                     break;
                 case BLOCKED_PRED:
-                    canProceed = myLink->can_move || toCollect->type == VOID_BLOCK;
-                case COLLECT_PRED:
-                    canProceed = toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3);
+                    if (myLink->team == 0) {
+                       printf("%d canMove: %d, invPred: %d, cmd: %d\n",i,myLink->can_move,mycmd->inv_pred,mycmd->cmd);
+                    }
 
+                    canProceed = (!myLink->can_move) || (toCollect!=NULL && toCollect->type == VOID_BLOCK);
+                    break;
+                case COLLECT_PRED:
+                    canProceed = toCollect!=NULL && (toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3));
+                    break;
+                case ACTIVATE_PRED:
+                    canProceed = toCollect!=NULL && (toCollect->type==CHEST);
+                    break;
                 default:
                     break;
                 }
-                canProceed = canProceed && mycmd->inv_pred;
+                if (myLink->team == 0){
+                    printf("canProceed %d, invPred %d\n",canProceed,mycmd->inv_pred);
+                }
+                canProceed = canProceed != mycmd->inv_pred;
             }
-
             myTeams[i].prevScore = myTeams[i].score;
             myLink->wasHitLast = false;
-
             if (!canProceed) {
+                myTeams[i].cur_cmdframe = 0;
+                myTeams[i].cur_cmd++;
                 continue;
             }
             //AND BEGIN PARSING LINK COMMANDS
-
             switch (mycmd->cmd) {
                 case MOVE_CMD:
                     CMDFRAMEMAX = 20;

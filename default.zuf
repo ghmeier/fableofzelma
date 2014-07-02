@@ -3,17 +3,11 @@ select L2 Regular
 select L3 Regular
 select L4 Regular
 
-start: left l1
-move l1 1
-shoot l1
-left l1
-move l1 3
-left l1
-attack l1
-move l1 3
-left l1
-move l1 3
-left l1
-if not alive, move l1 2
-activate l1
+start: if blocked, left l1
+if not blocked, goto movement1
 goto start
+
+movement1: move l1 1
+if interactive, activate l1
+if blocked, goto start
+goto movement1
