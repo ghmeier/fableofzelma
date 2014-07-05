@@ -47,11 +47,11 @@ namespace foz {
         for (i = 0; i < height; i++) {
             for (j = 0; j < width; j++) {
                 for (i_team = 0; i_team < 4; i_team++) {
-                    for (k = 0; k < myGame->myLinks[i_team].size(); k++) {
-                        if ((myGame->myLinks[i_team][k].active == true) &&
-                            (myGame->myLinks[i_team][k].room_x == j) &&
-                            (myGame->myLinks[i_team][k].room_y == i)) {
-                            myGame->myLinks[i_team][k].draw();
+                    for (k = 0; k < myGame->myTeams[i_team].myLinks.size(); k++) {
+                        if ((myGame->myTeams[i_team].myLinks[k].active == true) &&
+                            (myGame->myTeams[i_team].myLinks[k].room_x == j) &&
+                            (myGame->myTeams[i_team].myLinks[k].room_y == i)) {
+                            myGame->myTeams[i_team].myLinks[k].draw();
                         }
                     }
                 }
@@ -59,8 +59,6 @@ namespace foz {
             }
             glTranslatef(-1080.0*(width), -1080.0, 0.0);
         }
-
-
 
         // Resets Matrix so it draws objects starting in top left room after
         // drawing the rooms

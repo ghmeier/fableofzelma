@@ -1,13 +1,17 @@
 select L1 Regular
 select L2 Regular
 select L3 Regular
-select L4 Regular
 
-start: if blocked, left l1
-if not blocked, goto movement1
+start: if l1.blocked, left l1
+move l2 1
+move l1 1
+right l3
+move l3 1
+left l2
+if not l1.blocked, goto movement1
 goto start
 
 movement1: move l1 1
-if interactive, activate l1
-if blocked, goto start
+if l1.interactive, activate l1
+if l1.blocked, goto start
 goto movement1

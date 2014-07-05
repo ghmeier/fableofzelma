@@ -31,7 +31,8 @@ std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     {"wait", "pause","hold"},
     {"activate","open","push"},
     {"death","remove","kill"},
-    {"shoot","projectile","cast"}
+    {"shoot","projectile","cast"},
+    {"skip","next","pass"}
     };
 
 /* Predicate spellings */

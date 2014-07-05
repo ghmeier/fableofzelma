@@ -122,342 +122,334 @@ namespace foz {
         int CMDFRAMEMAX;
         // Command loop: grab the next cmd for each team.
         for (uint16_t i = 0; i < 4; i++) {
-
             // If we are done with the commands, move on to the next team
             if (myTeams[i].cmds_done == true) {
                 continue;
             }
 
-            // If we are done with the active links, move on to the next team
-            if (myTeams[i].cur_link > myLinks[i].size()) {
-                myTeams[i].cmds_done = true;
-                continue;
-            }
-
             // Grab the current command and link
-            foz::cmd_type *mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
-            foz::Link *myLink = &myLinks[i][myTeams[i].cur_link];
+            for (int i_link = 0; i_link < myGame->myTeams[i].myLinks.size(); i_link++) {
+                foz::cmd_type *mycmd = &myTeams[i].myLinks[i_link].commands[myTeams[i].myLinks[i_link].cur_cmd];
+                foz::Link *myLink = &myTeams[i].myLinks[i_link];
 
-            if (!myLink->active){
-                continue;
-            }
-            //the vertices of link and each object for easier access
-            Object* lookChest = NULL;
-            Object* toCollect = NULL;
-            Enemy* toHit = NULL;
-            myLink->can_move = true; //Link can move unless we find something in his way
-
-                    for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
-                        foz::Object *myObject = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[obj];
-                        if (linkColObj(myLink,myObject)) {
-                            if (myObject->status == SOLID) {
-                                myLink->can_move = false;
-                                if (myObject->type == CHEST) {
-                                    lookChest = myObject;
-                                }
-                            }else {
-                                myLink->can_move = true;
-                                if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
-                                    toCollect = myObject;
-                                }else if (myObject->type == VOID_BLOCK) {
-                                    toCollect = myObject;
-                                }else if (myObject->type == KEY) {
-                                    toCollect = myObject;
-                                }
-                            }
-                        }
-                        if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST)) {
-                            for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
-                                if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
-                                    myObject->active = false;
-                                    playSound(SFX_LINKARROW,100,true);
-                                }
-                            }
-                        }
-
-                    }
-
-                    for (uint16_t ene = 0; ene < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); ene++) {
-                        foz::Enemy *enemy = &myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies[ene];
-                        if (linkColLink(myLink,enemy)) {
-                            myLink->can_move = false;
-                            toHit = enemy;
-                        }
-                    }
-
-                    //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
-                    //**If you're planning on changing this be sure you have a good reason to or write these values down.**
-                    if (myLink->y <= -328.0) {
-                        if (myLink->direction == DIRECTION_SOUTH) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
-                                myLink->room_y++;
-                                playSound(SFX_HEY,100,true);
-                                myLink->y = 266.0;
-                            }else {
-                                myLink->can_move = false;
-                                myLink->y = -328.0;
-                            }
-                        }else {
-                            myLink->y = -328.0;
-                        }
-                    }
-                    if (myLink->y >= 266.0) {
-                        if (myLink->direction == DIRECTION_NORTH) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
-                                myLink->room_y--;
-                                playSound(SFX_HEY,100,true);
-                                myLink->y = -328.0;
-                            }else {
-                                myLink->can_move = false;
-                                myLink->y = 266.0;
-                            }
-                        }else {
-                            myLink-> y = 266.0;
-                        }
-                    }
-                    if (myLink->x >= 270.0) {
-                        if (myLink->direction == DIRECTION_EAST) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
-                                myLink->room_x++;
-                                playSound(SFX_HEY,100,true);
-                                myLink->x = -379.0;
-                                myLink->y = -33;
-                            }else {
-                                myLink->can_move = false;
-                                myLink->x = 270.0;
-                            }
-                        }else {
-                        //myLink->x = 270.0;
-                        }
-                    }
-                    if (myLink->x <= -321.0) {
-                        if (myLink->direction == DIRECTION_WEST) {
-                            if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
-                                myLink->room_x--;
-                                playSound(SFX_HEY,100,true);
-                                myLink->x = 328.0;
-                                myLink->y = -33;
-                                myLink->can_move = true;
-                            }else {
-                                myLink->can_move = false;
-                                myLink->x = -321.0;
-                            }
-                        }else {
-                            //myLink->x = -321;
-                        }
-                    }
-
-            Object * arrow;
-            bool canProceed = true;
-            if (mycmd->has_pred) {
-                switch (mycmd->pred){
-                case ALWAYS_PRED:
-                    canProceed = true;
-                    break;
-                case NEVER_PRED:
-                    canProceed = false;
-                    break;
-                case READY_PRED:
-                    canProceed = myLink->active;
-                    break;
-                case ALIVE_PRED:
-                    canProceed = myLink->health > 0;
-                    break;
-                case DEAD_PRED:
-                    canProceed = myLink->health<=0;
-                    break;
-                case DAMAGE_PRED:
-                    canProceed = !myLink->wasHitLast;
-                    break;
-                case HIT_PRED:
-                    canProceed = toHit != NULL;
-                    break;
-                case SCORE_PRED:
-                    canProceed = myTeams[i].prevScore < myTeams[i].score;
-                case WINNING_PRED:
-                    for (int curTeam=0;curTeam<4;curTeam++) {
-                        if (curTeam!=i) {
-                            canProceed = canProceed && myTeams[i].score > myTeams[curTeam].score;
-                        }
-                    }
-                    break;
-                case LOSING_PRED:
-                    for (int curTeam=0;curTeam<4;curTeam++) {
-                        if (curTeam!=i) {
-                            canProceed = canProceed && myTeams[i].score < myTeams[curTeam].score;
-                        }
-                    }
-                    break;
-                case BLOCKED_PRED:
-                    if (myLink->team == 0) {
-                       printf("%d canMove: %d, invPred: %d, cmd: %d\n",i,myLink->can_move,mycmd->inv_pred,mycmd->cmd);
-                    }
-
-                    canProceed = (!myLink->can_move) || (toCollect!=NULL && toCollect->type == VOID_BLOCK);
-                    break;
-                case COLLECT_PRED:
-                    canProceed = toCollect!=NULL && (toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3));
-                    break;
-                case ACTIVATE_PRED:
-                    canProceed = toCollect!=NULL && (toCollect->type==CHEST);
-                    break;
-                default:
-                    break;
+                if (i ==0 && myLink->cur_cmdframe==0) {
+                    printf("Link: %d, cur_cmd: %d, cmd %d\n",myLink->id,myLink->cur_cmd,mycmd->cmd);
                 }
-                if (myLink->team == 0){
-                    printf("canProceed %d, invPred %d\n",canProceed,mycmd->inv_pred);
+
+                if (!myLink->active){
+                    continue;
                 }
-                canProceed = canProceed != mycmd->inv_pred;
-            }
-            myTeams[i].prevScore = myTeams[i].score;
-            myLink->wasHitLast = false;
-            if (!canProceed) {
-                myTeams[i].cur_cmdframe = 0;
-                myTeams[i].cur_cmd++;
-                continue;
-            }
-            //AND BEGIN PARSING LINK COMMANDS
-            switch (mycmd->cmd) {
-                case MOVE_CMD:
-                    CMDFRAMEMAX = 20;
-                    //check to see is an object will keep Link from moving
+                //the vertices of link and each object for easier access
+                Object* lookChest = NULL;
+                Object* toCollect = NULL;
+                Enemy* toHit = NULL;
+                myLink->can_move = true; //Link can move unless we find something in his way
 
-                    if (myLink->can_move) {
-                        myLink->update(mycmd->cmd);
-                        if (toCollect != NULL){
-                            if (toCollect->type>=RUPEE_GREEN_1 && toCollect->type<=RUPEE_RED_3) {
-                                playSound(SFX_GETRUPEE,100,true);
-                                myTeams[myLink->team].score++;
-                                toCollect->active = false;
-                            }else if (toCollect->type == VOID_BLOCK) {
-                                myLink->health = -1;
-                            }else if (toCollect->type == KEY) {
-                                playSound(SFX_GETITEM,100,true);
-                                toCollect->active = false;
-                                myLink->numKeys++;
+                        for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
+                            foz::Object *myObject = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[obj];
+                            if (linkColObj(myLink,myObject)) {
+                                if (myObject->status == SOLID) {
+                                    myLink->can_move = false;
+                                    if (myObject->type == CHEST) {
+                                        lookChest = myObject;
+                                    }
+                                }else {
+                                    myLink->can_move = true;
+                                    if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
+                                        toCollect = myObject;
+                                    }else if (myObject->type == VOID_BLOCK) {
+                                        toCollect = myObject;
+                                    }else if (myObject->type == KEY) {
+                                        toCollect = myObject;
+                                    }
+                                }
                             }
+                            if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST)) {
+                                for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
+                                    if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
+                                        myObject->active = false;
+                                        playSound(SFX_LINKARROW,100,true);
+                                    }
+                                }
+                            }
+
                         }
-                    }else {
-                        myLink->update(WAIT_CMD);
-                    }
 
-                    myTeams[i].cur_cmdframe++;
-
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
-                    if (myTeams[i].cur_cmdframe%15 == 0) {
-                        playSound(SFX_STONESTEP,100,true);
-                    }
-                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
-                        myTeams[i].cur_cmdframe = 0;
-                        myTeams[i].cur_cmdopt++;
-                        if (myTeams[i].cur_cmdopt >= mycmd->opt[0]) {
-                            myTeams[i].cur_cmd++;
-                            myTeams[i].cur_cmdopt = 0;
-                        }
-                    }
-
-
-                    break;
-
-                case ATTACK_CMD:
-                    CMDFRAMEMAX = 20;
-
-                    myTeams[i].cur_cmdframe++;
-                    myLink->update(mycmd->cmd);
-                        if (toHit!= NULL) {
-                            toHit->wasHitLast = true;
-                            toHit->doDamage(myLink->damage);
-                            if (myTeams[i].cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
-                                myTeams[i].score+=1;
+                        for (uint16_t ene = 0; ene < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); ene++) {
+                            foz::Enemy *enemy = &myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies[ene];
+                            if (linkColLink(myLink,enemy)) {
+                                myLink->can_move = false;
+                                toHit = enemy;
                             }
                         }
 
-                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
-                        myTeams[i].cur_cmdframe = 0;
-                        myTeams[i].cur_cmd++;
-                    }
-                    break;
-                case SHOOT_CMD:
-                    CMDFRAMEMAX = 20;
-
-                    if (myTeams[i].cur_cmdframe==0) {
-                        arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
-                        arrow->setDirection(myLink->direction);
-                        myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
-                    }
-                    myLink->update(mycmd->cmd);
-                    myTeams[i].cur_cmdframe++;
-                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
-                        myTeams[i].cur_cmdframe = 0;
-                        myTeams[i].cur_cmd++;
-                    }
-                  break;
-                case LEFT_CMD:
-                case RIGHT_CMD:
-                case WAIT_CMD:
-                    CMDFRAMEMAX = 20;
-                    if (myTeams[i].cur_cmdframe==0) {
-                        myLink->update(mycmd->cmd);
-                    }
-
-                    myTeams[i].cur_cmdframe++;
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
-                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
-                        myTeams[i].cur_cmdframe = 0;
-                        myTeams[i].cur_cmd++;
-                    }
-                    break;
-                case ACTIVATE_CMD:
-                    CMDFRAMEMAX = 20;
-
-                    if (lookChest!=NULL && myLink->numKeys>0) {
-                        lookChest->type = CHEST_OPEN;
-                        lookChest->sprite = CHEST_OPEN;
-                        myTeams[myLink->team].score +=5;
-                        myLink->numKeys--;
-                    }
-
-                    if (myTeams[i].cur_cmdframe==0) {
-                        myLink->update(mycmd->cmd);
-                    }
-
-                    myTeams[i].cur_cmdframe++;
-                    // Have we reached the end of a CMDFRAME?
-                    // If so, see how many squares we have left to go.
-                    if (myTeams[i].cur_cmdframe >= CMDFRAMEMAX) {
-                        myTeams[i].cur_cmdframe = 0;
-                        myTeams[i].cur_cmd++;
-                    }
-                    break;
-                default:
-                    bool pred_true = true;
-
-                    //Handles the goto command
-                    if (myTeams[i].cmds[myTeams[i].cur_cmd].cmd == GOTO_CMD){
-                        for (uint16_t j = 0; j < myTeams[i].cmds.size(); j++) {
-                            if (strcmp(myTeams[i].cmds[j].label_str,myTeams[i].cmds[myTeams[i].cur_cmd].target_str)==0){
-                                myTeams[i].cur_cmd = j;
-                                mycmd = &myTeams[i].cmds[myTeams[i].cur_cmd];
-                                break;
+                        //**IMPORTANT NOTE: the numbers here correspond to the pixel value of the edge of a given room in relation to Link.**
+                        //**If you're planning on changing this be sure you have a good reason to or write these values down.**
+                        if (myLink->y <= -328.0) {
+                            if (myLink->direction == DIRECTION_SOUTH) {
+                                if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                                    myLink->room_y++;
+                                    playSound(SFX_HEY,100,true);
+                                    myLink->y = 266.0;
+                                }else {
+                                    myLink->can_move = false;
+                                    myLink->y = -328.0;
+                                }
                             }
                         }
-                    }else if((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
-                        printf("Unrecognized Team: %d cmd: %s %d\n",i,cmdNames[myTeams[i].cmds[myTeams[i].cur_cmd].cmd][0].c_str(),myTeams[i].cur_cmd);
-                        myTeams[i].cur_cmd++;
-                        if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
-                            myTeams[i].cmds_done = true;
+                        if (myLink->y >= 266.0) {
+                            if (myLink->direction == DIRECTION_NORTH) {
+                                if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
+                                    myLink->room_y--;
+                                    playSound(SFX_HEY,100,true);
+                                    myLink->y = -328.0;
+                                }else {
+                                    myLink->can_move = false;
+                                    myLink->y = 266.0;
+                                }
+                            }
                         }
+                        if (myLink->x >= 270.0) {
+                            if (myLink->direction == DIRECTION_EAST) {
+                                if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                                    myLink->room_x++;
+                                    playSound(SFX_HEY,100,true);
+                                    myLink->x = -379.0;
+                                    myLink->y = -33;
+                                }else {
+                                    myLink->can_move = false;
+                                    myLink->x = 270.0;
+                                }
+                            }
+                        }
+                        if (myLink->x <= -321.0) {
+                            if (myLink->direction == DIRECTION_WEST) {
+                                if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
+                                    myLink->room_x--;
+                                    playSound(SFX_HEY,100,true);
+                                    myLink->x = 328.0;
+                                    myLink->y = -33;
+                                    myLink->can_move = true;
+                                }else {
+                                    myLink->can_move = false;
+                                    myLink->x = -321.0;
+                                }
+                            }
+                        }
+
+                Object * arrow;
+                bool canProceed = true;
+
+                if (mycmd->has_pred) {
+                    switch (mycmd->pred){
+                    case ALWAYS_PRED:
+                        canProceed = true;
+                        break;
+                    case NEVER_PRED:
+                        canProceed = false;
+                        break;
+                    case READY_PRED:
+                        canProceed = myLink->active;
+                        break;
+                    case ALIVE_PRED:
+                        canProceed = myLink->health > 0;
+                        break;
+                    case DEAD_PRED:
+                        canProceed = myLink->health<=0;
+                        break;
+                    case DAMAGE_PRED:
+                        canProceed = !myLink->wasHitLast;
+                        break;
+                    case HIT_PRED:
+                        canProceed = toHit != NULL;
+                        break;
+                    case SCORE_PRED:
+                        canProceed = myTeams[i].prevScore < myTeams[i].score;
+                    case WINNING_PRED:
+                        for (int curTeam=0;curTeam<4;curTeam++) {
+                            if (curTeam!=i) {
+                                canProceed = canProceed && myTeams[i].score > myTeams[curTeam].score;
+                            }
+                        }
+                        break;
+                    case LOSING_PRED:
+                        for (int curTeam=0;curTeam<4;curTeam++) {
+                            if (curTeam!=i) {
+                                canProceed = canProceed && myTeams[i].score < myTeams[curTeam].score;
+                            }
+                        }
+                        break;
+                    case BLOCKED_PRED:
+                        canProceed = (!myLink->can_move) || (toCollect!=NULL && toCollect->type == VOID_BLOCK);
+                        break;
+                    case COLLECT_PRED:
+                        canProceed = toCollect!=NULL && (toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3));
+                        break;
+                    case ACTIVATE_PRED:
+                        canProceed = toCollect!=NULL && (toCollect->type==CHEST);
+                        break;
+                    default:
+                        break;
                     }
+                    canProceed = canProceed != mycmd->inv_pred;
+                }
+                myTeams[i].prevScore = myTeams[i].score;
+                myLink->wasHitLast = false;
+                if (!canProceed) {
+                    myTeams[i].cur_cmdframe = 0;
+                    myLink->cur_cmd++;
+                    continue;
+                }
+                //AND BEGIN PARSING LINK COMMANDS
+                switch (mycmd->cmd) {
+                    case SKIP_CMD:
+                        myLink->cur_cmd++;
+                        myLink->cur_cmdframe = 0;
+                        break;
+                    case MOVE_CMD:
+                        CMDFRAMEMAX = 20;
+                        //check to see is an object will keep Link from moving
 
-                    break;
+                        if (myLink->can_move) {
+                            myLink->update(mycmd->cmd);
+                            if (toCollect != NULL){
+                                if (toCollect->type>=RUPEE_GREEN_1 && toCollect->type<=RUPEE_RED_3) {
+                                    playSound(SFX_GETRUPEE,100,true);
+                                    myTeams[myLink->team].score++;
+                                    toCollect->active = false;
+                                }else if (toCollect->type == VOID_BLOCK) {
+                                    myLink->health = -1;
+                                }else if (toCollect->type == KEY) {
+                                    playSound(SFX_GETITEM,100,true);
+                                    toCollect->active = false;
+                                    myLink->numKeys++;
+                                }
+                            }
+                        }else {
+                            myLink->update(WAIT_CMD);
+                        }
+
+                        myLink->cur_cmdframe++;
+
+                        // Have we reached the end of a CMDFRAME?
+                        // If so, see how many squares we have left to go.
+                        if (myLink->cur_cmdframe%15 == 0) {
+                            playSound(SFX_STONESTEP,100,true);
+                        }
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myTeams[i].cur_cmdopt++;
+                            if (myTeams[i].cur_cmdopt >= mycmd->opt[0]) {
+                                myLink->cur_cmd++;
+                                myTeams[i].cur_cmdopt = 0;
+                            }
+                        }
+
+
+                        break;
+
+                    case ATTACK_CMD:
+                        CMDFRAMEMAX = 20;
+
+                        myLink->cur_cmdframe++;
+                        myLink->update(mycmd->cmd);
+                            if (toHit!= NULL) {
+                                toHit->wasHitLast = true;
+                                toHit->doDamage(myLink->damage);
+                                if (myLink->cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
+                                    myTeams[i].score+=1;
+                                }
+                            }
+
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
+                        break;
+                    case SHOOT_CMD:
+                        CMDFRAMEMAX = 20;
+
+                        if (myTeams[i].cur_cmdframe==0) {
+                            arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
+                            arrow->setDirection(myLink->direction);
+                            myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
+                        }
+                        myLink->update(mycmd->cmd);
+                        myLink->cur_cmdframe++;
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
+                      break;
+                    case LEFT_CMD:
+                    case RIGHT_CMD:
+                    case WAIT_CMD:
+                        CMDFRAMEMAX = 20;
+                        if (myLink->cur_cmdframe==0) {
+                            myLink->update(mycmd->cmd);
+                        }
+
+                        myLink->cur_cmdframe++;
+                        // Have we reached the end of a CMDFRAME?
+                        // If so, see how many squares we have left to go.
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
+                        break;
+                    case ACTIVATE_CMD:
+                        CMDFRAMEMAX = 20;
+
+                        if (lookChest!=NULL && myLink->numKeys>0) {
+                            lookChest->type = CHEST_OPEN;
+                            lookChest->sprite = CHEST_OPEN;
+                            myTeams[myLink->team].score +=5;
+                            myLink->numKeys--;
+                        }
+
+                        if (myLink->cur_cmdframe==0) {
+                            myLink->update(mycmd->cmd);
+                        }
+
+                        myLink->cur_cmdframe++;
+                        // Have we reached the end of a CMDFRAME?
+                        // If so, see how many squares we have left to go.
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
+                        break;
+                    default:
+                        bool pred_true = true;
+
+                        //Handles the goto command
+                        if (myLink->commands[myLink->cur_cmd].cmd == GOTO_CMD){
+                            for (uint16_t j = 0; j < myLink->commands.size(); j++) {
+                                if (strcmp(myLink->commands[j].label_str,myLink->commands[myLink->cur_cmd].target_str)==0){
+                                    myLink->cur_cmd = j;
+                                    mycmd = &myLink->commands[myLink->cur_cmd];
+                                    break;
+                                }
+                            }
+                        }else if((mycmd->cmd != GOTO_CMD) || (pred_true == false)) {
+                            printf("Unrecognized Team: %d cmd: %s %d\n",i,cmdNames[myLink->commands[myLink->cur_cmd].cmd][0].c_str(),myLink->cur_cmd);
+                            myLink->cur_cmd++;
+                            /*if (myLink->cur_cmd >= myLink->commands.size()) {
+                                myTeams[i].cmds_done = true;
+                            }*/
+                        }
+
+                        break;
+                }
+
+
+
+                if (myLink->cur_cmd >= myLink->commands.size()) {
+                    myLink->cur_cmd = 0;
+
+                }
+            //myTeams[i].cmds_done = true;
             }
-
-            if (myTeams[i].cur_cmd >= myTeams[i].cmds.size()) {
-                myTeams[i].cmds_done = true;
-            }
-
         }
 
 
@@ -755,8 +747,8 @@ namespace foz {
                             }
                             local_link = new Link(l, select_tok, i_team, myWorld.width, myWorld.height);
                             local_link->active = first_link;
-                            first_link = false;
-                            myLinks[i_team].push_back(*local_link);
+                            first_link = true;
+                            myTeams[i_team].myLinks.push_back(*local_link);
                             delete local_link;
                             break;
                         }
@@ -892,6 +884,7 @@ namespace foz {
                 // Based on the command we matched, we can grab the target of the command.
                 // We know we spelled the command correctly at this point so just grab everything else
                 bool valid_cmd = false;
+                bool hasLink = false;
                 uint16_t opt[2] = {0, 0};
                 uint16_t link = 0;
                 switch (cmd) {
@@ -904,6 +897,7 @@ namespace foz {
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu %hu", place_str, &link,  &opt[0]);
                     if (cmd_ntok == 3) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                   case LEFT_CMD:
@@ -911,42 +905,49 @@ namespace foz {
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                   case RIGHT_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                   case ATTACK_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                   case WAIT_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                  case DEATH_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                  case SHOOT_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                  case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
+                        hasLink = true;
                     }
                     break;
                   case GOTO_CMD:
@@ -956,6 +957,7 @@ namespace foz {
                     if (cmd_ntok == 2) {
                         // Note that goto is not necessarily valid, depending on the target string which we can only check later
                         valid_cmd = true;
+                        hasLink = false;
                     }
                     break;
                 }
@@ -974,6 +976,7 @@ namespace foz {
                 if (cmd == GOTO_CMD) {
                     strncpy(local_cmd->target_str, target_str, 16);
                 }
+                local_cmd->has_link = hasLink;
                 local_cmd->inv_pred = inv_pred;
                 local_cmd->has_pred = has_pred;
                 local_cmd->has_link_pred = has_link_pred;
@@ -985,6 +988,24 @@ namespace foz {
                 local_cmd->opt[0] = opt[0];
                 local_cmd->opt[1] = opt[1];
 
+                //add commands to the correct link
+                for (int linkIndex = 0; linkIndex < myTeams[i_team].myLinks.size(); linkIndex++) {
+                    if (!local_cmd->has_link && !local_cmd->has_link_pred) {
+                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
+                    }else if ((local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) || (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id)){
+                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
+                    }else if (local_cmd->has_label){
+                        cmd_type* waitCmd = new cmd_type;
+                        waitCmd->cmd = SKIP_CMD;
+                        waitCmd->link = myTeams[i_team].myLinks[linkIndex].id;
+                        waitCmd->has_pred = false;
+                        waitCmd->has_label = true;
+                        strcpy(waitCmd->label_str, local_cmd->label_str);
+
+                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*waitCmd);
+                        delete waitCmd;
+                    }
+                }
                 myTeams[i_team].cmds.insert(myTeams[i_team].cmds.end(), 1, *local_cmd);
                 delete local_cmd;
 
@@ -996,15 +1017,15 @@ namespace foz {
 
                 if (myTeams[i_team].cmds[i].has_link_pred == true) {
                     bool link_pred_match = false;
-                    for (uint16_t p = 0; p < myLinks[i_team].size(); p++) {
-                        if (myLinks[i_team][p].id == myTeams[i_team].cmds[i].link_pred) {
+                    for (uint16_t p = 0; p < myGame->myTeams[i_team].myLinks.size(); p++) {
+                        if (myGame->myTeams[i_team].myLinks[p].id == myTeams[i_team].cmds[i].link_pred) {
                             link_pred_match = true;
                             break;
                         }
                     }
                     if (link_pred_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], myTeams[i_team].cmds[i].line);
-                        printf("  command predicate plant target of link%hu not found\n", myTeams[i_team].cmds[i].link_pred);
+                        printf("  command predicate link target of link%hu not found\n", myTeams[i_team].cmds[i].link_pred);
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
                 }
@@ -1028,15 +1049,15 @@ namespace foz {
                 }
                 else {
                     bool link_match = false;
-                    for (uint16_t p = 0; p < myLinks[i_team].size(); p++) {
-                        if (myLinks[i_team][p].id == myTeams[i_team].cmds[i].link) {
+                    for (uint16_t p = 0; p < myTeams[i_team].myLinks.size(); p++) {
+                        if (myTeams[i_team].myLinks[p].id == myTeams[i_team].cmds[i].link) {
                             link_match = true;
                             break;
                         }
                     }
                     if (link_match == false) {
                         printf("Error compiling %s, line %d\n", myConfig.team_fname[i_team], myTeams[i_team].cmds[i].line);
-                        printf("  link target of p%hu not found\n", myTeams[i_team].cmds[i].link);
+                        printf("  link target of L%hu not found\n", myTeams[i_team].cmds[i].link);
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
 
@@ -1096,6 +1117,18 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
+            }
+
+        }
+
+        for (int i=0;i<1;i++) {
+            printf("Team: %d\n",i);
+            for (int i_link = 0;i_link<myGame->myTeams[i].myLinks.size();i_link++){
+                printf("Link: %d\n",myGame->myTeams[i].myLinks[i_link].id);
+                for (int i_cmd=0;i_cmd<myGame->myTeams[i].myLinks[i_link].commands.size();i_cmd++){
+                    cmd_type* mycmd= &myGame->myTeams[i].myLinks[i_link].commands[i_cmd];
+                    printf("i:%d, cmd:%d, link:%d,linkpred:%d\n",i_cmd,mycmd->cmd,mycmd->link,mycmd->link_pred);
+                }
             }
 
         }

@@ -50,6 +50,7 @@ namespace foz {
         //don't worry about Link if it's out of health
         if (health<=0) {
             //delete this;
+            printf("not active\n");
             this->active = false;
         }
 
@@ -285,6 +286,8 @@ namespace foz {
         speed = GLOBALSPEED;
         damage = 30;
         active = true;
+        cur_cmd = 0;
+        cur_cmdframe = 0;
 
         switch(team) {
             case 0:

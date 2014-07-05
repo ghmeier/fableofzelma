@@ -412,11 +412,9 @@ namespace foz {
                     baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
                     break;
             }
-
-            sprintf(links,"x%-2d", myLinks[i].size() - myTeams[i].cur_link);
-
+            sprintf(links,"x%-2d", myGame->myTeams[i].myLinks.size());
             /* Draw Link Symbol */
-            glBindTexture(GL_TEXTURE_2D, myTextures[myLinks[i][myTeams[i].cur_link].texfile].texHandle);
+            glBindTexture(GL_TEXTURE_2D, myTextures[myGame->myTeams[i].myLinks[myTeams[i].cur_link].texfile].texHandle);
             getTexCoords(TEX_BLUE_LINK, LINK_WALKING_SOUTH_1, texCoords);
 
             glBegin(GL_QUADS);
