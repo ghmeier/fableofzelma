@@ -396,8 +396,8 @@ namespace foz {
                     }
 
                     for (uint16_t teams = 0; teams<4; teams++) {
-                        for (uint16_t link = 0; link < myGame->myLinks[teams].size();link++) {
-                               Link* current =  &myGame->myLinks[teams][link];
+                        for (uint16_t link = 0; link < myGame->myTeams[teams].myLinks.size();link++) {
+                               Link* current =  &myGame->myTeams[teams].myLinks[link];
                             if (current->active && myGame->linkColLink(e,current)) {
                                 e->can_move = false;
                                 toHit = current;
@@ -449,6 +449,45 @@ namespace foz {
                             //e->x = -321;
                         }
                     }
+                bool canProceed = true;
+                if (curCmd->has_pred) {
+                    switch (curCmd->pred){
+                    case ALWAYS_PRED:
+                        canProceed = true;
+                        break;
+                    case NEVER_PRED:
+                        canProceed = false;
+                        break;
+                    case READY_PRED:
+                        canProceed = e->active;
+                        break;
+                    case ALIVE_PRED:
+                        canProceed = e->health > 0;
+                        break;
+                    case DEAD_PRED:
+                        canProceed = e->health<=0;
+                        break;
+                    case DAMAGE_PRED:
+                        canProceed = !e->wasHitLast;
+                        break;
+                    case HIT_PRED:
+                        canProceed = toHit != NULL;
+                        break;
+                    case BLOCKED_PRED:
+                        canProceed = (!e->can_move);
+                        break;
+                    default:
+                        break;
+                    }
+                    canProceed = canProceed != curCmd->inv_pred;
+                }
+
+                e->wasHitLast = false;
+                if (!canProceed) {
+                    e->cur_cmdframe = 0;
+                    e->cur_cmd++;
+                    continue;
+                }
 
             switch (curCmd->cmd) {
                 case MOVE_CMD:

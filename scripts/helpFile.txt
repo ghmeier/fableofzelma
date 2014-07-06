@@ -1,0 +1,56 @@
+Fable of Zelma Script help file
+Garret Meier 2014
+
+This file is intended to help keep track of the functions
+of all of the different scripts in foz files.
+
+	-------------------------
+	-Zelma User Files (.zuf)-
+	-------------------------
+****Commands and Descriptions****
+	Create	L#	-	Adds a link with id # to the game for the user's team in their starting room
+	Move L# %	-	Translates the link with id # a number of spaces equal to % in their current direction
+	Left L#		-	Rotates the link with id # 90 degrees counterclockwise
+	Right L#	-	Rotates the link with id # clockwise 90 degrees
+	Attack L#	-	Swings links #'s sword in their current direction
+	<label>:	-	Sets <label> as a string which is recognized by a goto command, must be followed by
+					a command on the same line
+	Goto <label>-	immediately switches commands to the command at <label>
+	Wait L#		-	sets the link with id # to idle for one command cycle
+	Activate L# -	activates buttons, levers, etc. if prerequisite conditions are met and link # is facing
+					the object
+	Remove L#	-	kills the chosen link, not super useful, but hey it's there
+	Shoot L#	-	fires an arrow in the direction link # is facing
+	Skip  L#	-	skips the line without taking up a command cycle (used internally).
+
+****Conditionals and Descriptions****
+Example format conditional statement:
+	if <predicate>, then <command>
+	if not <predicate>, then <command>
+	
+Predicates:
+	L#.always	-	this is always true for link #
+	L#.never	-	never evaluates true for link #
+	L#.ready	-	true when link # is active (possible other use later)
+	L#.alive	-	true when link #'s health > 0
+	L#.dead		- 	true when link #'s health <= 0
+	L#.damage	-	true if link # took damage in the last frame
+	L#.hit		-	true if link #'s last command contacted an enemy
+	L#.score	-	true if link # added one to the score in it's last frame
+	winning		-	true if the team's score is >  all of the other teams
+	losing		-	true if the team's score is < all of the other teams
+	L#.blocked  -	true if link # cannot move in the direction is is facing
+	L#.collectible - true when link # will collect an object if it moves in it's current direction
+	L#.interactive - true if link is facing an object upon which the activate command can be used
+	
+	----------------------------
+	--Zelma Enemy Files (.zef)--
+	----------------------------
+Enemy files function with the same commands and predicates as user files with two exceptions:
+	-the create command does not work with enemies
+	-L# is never used in enemy files
+
+**At this point all enemies of the same type use the same command list**
+	
+	
+	

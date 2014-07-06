@@ -132,10 +132,6 @@ namespace foz {
                 foz::cmd_type *mycmd = &myTeams[i].myLinks[i_link].commands[myTeams[i].myLinks[i_link].cur_cmd];
                 foz::Link *myLink = &myTeams[i].myLinks[i_link];
 
-                if (i ==0 && myLink->cur_cmdframe==0) {
-                    printf("Link: %d, cur_cmd: %d, cmd %d\n",myLink->id,myLink->cur_cmd,mycmd->cmd);
-                }
-
                 if (!myLink->active){
                     continue;
                 }
@@ -157,6 +153,8 @@ namespace foz {
                                     myLink->can_move = true;
                                     if (myObject->type>=RUPEE_GREEN_1 && myObject->type<=RUPEE_RED_3) {
                                         toCollect = myObject;
+                                        myTeams[myLink->team].score++;
+                                        toCollect->active = false;
                                     }else if (myObject->type == VOID_BLOCK) {
                                         toCollect = myObject;
                                     }else if (myObject->type == KEY) {
@@ -1481,7 +1479,7 @@ namespace foz {
     * Description returns true if the two link's collision boxes overlap
     *****************************************************************************/
     bool Game::linkColLink(Link *myLink, Link *other) {
-        if (!myLink->active) {
+        if (!myLink->active || !other->active) {
             return false;
         }
 
@@ -1533,7 +1531,7 @@ namespace foz {
     *****************************************************************************/
 
     bool Game::linkColObj(Link *myLink, Object *myObject) {
-        if (!myObject->active) {
+        if (!myObject->active || !myLink->active) {
             return false;
         }
 
@@ -1582,7 +1580,7 @@ namespace foz {
     * Description: Returns true when one object traveling in a direction collides with another
     *****************************************************************************/
     bool Game::objColObj(Object *myLink, Object *myObject) {
-        if (!myObject->active) {
+        if (!myObject->active || !myLink->active) {
             return false;
         }
 
