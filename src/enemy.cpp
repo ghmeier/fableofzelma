@@ -107,6 +107,7 @@ namespace foz {
 
                 break;
 
+            case SHOOT_CMD:
             case ATTACK_CMD:
 
                 if (frameCount%6 == 3) {

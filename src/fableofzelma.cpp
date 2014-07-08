@@ -162,11 +162,15 @@ namespace foz {
                                     }
                                 }
                             }
-                            if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST)) {
+                            if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST || (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST))) {
                                 for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
                                     if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
                                         myObject->active = false;
-                                        playSound(SFX_LINKARROW,100,true);
+                                        if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
+                                            playSound(SFX_FIREBALL,100,true);
+                                        }else {
+                                            playSound(SFX_LINKARROW,100,true);
+                                        }
                                     }
                                 }
                             }

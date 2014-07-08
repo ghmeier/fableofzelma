@@ -489,6 +489,7 @@ namespace foz {
                     continue;
                 }
 
+            Object * arrow;
             switch (curCmd->cmd) {
                 case MOVE_CMD:
                     if (e->can_move) {
@@ -535,7 +536,25 @@ namespace foz {
                         e->cmdIter++;
                     }
                     break;
+                case SHOOT_CMD:
 
+                    if (e->type == GEYEGORE) {
+                        if (e->cur_cmdframe==0) {
+                            arrow = new Object(e->direction + FIREBALL_NORTH,e->x,e->y);
+                            arrow->setDirection(e->direction);
+                            this->myObjects.push_back(*arrow);
+                        }
+                        e->update(curCmd->cmd);
+                    }else {
+                        e->update(WAIT_CMD);
+
+                    }
+                    e->cur_cmdframe++;
+                    if (e->cur_cmdframe >= CMDFRAMEMAX) {
+                        e->cur_cmdframe = 0;
+                        e->cmdIter++;
+                    }
+                    break;
                 default:
                     if (curCmd->cmd == GOTO_CMD){
                         for (uint16_t j = 0; j < myGame->enemyCommands[e->type].size(); j++) {

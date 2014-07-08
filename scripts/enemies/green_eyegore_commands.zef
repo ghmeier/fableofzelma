@@ -2,7 +2,7 @@ start: move 3
 left
 move 7
 left
-attack
+shoot
 move 1
-attack
+shoot
 goto start
