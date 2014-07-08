@@ -40,6 +40,12 @@ namespace foz {
                     case sf::Keyboard::Num4:
                         myCamera.state = CAMERA_TEAM_4;
                         break;
+                    case sf::Keyboard::Z:
+                        myCamera.state = CAMERA_PREV_LINK;
+                        break;
+                   case sf::Keyboard::X:
+                        myCamera.state = CAMERA_NEXT_LINK;
+                        break;
                     case sf::Keyboard::Left:
                         if (myCamera.state == CAMERA_IDLE)
                             myCamera.state = CAMERA_PAN_LEFT;

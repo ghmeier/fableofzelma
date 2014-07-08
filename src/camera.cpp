@@ -36,6 +36,7 @@ namespace foz {
         y_bottom = -1080.0/2.0*myWorld->height;
         y_top = 1080.0/2.0*myWorld->height;
 
+        currentTeam = 255;
         // We need to keep track of what room we are looking at currently, independent of the zoom level
         // This x_pos/y_pos might not be an integer for even-sized worlds.
         width = myWorld->width;
@@ -69,6 +70,7 @@ namespace foz {
         if ((state == CAMERA_TEAM_1) || (state == CAMERA_TEAM_2) ||
             (state == CAMERA_TEAM_3) || (state == CAMERA_TEAM_4)) {
             team_id = state - (uint8_t)CAMERA_TEAM_1;
+            currentTeam = team_id;
         }
 
         switch(state) {
@@ -79,6 +81,7 @@ namespace foz {
                 y_bottom = -1080.0/2.0*height;
                 y_top = 1080.0/2.0*height;
                 state = CAMERA_IDLE;
+                currentTeam = 255;
                 break;
 
             case CAMERA_TEAM_1:
@@ -123,6 +126,7 @@ namespace foz {
                     x_pan_count = 0;
                     x_pos -= 1.0;
                 }
+                currentTeam = 255;
                 break;
 
             case CAMERA_PAN_LEFT:
@@ -141,6 +145,7 @@ namespace foz {
                     x_pos += 1.0;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
+                 currentTeam = 255;
                 break;
 
             case CAMERA_PAN_DOWN:
@@ -159,6 +164,7 @@ namespace foz {
                     y_pos += 1.0;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
+                 currentTeam = 255;
                 break;
 
             case CAMERA_PAN_UP:
@@ -178,6 +184,7 @@ namespace foz {
                     y_pos -= 1.0;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
+                 currentTeam = 255;
                 break;
 
             case CAMERA_ZOOM_IN:
@@ -199,6 +206,7 @@ namespace foz {
                     y_pos -= 1080.0/1920;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
+                 currentTeam = 255;
                 break;
 
 
@@ -220,8 +228,78 @@ namespace foz {
                     y_pos += 1080.0/1920;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
+                 currentTeam = 255;
                 break;
+            case CAMERA_NEXT_LINK:
+                myTeam = &myGame->myTeams[currentTeam];
+                myTeam->cur_link++;
+                if (currentTeam<4 && myTeam->cur_link >= myTeam->myLinks.size()){
+                    myTeam->cur_link = 0;
+                }
+                if (myTeam->cmds_done != true) {
+                    reposition = true;
+                    myLink = &myGame->myTeams[myTeam->id].myLinks[myTeam->cur_link];
+                    x_pos = (float)myLink->room_x;
+                    y_pos = (float)myLink->room_y;
 
+                    zoom_level = 1.0;
+                    x_pan_count = 0;
+                    y_pan_count = 0;
+                    zoom_count = 0;
+
+                    x_left = (1080.0/2.0)*(2*x_pos-width)-420.0;
+                    x_right = x_left + 1920.0;
+                    y_top = (1080.0/2.0)*(height-2*y_pos);
+                    y_bottom = y_top - 1080.0;
+                    if (currentTeam ==0 ) {
+                        state = CAMERA_TEAM_1;
+                    }else if (currentTeam ==1 ) {
+                        state = CAMERA_TEAM_2;
+                    }else if (currentTeam ==2 ) {
+                        state = CAMERA_TEAM_3;
+                    }else if (currentTeam ==3 ) {
+                        state = CAMERA_TEAM_4;
+                    }
+                }
+                else {
+                    state = CAMERA_IDLE;
+                }
+                break;
+            case CAMERA_PREV_LINK:
+                myTeam = &myGame->myTeams[currentTeam];
+                myTeam->cur_link++;
+                if (currentTeam < 4 && myTeam->cur_link >= myTeam->myLinks.size()){
+                    myTeam->cur_link = 0;
+                }
+                if (myTeam->cmds_done != true) {
+                    reposition = true;
+                    myLink = &myGame->myTeams[myTeam->id].myLinks[myTeam->cur_link];
+                    x_pos = (float)myLink->room_x;
+                    y_pos = (float)myLink->room_y;
+
+                    zoom_level = 1.0;
+                    x_pan_count = 0;
+                    y_pan_count = 0;
+                    zoom_count = 0;
+
+                    x_left = (1080.0/2.0)*(2*x_pos-width)-420.0;
+                    x_right = x_left + 1920.0;
+                    y_top = (1080.0/2.0)*(height-2*y_pos);
+                    y_bottom = y_top - 1080.0;
+                    if (currentTeam ==0 ) {
+                        state = CAMERA_TEAM_1;
+                    }else if (currentTeam ==1 ) {
+                        state = CAMERA_TEAM_2;
+                    }else if (currentTeam ==2 ) {
+                        state = CAMERA_TEAM_3;
+                    }else if (currentTeam ==3 ) {
+                        state = CAMERA_TEAM_4;
+                    }
+                }
+                else {
+                    state = CAMERA_IDLE;
+                }
+                break;
             default:
                 break;
         }

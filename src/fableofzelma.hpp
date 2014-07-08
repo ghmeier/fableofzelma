@@ -233,6 +233,7 @@ namespace foz {
         int16_t x_pan_count, y_pan_count, zoom_count;
         float x_pos, y_pos;
         float zoom_level;
+        uint8_t currentTeam;
         uint16_t width, height;
         CAMERA_ENUM state;
 
