@@ -89,7 +89,7 @@ namespace foz {
                 myTeam = &myGame->myTeams[team_id];
                 if (myTeam->cmds_done != true) {
                     reposition = true;
-                    myLink = &myGame->myLinks[myTeam->id][myTeam->cur_link];
+                    myLink = &myGame->myTeams[myTeam->id].myLinks[myTeam->cur_link];
                     x_pos = (float)myLink->room_x;
                     y_pos = (float)myLink->room_y;
 
