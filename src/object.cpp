@@ -28,22 +28,39 @@ namespace foz {
         direction =dir;
     }
 
-    Object::Object(uint8_t myType, float myX, float myY)
-    {
+    Object::Object(uint8_t myType, float myX, float myY, int16_t mySubject){
+        if (mySubject<0) {
+            printf("thgsi happens \n");
+            active = false;
+            subject = -mySubject;
+        }else{
+            active = true;
+            subject = mySubject;
+        }
+        init(myType,myX,myY);
+    }
+
+    Object::Object(uint8_t myType, float myX, float myY){
+        subject = 0;
+        active = true;
+        init(myType,myX,myY);
+    }
+
+    void Object::init(uint8_t myType, float myX, float myY){
         type = myType;
         width = GLOBALWIDTH;
         height = GLOBALHEIGHT;
-        active = true;
         x = myX;
         y = myY;
         depth = 3;
         texfile = TEX_BASIC_ROOM;
         sprite = type;
-        active = true;
-        if((type>12 && type<RUPEE_GREEN_1) || type >KEY) {
 
+
+
+        if((type>12 && type<RUPEE_GREEN_1) || type >KEY) {
             sprite = type;
-            if (type == VOID_BLOCK) {
+            if (type == VOID_BLOCK || type==BUTTON) {
                 status = TRANSPARENT;
             }else {
                 status = SOLID;

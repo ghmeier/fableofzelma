@@ -159,22 +159,49 @@ namespace foz {
                                         toCollect = myObject;
                                     }else if (myObject->type == KEY) {
                                         toCollect = myObject;
+                                    }else if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
+                                        myLink->doDamage(25);
+                                        playSound(SFX_LINKHURT_1,100,true);
+                                    }else if (myObject->type == BUTTON) {
+                                        myObject->type = POT_TILE;
+                                        myObject->sprite = POT_TILE;
+
+                                        playSound(SFX_SWTICH,100,true);
+                                        for (int roomObj = 0; roomObj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); roomObj++) {
+                                            foz::Object *buttonObj = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[roomObj];
+                                            if (obj != roomObj && myObject->subject > 0 && buttonObj->subject > 0 && myObject->subject == buttonObj->subject) {
+                                                buttonObj->active = !buttonObj->active;
+                                                buttonObj->subject = 0;
+                                            }
+                                        }
+                                         myObject->subject = 0;
                                     }
                                 }
                             }
-                            if (myObject->active && (myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST || (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST))) {
-                                for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
-                                    if (myObject->active && obj!=j && myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j].active && objColObj(myObject,&myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j])) {
-                                        myObject->active = false;
-                                        if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
+                            if (myObject->active){
+                                if( (myObject->type >= ARROW_NORTH || myObject->type >= ARROW_WEST)) {
+                                    for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
+                                        Object * test = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j];
+                                        if (obj!=j && test->status==SOLID && test->active && objColObj(myObject,test)) {
+                                            myObject->active = false;
                                             playSound(SFX_FIREBALL,100,true);
-                                        }else {
-                                            playSound(SFX_LINKARROW,100,true);
+                                            break;
                                         }
                                     }
                                 }
                             }
+                            if (!myObject->active && myObject->subject <= 0 ){
+                                 myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.erase( myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.begin()+obj);
+                                 obj--;
+                            }
+                        }
 
+                        for (uint16_t other = 0; other < 4; other ++) {
+                            for (uint16_t oLink = 0; oLink < myGame->myTeams[other].myLinks.size(); oLink++){
+                                if (myLink->id != myGame->myTeams[other].myLinks[oLink].id && linkColLink(myLink,&myGame->myTeams[other].myLinks[oLink])){
+                                    myLink->can_move = false;
+                                }
+                            }
                         }
 
                         for (uint16_t ene = 0; ene < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); ene++) {
@@ -371,7 +398,7 @@ namespace foz {
                     case SHOOT_CMD:
                         CMDFRAMEMAX = 20;
 
-                        if (myTeams[i].cur_cmdframe==0) {
+                        if (myLink->cur_cmdframe==0) {
                             arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
                             arrow->setDirection(myLink->direction);
                             myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
@@ -405,7 +432,7 @@ namespace foz {
                         if (lookChest!=NULL && myLink->numKeys>0) {
                             lookChest->type = CHEST_OPEN;
                             lookChest->sprite = CHEST_OPEN;
-                            myTeams[myLink->team].score +=5;
+                            myTeams[myLink->team].score +=10;
                             myLink->numKeys--;
                         }
 
@@ -449,6 +476,11 @@ namespace foz {
                 if (myLink->cur_cmd >= myLink->commands.size()) {
                     myLink->cur_cmd = 0;
 
+                }
+
+                if (!myLink->active){
+                    myTeams[i].myLinks.erase(myTeams[i].myLinks.begin() + i_link);
+                    i_link--;
                 }
             //myTeams[i].cmds_done = true;
             }
@@ -1085,7 +1117,7 @@ namespace foz {
             }
 
 
-            if (myConfig.debug_level > 50) {
+            /*if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
                 printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
                 for (uint16_t i = 0; i < myTeams[i_team].cmds.size(); i++) {
@@ -1119,19 +1151,7 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
-            }
-
-        }
-
-        for (int i=0;i<1;i++) {
-            printf("Team: %d\n",i);
-            for (int i_link = 0;i_link<myGame->myTeams[i].myLinks.size();i_link++){
-                printf("Link: %d\n",myGame->myTeams[i].myLinks[i_link].id);
-                for (int i_cmd=0;i_cmd<myGame->myTeams[i].myLinks[i_link].commands.size();i_cmd++){
-                    cmd_type* mycmd= &myGame->myTeams[i].myLinks[i_link].commands[i_cmd];
-                    printf("i:%d, cmd:%d, link:%d,linkpred:%d\n",i_cmd,mycmd->cmd,mycmd->link,mycmd->link_pred);
-                }
-            }
+            }*/
 
         }
 
@@ -1441,7 +1461,7 @@ namespace foz {
             }
 
 
-            if (myConfig.debug_level > 50) {
+            /*if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
                 printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
                 printf("size: %d",enemyCommands[i].size());
@@ -1472,7 +1492,7 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
-            }
+            }*/
 
         }
 
@@ -1587,38 +1607,40 @@ namespace foz {
         if (!myObject->active || !myLink->active) {
             return false;
         }
-
+                               /* if (myLink->sprite == ARROW_NORTH) {
+                                        printf("so yeah...\n");
+                                }*/
         float linkLt = myLink->x;
         float linkRt = myLink->x + myLink->width;
-        float linkTp = myLink->y + myLink->height - 6.0;//subtract 6 because link's head is taller than the blocks
+        float linkTp = myLink->y + myLink->height;//subtract 6 because link's head is taller than the blocks
         float linkBt = myLink->y;
         float objLt = myObject->x;
         float objRt = myObject->x + myObject->width;
         float objTp = myObject->y + myObject->height;
         float objBt = myObject->y;
 
-        if (((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkBt-1.1<objTp && linkBt-1.1> objBt) {
+        if (((linkLt>=objLt && linkLt<=objRt)||(linkRt<=objRt && linkRt>=objLt)) && linkBt-1.1<objTp && linkBt-1.1> objBt) {
             if (myLink->direction == DIRECTION_SOUTH) {
                 return true;
             }else {
 
             }
         }
-        if (linkRt+1.1>objLt && linkRt+1.1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+        if (linkRt+1.1>objLt && linkRt+1.1<objRt && ((linkTp>=objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<=objTp))) {
            if (myLink->direction == DIRECTION_EAST ) {
                 return true;
            }else {
 
            }
         }
-        if (linkLt-1.1>objLt && linkLt-1.1<objRt && ((linkTp>objBt && linkTp<objTp)||(linkBt>objBt && linkBt<objTp))) {
+        if (linkLt-1.1>objLt && linkLt-1.1<objRt && ((linkTp>=objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<=objTp))) {
            if (myLink->direction == DIRECTION_WEST) {
             return true;
            }else {
 
            }
         }
-        if (((linkLt>objLt && linkLt<objRt)||(linkRt<objRt && linkRt>objLt)) && linkTp+1.1<objTp && linkTp+1.1> objBt) {
+        if (((linkLt>=objLt && linkLt<=objRt)||(linkRt<=objRt && linkRt>=objLt)) && linkTp+1.1<objTp && linkTp+1.1> objBt) {
             if (myLink->direction == DIRECTION_NORTH) {
                     return true;
             }else {

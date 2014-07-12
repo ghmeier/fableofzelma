@@ -84,7 +84,8 @@ std::string sfxFiles[NUM_SFX]{
     "audio/shootFire.wav",
     "audio/enemyHit.wav",
     "audio/enemyKill.wav",
-    "audio/shootFire.wav"
+    "audio/shootFire.wav",
+    "audio/switch.wav"
 };
 /* Sprite map for LINK objects */
 uint16_t link_object_spriteMap[][4] = {

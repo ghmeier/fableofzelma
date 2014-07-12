@@ -39,6 +39,7 @@ namespace foz {
         uint32_t line_count;
         uint8_t size_ntok, tiles_ntok;
         uint16_t width_tok, height_tok, tile_tok;
+        int16_t subject_tok;
         uint16_t tile_i=0, tile_j=0;
         bool size_flag=false, tile_flag=false;
 
@@ -79,27 +80,33 @@ namespace foz {
                     raise_error(ERR_BADFILE4, fname1);
                 }
 
-                linebuf_temp = strtok(linebuf, " ,.-");
+                linebuf_temp = strtok(linebuf, " ,.");
+                subject_tok = 0;
                 for (tile_j = 0; tile_j < width; tile_j++) {
-                    tiles_ntok = sscanf(linebuf_temp, " %hu", &tile_tok);
-                    if (tiles_ntok != 1) {
+                    tiles_ntok = sscanf(linebuf_temp, " %hu:%d", &tile_tok,&subject_tok);
+                    if (tiles_ntok > 2) {
                         printf("Error compiling %s, line %d\n", fname1, line_count);
                         printf("  Invalid room specification in command \'%s\'", linebuf);
                         raise_error(ERR_BADFILE4, fname1);
                     }
                     if (tile_tok<=12 || tile_tok==50) {//12 is the number of background sprites and 50 is the doors
-                        myTiles[tile_i].push_back(tile_tok);
+                            myTiles[tile_i].push_back(tile_tok);
                     }else {
                         myTiles[tile_i].push_back(FLOOR_TILE);
                        if (tile_tok<100) {
-                            Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
-                            myObjects.push_back(toPush);
+                            if (tiles_ntok == 2) {//this handles objects that are connected to others
+                                Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0,subject_tok);
+                                myObjects.push_back(toPush);
+                            }else{
+                                Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
+                                myObjects.push_back(toPush);
+                            }
                         }else {
                             Enemy toAdd(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
                             myEnemies.push_back(toAdd);
                         }
                     }
-                    linebuf_temp = strtok(NULL, " ,.-");
+                    linebuf_temp = strtok(NULL, " ,.");
                 }
 
                 tile_i++;
@@ -393,6 +400,23 @@ namespace foz {
                                 }
                             }
                         }
+                        if (myObject->active){
+
+                            if( (myObject->sprite >= FIREBALL_NORTH || myObject->sprite >= FIREBALL_WEST)) {
+                                for (uint16_t j =0; j< this->myObjects.size(); j++) {
+                                    Object * test = &this->myObjects[j];
+                                    if (obj!=j && test->status==SOLID && test->active && myGame->objColObj(myObject,test)) {
+                                        myObject->active = false;
+                                        myGame->playSound(SFX_LINKARROW,100,true);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (!myObject->active && myObject->subject == 0){
+                            myObjects.erase(myObjects.begin()+obj);
+                            obj--;
+                        }
                     }
 
                     for (uint16_t teams = 0; teams<4; teams++) {
@@ -578,7 +602,8 @@ namespace foz {
             }
             e->draw();
             if (!e->active) {
-                //delete e;
+                myEnemies.erase(myEnemies.begin() + i);
+                i--;
             }
         }
     }

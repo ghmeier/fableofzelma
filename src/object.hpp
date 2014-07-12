@@ -23,7 +23,9 @@ namespace foz {
 
     class Object{
         public:
+            Object(uint8_t myType, float myX, float myY, int16_t mySubject);
             Object(uint8_t myType, float myX, float myY);
+            void init(uint8_t myType, float myX, float myY);
             ~Object();
             void update(uint8_t cmd);
             void draw();
@@ -40,6 +42,7 @@ namespace foz {
             uint8_t room_x, room_y;
             float x, y;
             uint8_t frameCount;
+            uint16_t subject;
 
     };
 };

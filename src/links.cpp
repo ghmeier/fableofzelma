@@ -380,7 +380,6 @@ namespace foz {
                     glTexCoord2d(texCoords[2], texCoords[3]);
                     glVertex3f(x, y + height, depth);
                 }
-
                 else {
                     glTexCoord2d(texCoords[0], texCoords[1]);
                     glVertex3f(x, y, depth);
