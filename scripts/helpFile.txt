@@ -7,50 +7,124 @@ of all of the different scripts in foz files.
 	-------------------------
 	-Zelma User Files (.zuf)-
 	-------------------------
-****Commands and Descriptions****
-	Create	L#	-	Adds a link with id # to the game for the user's team in their starting room
-	Move L# %	-	Translates the link with id # a number of spaces equal to % in their current direction
-	Left L#		-	Rotates the link with id # 90 degrees counterclockwise
-	Right L#	-	Rotates the link with id # clockwise 90 degrees
-	Attack L#	-	Swings links #'s sword in their current direction
-	<label>:	-	Sets <label> as a string which is recognized by a goto command, must be followed by
-					a command on the same line
-	Goto <label>-	immediately switches commands to the command at <label>
-	Wait L#		-	sets the link with id # to idle for one command cycle
-	Activate L# -	activates buttons, levers, etc. if prerequisite conditions are met and link # is facing
-					the object
-	Remove L#	-	kills the chosen link, not super useful, but hey it's there
-	Shoot L#	-	fires an arrow in the direction link # is facing
-	Skip  L#	-	skips the line without taking up a command cycle (used internally).
+		****Commands and Descriptions****
+			Create	L#	-	Adds a link with id # to the game for the user's team in their starting room
+			Move L# %	-	Translates the link with id # a number of spaces equal to % in their current direction
+			Left L#		-	Rotates the link with id # 90 degrees counterclockwise
+			Right L#	-	Rotates the link with id # clockwise 90 degrees
+			Attack L#	-	Swings links #'s sword in their current direction
+			<label>:	-	Sets <label> as a string which is recognized by a goto command, must be followed by
+							a command on the same line
+			Goto <label>-	immediately switches commands to the command at <label>
+			Wait L#		-	sets the link with id # to idle for one command cycle
+			Activate L# -	activates buttons, levers, etc. if prerequisite conditions are met and link # is facing
+							the object
+			Remove L#	-	kills the chosen link, not super useful, but hey it's there
+			Shoot L#	-	fires an arrow in the direction link # is facing
+			Skip  L#	-	skips the line without taking up a command cycle (used internally).
 
-****Conditionals and Descriptions****
-Example format conditional statement:
-	if <predicate>, then <command>
-	if not <predicate>, then <command>
-	
-Predicates:
-	L#.always	-	this is always true for link #
-	L#.never	-	never evaluates true for link #
-	L#.ready	-	true when link # is active (possible other use later)
-	L#.alive	-	true when link #'s health > 0
-	L#.dead		- 	true when link #'s health <= 0
-	L#.damage	-	true if link # took damage in the last frame
-	L#.hit		-	true if link #'s last command contacted an enemy
-	L#.score	-	true if link # added one to the score in it's last frame
-	winning		-	true if the team's score is >  all of the other teams
-	losing		-	true if the team's score is < all of the other teams
-	L#.blocked  -	true if link # cannot move in the direction is is facing
-	L#.collectible - true when link # will collect an object if it moves in it's current direction
-	L#.interactive - true if link is facing an object upon which the activate command can be used
+		****Conditionals and Descriptions****
+		Example format conditional statement:
+			if <predicate>, then <command>
+			if not <predicate>, then <command>
+			
+		Predicates:
+			L#.always	-	this is always true for link #
+			L#.never	-	never evaluates true for link #
+			L#.ready	-	true when link # is active (possible other use later)
+			L#.alive	-	true when link #'s health > 0
+			L#.dead		- 	true when link #'s health <= 0
+			L#.damage	-	true if link # took damage in the last frame
+			L#.hit		-	true if link #'s last command contacted an enemy
+			L#.score	-	true if link # added one to the score in it's last frame
+			winning		-	true if the team's score is >  all of the other teams
+			losing		-	true if the team's score is < all of the other teams
+			L#.blocked  -	true if link # cannot move in the direction is is facing
+			L#.collectible - true when link # will collect an object if it moves in it's current direction
+			L#.interactive - true if link is facing an object upon which the activate command can be used
 	
 	----------------------------
 	--Zelma Enemy Files (.zef)--
 	----------------------------
-Enemy files function with the same commands and predicates as user files with two exceptions:
-	-the create command does not work with enemies
-	-L# is never used in enemy files
+		Enemy files function with the same commands and predicates as user files with two exceptions:
+			-the create command does not work with enemies
+			-L# is never used in enemy files
 
-**At this point all enemies of the same type use the same command list**
-	
-	
-	
+		**At this point all enemies of the same type use the same command list**
+			
+	----------------------------
+	--Zelma Room Files (.zrf) --
+	----------------------------
+		Room files are defined in scripts/rooms/.
+		Each room file describes one type of room that is used in the world file
+		First, the file describes the size of the room, in tiles as follows:
+			.size 13,13
+		Then define tiles:
+			.tiles
+		Then tiles are placed in a grid the dimensions of the .size definition as follows with numbers separated by spaces:
+			13 13 13 13 13 13 13 13 13 13 13 13 13
+
+		Each number corresponds to a type of object, tile, or enemy in the game.
+		******Tiles*******
+			0	-	Top left wall corner
+			1	-	Top Wall
+			2	-	Top Right wall corner
+			3	-	Left side door
+			4	-	Top side door
+			5	-	Right side door
+			6	-	Left side wall 
+			7	-	Generic floor 
+			8	-	Right side wall 
+			9	-	Bottom side door
+			10	-	Bottom left wall corner
+			11	-	Bottom side wall 
+			12	-	Bottom right wall 
+
+		********Objects**********
+			13	-	Closed chest
+			14	-	Opened chest
+			15	-	Pot on tile
+			16	-	Empty pot tile / pressed button
+			17	-	Unpressed button
+			18	-	Unlit torch holder
+			19	-	Lit torch holder
+			20	-	Default square block
+			21	-	empty, black block
+			22	-	Green Rupee
+			25	-	Purple rupee
+			28	-	Blue rupee
+			31	-	Orange rupee
+			34	-	Red rupee
+			37	-	Key
+			
+		**********Enemies********
+			100	-	Blue Skeleton
+			101	-	Red Skeleton
+			102	-	Green Eyegore
+		
+		Object activation has a specific syntax that goes along with them.
+			-All objects and enemies have the ability to have a subject that goes along with them->
+				+ <object type>:<subject> (ex. 17:1, denotes a button with subject one)
+			-An object with a positive subject appears until an object with that subject has
+			 been activated
+			-A negative subject is not active until an object of that subject is activated
+			*Subjects are only the shared inside of each room.
+		
+		Example Room: (In this room the two rupees don't appear until the button is pressed and the blocks
+		disappear after it is pressed.
+			.size 13 13
+			.tiles
+			0  1  1  1  1  1  1  1  1  1  1  1  2
+			 6  7  7  7  7  7  7  7  7  7  7  7  8
+			 6  7  7  7  7  7  7  7  7  7  7  7  8
+			 6  7  7  7  7  7  7  7  7  7  7  7  8
+			 6  7  7  7  7  7  7  7  7  7  7  7  8
+			 6  7  7  7  7  7  7  7  7  7  7  7  8
+			 6  7  7  7  7  7 17:1 7  7  7  7  7  50
+			 6  7  7  7  7  7 31:-1 7 7  7  7  7  8
+			 6  7  7  7  7  7 31:-1 7 7  7  7  7  8
+			 6  7  7  7  7  7 20:1  7 7  7  7  7  8
+			 6  7  7  7  7  7 20:1  7 7  7  7  7  8
+			 6  7  7  7  7  7 100:1 7 7  7  7  7  8
+			10 11 11 11 11 11 50 11 11 11 11 11 12
+ 

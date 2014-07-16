@@ -355,7 +355,7 @@ namespace foz {
         team = 255;
         texfile = TEX_ENEMIES;
         damage = enemyDamage[type];
-        active = true;
+        //active = true;
     }
 
     /*****************************************************************************

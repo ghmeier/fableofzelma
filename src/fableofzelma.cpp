@@ -174,6 +174,12 @@ namespace foz {
                                                 buttonObj->subject = 0;
                                             }
                                         }
+                                        for (int roomEn = 0; roomEn < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); roomEn++){
+                                            Enemy *otherEn = &myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies[roomEn];
+                                            if (myObject->subject > 0 && otherEn->subject > 0 && myObject->subject == otherEn->subject) {
+                                                otherEn->active = !otherEn->active;
+                                                otherEn->subject = 0;
+                                            }                                       }
                                          myObject->subject = 0;
                                     }
                                 }

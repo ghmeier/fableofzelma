@@ -155,6 +155,7 @@ namespace foz {
     class Enemy : public Link{
         public:
             Enemy(uint16_t mytype, float myx, float myy);
+            Enemy(uint16_t mytype, float myx, float myy,int16_t mySubject);
             void compileEnemies();
             void update(uint8_t cmd);
             void draw();
@@ -165,6 +166,7 @@ namespace foz {
             uint16_t cur_cmdframe;
             bool cmds_done;
             uint16_t cur_cmdopt;
+            uint16_t subject;
     };
 
     /* Room information */

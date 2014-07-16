@@ -102,8 +102,13 @@ namespace foz {
                                 myObjects.push_back(toPush);
                             }
                         }else {
-                            Enemy toAdd(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
-                            myEnemies.push_back(toAdd);
+                            if (tiles_ntok == 2) {//this handles objects that are connected to others
+                                Enemy toAdd(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0,subject_tok);
+                                myEnemies.push_back(toAdd);
+                            }else{
+                                Enemy toAdd(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
+                                myEnemies.push_back(toAdd);
+                            }
                         }
                     }
                     linebuf_temp = strtok(NULL, " ,.");
@@ -601,7 +606,7 @@ namespace foz {
                     break;
             }
             e->draw();
-            if (!e->active) {
+            if (!e->active  && e->subject==0) {
                 myEnemies.erase(myEnemies.begin() + i);
                 i--;
             }

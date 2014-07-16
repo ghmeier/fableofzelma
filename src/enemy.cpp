@@ -22,12 +22,56 @@
 
 namespace foz {
 
+    Enemy::Enemy(uint16_t mytype, float myx, float myy, int16_t mySubject) : Link::Link(mytype, myx, myy){
+        if (mySubject<0) {
+            active = false;
+            subject = -mySubject;
+        }else{
+            active = true;
+            subject = mySubject;
+        }
+        cmdIter = 0;
+        frameCount = 0;
+        cur_cmdopt = 0;
+        cur_cmdframe = 0;
+        switch (type) {
+            case BSKEL:
+                health = 20;
+                texfile = TEX_ENEMIES;
+                sprite = BSKEL_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
+                break;
+            case RSKEL:
+                health = 20;
+                texfile = TEX_ENEMIES;
+                sprite = RSKEL_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
+                break;
+           case GEYEGORE:
+                health = 100;
+                texfile = TEX_ENEMIES;
+                sprite = GEYEGORE_SOUTH_1;
+                direction = DIRECTION_SOUTH;
+                height = GLOBALHEIGHT;
+                width = GLOBALWIDTH;
+                break;
+            default:
+                break;
+        }
+    };
+
     Enemy::Enemy(uint16_t mytype, float myx, float myy) : Link::Link(mytype, myx, myy){
         cmdIter = 0;
         frameCount = 0;
         cmds_done = false;
         cur_cmdopt = 0;
         cur_cmdframe = 0;
+        subject = 0;
+        active = true;
         switch (type) {
             case BSKEL:
                 health = 20;

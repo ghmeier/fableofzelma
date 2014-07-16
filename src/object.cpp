@@ -30,7 +30,6 @@ namespace foz {
 
     Object::Object(uint8_t myType, float myX, float myY, int16_t mySubject){
         if (mySubject<0) {
-            printf("thgsi happens \n");
             active = false;
             subject = -mySubject;
         }else{
