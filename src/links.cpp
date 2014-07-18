@@ -59,7 +59,7 @@ namespace foz {
             case MOVE_CMD:
                 height = GLOBALHEIGHT;
                 width = GLOBALWIDTH;
-                if (frameCount%8==3) {
+                if (cur_cmdframe%8==3) {
                     if (direction == DIRECTION_NORTH) {
                         if (sprite >= LINK_WALKING_NORTH_6) {
                             sprite = LINK_WALKING_NORTH_1;
@@ -106,11 +106,6 @@ namespace foz {
                         }
                     }
                 }
-                    if ( frameCount>FRAME_RATE) {
-                        frameCount = 0;
-                    }else {
-                        frameCount++;
-                    }
                 x = x + speed*direction_Modifier[direction][0];
                 y = y + speed*direction_Modifier[direction][1];
 
@@ -120,10 +115,7 @@ namespace foz {
             case ATTACK_CMD:
 
                 if (direction == DIRECTION_NORTH) {
-                    if (sprite >= LINK_SLASH_NORTH_20){
-                        sprite = LINK_SLASH_NORTH_1;
-                    }
-                    else if (sprite < LINK_SLASH_NORTH_1) {
+                    if (sprite >= LINK_SLASH_NORTH_20 || sprite <LINK_SLASH_NORTH_1){
                         sprite = LINK_SLASH_NORTH_1;
                     }
                     else {
@@ -133,13 +125,8 @@ namespace foz {
                     }
                     width = 3.05*(link_object_spriteMap[sprite][2] - link_object_spriteMap[sprite][0]);
                     height = 3.05*(link_object_spriteMap[sprite][3] - link_object_spriteMap[sprite][1]);
-                }
-
-                if (direction == DIRECTION_SOUTH) {
-                    if (sprite >= LINK_SLASH_SOUTH_20){
-                        sprite = LINK_SLASH_SOUTH_1;
-                    }
-                    else if (sprite < LINK_SLASH_SOUTH_1) {
+                }else if (direction == DIRECTION_SOUTH) {
+                    if (sprite >= LINK_SLASH_SOUTH_20 || sprite < LINK_SLASH_SOUTH_1){
                         sprite = LINK_SLASH_SOUTH_1;
                     }
                     else {
@@ -152,10 +139,7 @@ namespace foz {
                 }
 
                 if (direction == DIRECTION_WEST) {
-                    if (sprite >= LINK_SLASH_WEST_20){
-                        sprite = LINK_SLASH_WEST_1;
-                    }
-                    else if (sprite < LINK_SLASH_WEST_1) {
+                    if (sprite >= LINK_SLASH_WEST_20 || sprite < LINK_SLASH_WEST_1){
                         sprite = LINK_SLASH_WEST_1;
                     }
                     else {
@@ -168,10 +152,7 @@ namespace foz {
                 }
 
                 if (direction == DIRECTION_EAST) {
-                    if (sprite >= LINK_SLASH_WEST_20){
-                        sprite = LINK_SLASH_WEST_1;
-                    }
-                    else if (sprite < LINK_SLASH_WEST_1) {
+                    if (sprite >= LINK_SLASH_WEST_20 || sprite < LINK_SLASH_WEST_1){
                         sprite = LINK_SLASH_WEST_1;
                     }
                     else {
@@ -226,7 +207,7 @@ namespace foz {
             }
             break;
         case SHOOT_CMD:
-            sprite++;
+
             if(direction==DIRECTION_NORTH){
                 if (sprite > LINK_ARROW_NORTH_6 || sprite < LINK_ARROW_NORTH_1){
                     sprite = LINK_ARROW_NORTH_1;
@@ -240,7 +221,12 @@ namespace foz {
                     sprite = LINK_ARROW_SOUTH_1;
                 }
             }
-            sprite ++;
+            if (cur_cmdframe%10==0){
+                if (id==1 && this->team==0){
+                    printf("frame: %d, sprite: %d\n",cur_cmdframe,sprite);
+                }
+                sprite++;
+            }
             break;
         case WAIT_CMD:
             height = GLOBALHEIGHT;
@@ -355,7 +341,6 @@ namespace foz {
         team = 255;
         texfile = TEX_ENEMIES;
         damage = enemyDamage[type];
-        //active = true;
     }
 
     /*****************************************************************************

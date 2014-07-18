@@ -275,7 +275,7 @@ namespace foz {
                 Object * arrow;
                 bool canProceed = true;
 
-                if (mycmd->has_pred) {
+                if (mycmd->has_pred && myLink->cur_cmdframe==0) {
                     switch (mycmd->pred){
                     case ALWAYS_PRED:
                         canProceed = true;
@@ -402,9 +402,10 @@ namespace foz {
                         }
                         break;
                     case SHOOT_CMD:
-                        CMDFRAMEMAX = 20;
+                        CMDFRAMEMAX = 60;
 
                         if (myLink->cur_cmdframe==0) {
+                            if (myLink->id == 1 && myLink->team==0){printf("new shot\n");}
                             arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
                             arrow->setDirection(myLink->direction);
                             myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
@@ -1465,41 +1466,6 @@ namespace foz {
                     }
                 }
             }
-
-
-            /*if (myConfig.debug_level > 50) {
-                printf("\nCommands are as follows: \n");
-                printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
-                printf("size: %d",enemyCommands[i].size());
-                for (uint16_t iE = 0; iE < enemyCommands[i].size(); iE++) {
-                    printf("cmd-%03u: | ", iE);
-                    printf(" %3u | ", enemyCommands[i][iE].line);
-                    if (enemyCommands[i][iE].has_label == true)
-                        printf("%9s | ", enemyCommands[i][iE].label_str);
-                    else
-                        printf("%9s | ", "none");
-                    if (enemyCommands[i][iE].has_pred == true) {
-                        if (enemyCommands[i][iE].has_link_pred == true)
-                            printf("%3hu | ", enemyCommands[i][iE].link_pred);
-                        else
-                            printf("%3s | ", "yes");
-                    }
-                    else {
-                        printf("%3s | ", "no");
-                    }
-                    if (enemyCommands[i][iE].inv_pred == true)
-                        printf("%4s | ", "yes");
-                    else
-                        printf("%4s | ", "no");
-
-                    printf("%8s | ", predNames[enemyCommands[i][iE].pred][0].c_str());
-                    printf("%7s | ", cmdNames[enemyCommands[i][iE].cmd][0].c_str());
-                    printf("[%hu, %hu]", enemyCommands[i][iE].opt[0], enemyCommands[i][iE].opt[1]);
-                    printf("\n");
-                }
-                printf("\n");
-            }*/
-
         }
 
     }
