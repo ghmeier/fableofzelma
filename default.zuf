@@ -1,8 +1,13 @@
 select L1 Regular
 select L2 Regular
 select L3 Regular
+select L4 Regular
 
 start: if not l1.blocked, goto movement1
+throw l4
+wait l4
+wait l4
+left l4
 shoot l1
 shoot l2
 shoot l3

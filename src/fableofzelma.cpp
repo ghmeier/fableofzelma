@@ -336,13 +336,15 @@ namespace foz {
                     continue;
                 }
                 //AND BEGIN PARSING LINK COMMANDS
+                CMDFRAMEMAX = 30;
                 switch (mycmd->cmd) {
                     case SKIP_CMD:
+
                         myLink->cur_cmd++;
                         myLink->cur_cmdframe = 0;
                         break;
                     case MOVE_CMD:
-                        CMDFRAMEMAX = 20;
+                        //CMDFRAMEMAX = 60;
                         //check to see is an object will keep Link from moving
 
                         if (myLink->can_move) {
@@ -384,7 +386,7 @@ namespace foz {
                         break;
 
                     case ATTACK_CMD:
-                        CMDFRAMEMAX = 20;
+                        //CMDFRAMEMAX = 60;
 
                         myLink->cur_cmdframe++;
                         myLink->update(mycmd->cmd);
@@ -402,10 +404,9 @@ namespace foz {
                         }
                         break;
                     case SHOOT_CMD:
-                        CMDFRAMEMAX = 60;
+                        //CMDFRAMEMAX = 60;
 
                         if (myLink->cur_cmdframe==0) {
-                            if (myLink->id == 1 && myLink->team==0){printf("new shot\n");}
                             arrow = new Object(myLink->direction + ARROW_NORTH,myLink->x,myLink->y);
                             arrow->setDirection(myLink->direction);
                             myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
@@ -417,10 +418,18 @@ namespace foz {
                             myLink->cur_cmd++;
                         }
                       break;
+                    case THROW_CMD:
+                        //CMDFRAMEMAX = 60;
+                        myLink->update(mycmd->cmd);
+                        myLink->cur_cmdframe++;
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
                     case LEFT_CMD:
                     case RIGHT_CMD:
                     case WAIT_CMD:
-                        CMDFRAMEMAX = 20;
+                        //CMDFRAMEMAX = 60;
                         if (myLink->cur_cmdframe==0) {
                             myLink->update(mycmd->cmd);
                         }
@@ -434,7 +443,7 @@ namespace foz {
                         }
                         break;
                     case ACTIVATE_CMD:
-                        CMDFRAMEMAX = 20;
+                        //CMDFRAMEMAX = 60;
 
                         if (lookChest!=NULL && myLink->numKeys>0) {
                             lookChest->type = CHEST_OPEN;
@@ -456,6 +465,7 @@ namespace foz {
                         }
                         break;
                     default:
+                        //CMDFRAMEMAX = 60;
                         bool pred_true = true;
 
                         //Handles the goto command
@@ -984,6 +994,13 @@ namespace foz {
                         hasLink = true;
                     }
                     break;
+                 case THROW_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                        hasLink = true;
+                    }
+                    break;
                  case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
                     if (cmd_ntok == 2) {
@@ -1480,8 +1497,8 @@ namespace foz {
         }
 
         float myLt = myLink->x;
-        float myRt = myLink->x + myLink->width;
-        float myTp = myLink->y + myLink->height - 6.0;
+        float myRt = myLink->x + GLOBALWIDTH;
+        float myTp = myLink->y + GLOBALHEIGHT - 6.0;
         float myBt = myLink->y;
         float othLt = other->x;
         float othRt = other->x + other->width;
@@ -1532,8 +1549,8 @@ namespace foz {
         }
 
         float linkLt = myLink->x;
-        float linkRt = myLink->x + myLink->width;
-        float linkTp = myLink->y + myLink->height - 6.0;//subtract 6 because link's head is taller than the blocks
+        float linkRt = myLink->x + GLOBALWIDTH;
+        float linkTp = myLink->y + GLOBALWIDTH - 6.0;//subtract 6 because link's head is taller than the blocks
         float linkBt = myLink->y;
         float objLt = myObject->x;
         float objRt = myObject->x + myObject->width;

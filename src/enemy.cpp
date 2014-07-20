@@ -133,7 +133,7 @@ namespace foz {
 
         switch (cmd) {
             case MOVE_CMD:
-                if (frameCount%8==3) {
+                if (cur_cmdframe%5==0) {
                     this->sprite++;
                     if (this->type == BSKEL) {
                         if (this->sprite>=(this->direction)*6+3)
@@ -154,7 +154,7 @@ namespace foz {
             case SHOOT_CMD:
             case ATTACK_CMD:
 
-                if (frameCount%6 == 3) {
+                if (cur_cmdframe%5 == 0) {
                     this->sprite++;
                     if (this->type == BSKEL) {
                         if (sprite< direction * 6 +3 || sprite >= (direction+1) * 6) {

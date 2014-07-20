@@ -373,7 +373,7 @@ namespace foz {
     * Description: Draw, change commands, and check collisions for enemies
     ************************************************************************/
     void Room::updateEnemies(){
-        int CMDFRAMEMAX  =20;
+        int CMDFRAMEMAX  =60;
         for (uint16_t i=0;i<myEnemies.size(); i++) {
             // If we are done with the commands, move on to the next team
             if (myEnemies[i].cmds_done == true) {
@@ -554,7 +554,7 @@ namespace foz {
                 case ATTACK_CMD:
                     e->update(curCmd->cmd);
                     e->cur_cmdframe++;
-                    if (e->cur_cmdframe==10) {
+                    if (e->cur_cmdframe==30) {
                         if (toHit != NULL) {
                             toHit->doDamage(e->damage);
                             toHit->wasHitLast = true;

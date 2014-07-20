@@ -74,6 +74,9 @@
 #define TEAM_FNAME_DEFAULT "default.zuf"
 #define TIME_MS_DEFAULT 300000
 
+#define GLOBALHEIGHT 64.0
+#define GLOBALWIDTH 58.0
+
 typedef enum {DEMO_START=0, DEMO_MID, DEMO_END, GAME_START, GAME_MID, GAME_END} MODE_TYPE;
 
 /* Function prototypes (utils.cpp) */
