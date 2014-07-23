@@ -139,6 +139,8 @@ namespace foz {
                 Object* lookChest = NULL;
                 Object* toCollect = NULL;
                 Enemy* toHit = NULL;
+                Object * arrow = NULL;
+
                 myLink->can_move = true; //Link can move unless we find something in his way
 
                         for (uint16_t obj = 0; obj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); obj++) {
@@ -272,7 +274,6 @@ namespace foz {
                             }
                         }
 
-                Object * arrow;
                 bool canProceed = true;
 
                 if (mycmd->has_pred && myLink->cur_cmdframe==0) {
@@ -336,7 +337,7 @@ namespace foz {
                     continue;
                 }
                 //AND BEGIN PARSING LINK COMMANDS
-                CMDFRAMEMAX = 30;
+                CMDFRAMEMAX = 60;
                 switch (mycmd->cmd) {
                     case SKIP_CMD:
 
@@ -388,7 +389,7 @@ namespace foz {
                     case ATTACK_CMD:
                         //CMDFRAMEMAX = 60;
 
-                        myLink->cur_cmdframe++;
+
                         myLink->update(mycmd->cmd);
                             if (toHit!= NULL) {
                                 toHit->wasHitLast = true;
@@ -397,7 +398,7 @@ namespace foz {
                                     myTeams[i].score+=1;
                                 }
                             }
-
+                        myLink->cur_cmdframe++;
                         if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
                             myLink->cur_cmdframe = 0;
                             myLink->cur_cmd++;
@@ -421,6 +422,13 @@ namespace foz {
                     case THROW_CMD:
                         //CMDFRAMEMAX = 60;
                         myLink->update(mycmd->cmd);
+
+                        if (myLink->cur_cmdframe ==0) {
+                            arrow = new Object(BOMB_1,myLink->x,myLink->y);
+                            arrow->setDirection(myLink->direction);
+                            myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
+                        }
+
                         myLink->cur_cmdframe++;
                         if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
                             myLink->cur_cmdframe = 0;
@@ -500,8 +508,14 @@ namespace foz {
                     i_link--;
                 }
             //myTeams[i].cmds_done = true;
+                //delete lookChest;
+                //delete toCollect;
+                //delete toHit;
+                //delete arrow;
             }
         }
+
+
 
 
         //update time

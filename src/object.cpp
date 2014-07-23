@@ -54,6 +54,7 @@ namespace foz {
         depth = 3;
         texfile = TEX_BASIC_ROOM;
         sprite = type;
+        frameCount = 0;
 
 
 
@@ -81,13 +82,40 @@ namespace foz {
             return;
         }
 
-        if (type == ARROW_EAST || type == ARROW_WEST || type == ARROW_NORTH || type == ARROW_SOUTH || type == FIREBALL_NORTH || type == FIREBALL_EAST || type == FIREBALL_SOUTH || type == FIREBALL_WEST) {
+        if ( (type >= ARROW_NORTH && type <= ARROW_WEST) || (type >= FIREBALL_NORTH && type <= FIREBALL_WEST) || (type>= BOMB_1 && type<=BOMB_9)) {
+                    double speed = 3.0;
+                    if (sprite >= BOMB_9 && frameCount%10==0){
+                        this->active = false;
+                    }
+                    if (type>=BOMB_1 && type <= BOMB_9) {
+                        frameCount++;
+                        if (sprite < BOMB_2){
+                            if (frameCount%120 == 0){
+                                sprite++;
+                            }
+                             speed = 1.5;
+                        }else if (sprite < BOMB_3){
+                            if (frameCount%40 ==0) {
+                                sprite ++;
+                            }
+                            speed = 0;
+                        }else {
+                            if (frameCount%10 == 0) {
+                                sprite++;
+                            }
+                            speed = 0;
+                        }
+
+
+
+                    }
+
                     if (this->y <= -328.0) {
                         if (this->direction == DIRECTION_SOUTH) {
                                 this->active = false;
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
-                                }else {
+                                }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
                                     myGame->playSound(SFX_FIREBALL,100,true);
                                 }
                         }
@@ -97,7 +125,7 @@ namespace foz {
                              this->active = false;
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
-                                }else {
+                                }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
                                     myGame->playSound(SFX_FIREBALL,100,true);
                                 }
                         }
@@ -107,7 +135,7 @@ namespace foz {
                                 this->active = false;
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
-                                }else {
+                                }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
                                     myGame->playSound(SFX_FIREBALL,100,true);
                                 }
                         }
@@ -117,14 +145,14 @@ namespace foz {
                                 this->active = false;
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
-                                }else {
+                                }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
                                     myGame->playSound(SFX_FIREBALL,100,true);
                                 }
                         }
                     }
 
-                x += 3.0*direction_Modifier[direction][0];
-                y += 3.0*direction_Modifier[direction][1];
+                x += speed*direction_Modifier[direction][0];
+                y += speed*direction_Modifier[direction][1];
         }
 
         float texCoords[6];
