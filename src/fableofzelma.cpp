@@ -164,6 +164,9 @@ namespace foz {
                                     }else if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
                                         myLink->doDamage(25);
                                         playSound(SFX_LINKHURT_1,100,true);
+                                    }else if (myObject->type == BOMB_1 && myObject->sprite==BOMB_9 ){
+                                        myLink->doDamage(15);
+                                        playSound(SFX_LINKHURT_1,100,true);
                                     }else if (myObject->type == BUTTON) {
                                         myObject->type = POT_TILE;
                                         myObject->sprite = POT_TILE;
@@ -187,17 +190,28 @@ namespace foz {
                                 }
                             }
                             if (myObject->active){
-                                if( (myObject->type >= ARROW_NORTH || myObject->type >= ARROW_WEST)) {
+                                if( (myObject->type >= ARROW_NORTH && myObject->type <= FIREBALL_WEST) || (myObject->type >= BOMB_1 && myObject->type <= BOMB_9)) {
                                     for (uint16_t j =0; j< myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); j++) {
                                         Object * test = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[j];
                                         if (obj!=j && test->status==SOLID && test->active && objColObj(myObject,test)) {
-                                            myObject->active = false;
-                                            playSound(SFX_FIREBALL,100,true);
+                                            if (myObject->type >= ARROW_NORTH && myObject->type <= ARROW_WEST){
+                                                myObject->active = false;
+                                                playSound(SFX_ARROWHIT,100,true);
+                                            }else if (myObject->type >=FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
+                                                myObject->active = false;
+                                                playSound(SFX_FIREBALL,100,true);
+                                            }else if (myObject->type >= BOMB_1 && myObject->type <=BOMB_9){
+                                                myObject->can_move = false;
+                                                if (myObject->sprite == BOMB_8) {
+                                                    test->active = false;
+                                                }
+                                            }
                                             break;
                                         }
                                     }
                                 }
                             }
+
                             if (!myObject->active && myObject->subject <= 0 ){
                                  myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.erase( myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.begin()+obj);
                                  obj--;
@@ -1610,12 +1624,10 @@ namespace foz {
         if (!myObject->active || !myLink->active) {
             return false;
         }
-                               /* if (myLink->sprite == ARROW_NORTH) {
-                                        printf("so yeah...\n");
-                                }*/
+
         float linkLt = myLink->x;
         float linkRt = myLink->x + myLink->width;
-        float linkTp = myLink->y + myLink->height;//subtract 6 because link's head is taller than the blocks
+        float linkTp = myLink->y + myLink->height;
         float linkBt = myLink->y;
         float objLt = myObject->x;
         float objRt = myObject->x + myObject->width;
@@ -1623,33 +1635,34 @@ namespace foz {
         float objBt = myObject->y;
 
         if (((linkLt>=objLt && linkLt<=objRt)||(linkRt<=objRt && linkRt>=objLt)) && linkBt-1.1<objTp && linkBt-1.1> objBt) {
-            if (myLink->direction == DIRECTION_SOUTH) {
+            if (myLink->direction == DIRECTION_SOUTH || (myLink->type >= BOMB_1 && myLink->type <= BOMB_9)) {
                 return true;
             }else {
 
             }
         }
         if (linkRt+1.1>objLt && linkRt+1.1<objRt && ((linkTp>=objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<=objTp))) {
-           if (myLink->direction == DIRECTION_EAST ) {
+           if (myLink->direction == DIRECTION_EAST || (myLink->type >= BOMB_1 && myLink->type <= BOMB_9)) {
                 return true;
            }else {
 
            }
         }
         if (linkLt-1.1>objLt && linkLt-1.1<objRt && ((linkTp>=objBt && linkTp<=objTp)||(linkBt>=objBt && linkBt<=objTp))) {
-           if (myLink->direction == DIRECTION_WEST) {
+           if (myLink->direction == DIRECTION_WEST || (myLink->type >= BOMB_1 && myLink->type <= BOMB_9)) {
             return true;
            }else {
 
            }
         }
         if (((linkLt>=objLt && linkLt<=objRt)||(linkRt<=objRt && linkRt>=objLt)) && linkTp+1.1<objTp && linkTp+1.1> objBt) {
-            if (myLink->direction == DIRECTION_NORTH) {
+            if (myLink->direction == DIRECTION_NORTH || (myLink->type >= BOMB_1 && myLink->type <= BOMB_9)) {
                     return true;
             }else {
 
             }
         }
+
         return false;
     }
 

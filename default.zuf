@@ -8,9 +8,9 @@ throw l4
 wait l4
 wait l4
 left l4
-shoot l1
-shoot l2
-shoot l3
+throw l1
+throw l2
+throw l3
 left l2
 if not l2.blocked, goto movement2
 right l3
@@ -19,7 +19,7 @@ if l1.blocked, goto lookL1
 goto start
 
 movement1: move l1 1
-if l1.hit, attack l1
+if l1.hit, throw l1
 if l1.interactive, activate l1
 if l1.collectible, move l1 1
 if l1.blocked, goto start
@@ -37,14 +37,14 @@ if l1.blocked, goto lookL1
 goto start
 
 movement2: move l2 1
-if l2.hit, attack l2
+if l2.hit, throw l2
 if l2.interactive, activate l2
 if l2.collectible, move l2 1
 if l2.blocked, goto start
 goto movement2
 
 movement3: move l3 1
-if l3.hit, attack l3
+if l3.hit, throw l3
 if l3.interactive, activate l3
 if l3.collectible, move l3 1
 if l3.blocked, goto start

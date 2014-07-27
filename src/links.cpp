@@ -49,8 +49,6 @@ namespace foz {
 
         //don't worry about Link if it's out of health
         if (health<=0) {
-            //delete this;
-            printf("not active\n");
             this->active = false;
         }
 
@@ -82,7 +80,6 @@ namespace foz {
                 y = y + speed*direction_Modifier[direction][1];
 
                 break;
-
 
             case ATTACK_CMD:
                 height = GLOBALHEIGHT+45;

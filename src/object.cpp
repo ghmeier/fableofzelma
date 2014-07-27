@@ -56,11 +56,16 @@ namespace foz {
         sprite = type;
         frameCount = 0;
 
+        if ((type >=ARROW_NORTH && type <= ARROW_WEST)|| (type >=FIREBALL_NORTH && type<=FIREBALL_WEST) || (type >BOMB_1 && type <= BOMB_9)){
+            can_move = true;
+        }else {
+            can_move = false;
+        }
 
 
-        if((type>12 && type<RUPEE_GREEN_1) || type >KEY) {
+        if((type>12 && type<RUPEE_GREEN_1) || type >KEY ) {
             sprite = type;
-            if (type == VOID_BLOCK || type==BUTTON) {
+            if (type == VOID_BLOCK || type==BUTTON || type == BOMB_1) {
                 status = TRANSPARENT;
             }else {
                 status = SOLID;
@@ -90,29 +95,48 @@ namespace foz {
                     if (type>=BOMB_1 && type <= BOMB_9) {
                         frameCount++;
                         if (sprite < BOMB_2){
+                            //status = TRANSPARENT;
                             if (frameCount%120 == 0){
                                 sprite++;
                             }
-                             speed = 1.5;
+                            if (direction_Modifier[direction][1] == 0){
+                                y += .2 * (-frameCount/10 + 6);
+                            }
+                            speed = 1.5;
                         }else if (sprite < BOMB_3){
                             if (frameCount%40 ==0) {
                                 sprite ++;
                             }
-                            speed = 0;
+                            if (speed >0) {
+                                speed =1.5 - frameCount/100 ;
+                            }else {
+                                speed=0;
+                            }
                         }else {
+                             //status = SOLID;
                             if (frameCount%10 == 0) {
+                                height += 15;
+                                width += 15;
+                                x -= 7.5;
+                                y -= 7.5;
                                 sprite++;
+                            }
+                            if (sprite>BOMB_9){
+                                this->active = false;
                             }
                             speed = 0;
                         }
-
-
 
                     }
 
                     if (this->y <= -328.0) {
                         if (this->direction == DIRECTION_SOUTH) {
-                                this->active = false;
+                                if (this->sprite >= BOMB_1 && this->sprite <= BOMB_9){
+                                   speed = 0;
+                                } else {
+                                    this->active = false;
+                                }
+
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
                                 }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
@@ -122,7 +146,11 @@ namespace foz {
                     }
                     if (this->y >= 266.0) {
                         if (this->direction == DIRECTION_NORTH) {
-                             this->active = false;
+                                if (this->sprite >= BOMB_1 && this->sprite <= BOMB_9){
+                                   speed = 0;
+                                } else {
+                                    this->active = false;
+                                }
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
                                 }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
@@ -132,7 +160,11 @@ namespace foz {
                     }
                     if (this->x >= 270.0) {
                         if (this->direction == DIRECTION_EAST) {
-                                this->active = false;
+                                if (this->sprite >= BOMB_1 && this->sprite <= BOMB_9){
+                                   speed = 0;
+                                } else {
+                                    this->active = false;
+                                }
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
                                 }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
@@ -142,7 +174,11 @@ namespace foz {
                     }
                     if (this->x <= -321.0) {
                         if (this->direction == DIRECTION_WEST) {
-                                this->active = false;
+                                if (this->sprite >= BOMB_1 && this->sprite <= BOMB_9){
+                                   speed = 0;
+                                } else {
+                                    this->active = false;
+                                }
                                 if (type>=ARROW_NORTH && type <=ARROW_WEST) {
                                     myGame->playSound(SFX_LINKARROW,100,true);
                                 }else if (type>=ARROW_NORTH && type <=ARROW_WEST){
@@ -150,9 +186,10 @@ namespace foz {
                                 }
                         }
                     }
-
-                x += speed*direction_Modifier[direction][0];
-                y += speed*direction_Modifier[direction][1];
+                if (can_move){
+                    x += speed*direction_Modifier[direction][0];
+                    y += speed*direction_Modifier[direction][1];
+                }
         }
 
         float texCoords[6];

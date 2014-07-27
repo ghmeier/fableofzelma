@@ -133,7 +133,7 @@ namespace foz {
 
         switch (cmd) {
             case MOVE_CMD:
-                if (cur_cmdframe%5==0) {
+                if (cur_cmdframe%10==0) {
                     this->sprite++;
                     if (this->type == BSKEL) {
                         if (this->sprite>=(this->direction)*6+3)
@@ -146,6 +146,7 @@ namespace foz {
                             this->sprite = this->direction*3 + GEYEGORE_NORTH_1;
                     }
                 }
+
                 this->x = this->x + this->speed*direction_Modifier[direction][0];
                 this->y = this->y + this->speed*direction_Modifier[direction][1];
 
@@ -154,7 +155,7 @@ namespace foz {
             case SHOOT_CMD:
             case ATTACK_CMD:
 
-                if (cur_cmdframe%5 == 0) {
+                if (cur_cmdframe%10 == 0) {
                     this->sprite++;
                     if (this->type == BSKEL) {
                         if (sprite< direction * 6 +3 || sprite >= (direction+1) * 6) {

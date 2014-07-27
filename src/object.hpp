@@ -32,6 +32,7 @@ namespace foz {
             void setDirection(uint8_t dir);
 
             bool active;
+            bool can_move;
             uint8_t type;
             uint8_t direction;
             uint8_t status;

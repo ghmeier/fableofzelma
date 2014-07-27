@@ -373,7 +373,7 @@ namespace foz {
     * Description: Draw, change commands, and check collisions for enemies
     ************************************************************************/
     void Room::updateEnemies(){
-        int CMDFRAMEMAX  =60;
+        int CMDFRAMEMAX  = 60;
         for (uint16_t i=0;i<myEnemies.size(); i++) {
             // If we are done with the commands, move on to the next team
             if (myEnemies[i].cmds_done == true) {
@@ -397,6 +397,8 @@ namespace foz {
                             if ( myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST){
                                 myObject->active = false;
                                 e->doDamage(10);
+                            }else if (myObject->sprite == BOMB_9){
+                                e->doDamage(15);
                             }else if (myObject->status == SOLID) {
                                 e->can_move = false;
                             }else {
@@ -405,9 +407,9 @@ namespace foz {
                                 }
                             }
                         }
-                        if (myObject->active){
 
-                            if( (myObject->sprite >= FIREBALL_NORTH || myObject->sprite >= FIREBALL_WEST)) {
+                        if (myObject->active){
+                            if( (myObject->sprite >= ARROW_NORTH && myObject->sprite <= ARROW_WEST)) {
                                 for (uint16_t j =0; j< this->myObjects.size(); j++) {
                                     Object * test = &this->myObjects[j];
                                     if (obj!=j && test->status==SOLID && test->active && myGame->objColObj(myObject,test)) {
