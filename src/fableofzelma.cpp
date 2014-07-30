@@ -385,8 +385,9 @@ namespace foz {
 
                         // Have we reached the end of a CMDFRAME?
                         // If so, see how many squares we have left to go.
-                        if (myLink->cur_cmdframe%15 == 0) {
-                            playSound(SFX_STONESTEP,100,true);
+                        if (myLink->cur_cmdframe == (i*11 + myLink->id*4) ) {
+
+                            //playSound(SFX_STONESTEP,100,false);
                         }
                         if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
                             myLink->cur_cmdframe = 0;
@@ -403,11 +404,12 @@ namespace foz {
                     case ATTACK_CMD:
                         //CMDFRAMEMAX = 60;
 
-
                         myLink->update(mycmd->cmd);
                             if (toHit!= NULL) {
                                 toHit->wasHitLast = true;
-                                toHit->doDamage(myLink->damage);
+                                if (myLink->cur_cmdframe==30){
+                                    toHit->doDamage(myLink->damage);
+                                }
                                 if (myLink->cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
                                     myTeams[i].score+=1;
                                 }
@@ -439,6 +441,7 @@ namespace foz {
 
                         if (myLink->cur_cmdframe ==0) {
                             arrow = new Object(BOMB_1,myLink->x,myLink->y);
+                            playSound(SFX_THROW,100,true);
                             arrow->setDirection(myLink->direction);
                             myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
                         }
@@ -448,6 +451,24 @@ namespace foz {
                             myLink->cur_cmdframe = 0;
                             myLink->cur_cmd++;
                         }
+                        break;
+                    case WARHAMMER_CMD:
+                        myLink->update(mycmd->cmd);
+                            if (toHit!= NULL) {
+                                toHit->wasHitLast = true;
+                                if (myLink->cur_cmdframe==59){
+                                    toHit->doDamage(myLink->damage);
+                                }
+                                if (myLink->cur_cmdframe%10 == 0 && toHit->health <= 0  && toHit->active) {
+                                    myTeams[i].score+=1;
+                                }
+                            }
+                        myLink->cur_cmdframe++;
+                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                            myLink->cur_cmdframe = 0;
+                            myLink->cur_cmd++;
+                        }
+                        break;
                     case LEFT_CMD:
                     case RIGHT_CMD:
                     case WAIT_CMD:
@@ -459,7 +480,7 @@ namespace foz {
                         myLink->cur_cmdframe++;
                         // Have we reached the end of a CMDFRAME?
                         // If so, see how many squares we have left to go.
-                        if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
+                        if (myLink->cur_cmdframe > CMDFRAMEMAX) {
                             myLink->cur_cmdframe = 0;
                             myLink->cur_cmd++;
                         }
@@ -1028,6 +1049,14 @@ namespace foz {
                         valid_cmd = true;
                         hasLink = true;
                     }
+                    break;
+                 case WARHAMMER_CMD:
+                    cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
+                    if (cmd_ntok == 2) {
+                        valid_cmd = true;
+                        hasLink = true;
+                    }
+                    break;
                     break;
                  case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);

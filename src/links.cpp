@@ -57,21 +57,22 @@ namespace foz {
             case MOVE_CMD:
                 height = GLOBALHEIGHT;
                 width = GLOBALWIDTH;
+
                 if (cur_cmdframe%10==0) {
                     sprite++;
 
                     if (direction == DIRECTION_NORTH) {
-                        if (sprite > LINK_WALKING_NORTH_6 || sprite < LINK_WALKING_NORTH_1) {
+                        if (sprite > LINK_WALKING_NORTH_6 || sprite < LINK_WALKING_NORTH_1 || cur_cmdframe==0) {
                             sprite = LINK_WALKING_NORTH_1;
                         }
                     }
                     if (direction == DIRECTION_SOUTH) {
-                        if (sprite > LINK_WALKING_SOUTH_6 || sprite < LINK_WALKING_SOUTH_1) {
+                        if (sprite > LINK_WALKING_SOUTH_6 || sprite < LINK_WALKING_SOUTH_1 || cur_cmdframe==0) {
                             sprite = LINK_WALKING_SOUTH_1;
                         }
                     }
                     if (direction == DIRECTION_WEST || direction == DIRECTION_EAST) {
-                        if (sprite > LINK_WALKING_WEST_6 || sprite < LINK_WALKING_WEST_1) {
+                        if (sprite > LINK_WALKING_WEST_6 || sprite < LINK_WALKING_WEST_1 || cur_cmdframe==0) {
                             sprite = LINK_WALKING_WEST_1;
                         }
                     }
@@ -84,7 +85,6 @@ namespace foz {
             case ATTACK_CMD:
                 height = GLOBALHEIGHT+45;
                 width = GLOBALWIDTH+45;
-
                 if (cur_cmdframe <= 0 ){
                     if (direction==DIRECTION_NORTH) {
                         x-=22;
@@ -125,19 +125,19 @@ namespace foz {
                     sprite++;
 
                     if (direction == DIRECTION_NORTH) {
-                        if (sprite >= LINK_SLASH_NORTH_13 || sprite <LINK_SLASH_NORTH_6){
+                        if (sprite >= LINK_SLASH_NORTH_13 || sprite <LINK_SLASH_NORTH_6 || cur_cmdframe==0){
                             sprite = LINK_SLASH_NORTH_6;
                         }
                    }else if (direction == DIRECTION_SOUTH) {
-                        if (sprite >= LINK_SLASH_SOUTH_13 || sprite < LINK_SLASH_SOUTH_6){
+                        if (sprite >= LINK_SLASH_SOUTH_13 || sprite < LINK_SLASH_SOUTH_6 || cur_cmdframe==0){
                             sprite = LINK_SLASH_SOUTH_6;
                         }
                    }else if (direction == DIRECTION_WEST) {
-                        if (sprite >= LINK_SLASH_WEST_13 || sprite < LINK_SLASH_WEST_6){
+                        if (sprite >= LINK_SLASH_WEST_13 || sprite < LINK_SLASH_WEST_6 || cur_cmdframe==0){
                             sprite = LINK_SLASH_WEST_6;
                         }
                    }else if (direction == DIRECTION_EAST) {
-                        if (sprite >= LINK_SLASH_WEST_13 || sprite < LINK_SLASH_WEST_6){
+                        if (sprite >= LINK_SLASH_WEST_13 || sprite < LINK_SLASH_WEST_6 || cur_cmdframe==0){
                             sprite = LINK_SLASH_WEST_6;
                         }
                    }
@@ -191,15 +191,15 @@ namespace foz {
                 sprite++;
 
                 if(direction==DIRECTION_NORTH){
-                    if (sprite > LINK_ARROW_NORTH_6 || sprite < LINK_ARROW_NORTH_1){
+                    if (sprite > LINK_ARROW_NORTH_6 || sprite < LINK_ARROW_NORTH_1 || cur_cmdframe==0){
                         sprite = LINK_ARROW_NORTH_1;
                     }
                 }else if (direction == DIRECTION_EAST || direction == DIRECTION_WEST){
-                    if (sprite > LINK_ARROW_WEST_6 || sprite < LINK_ARROW_WEST_1) {
+                    if (sprite > LINK_ARROW_WEST_6 || sprite < LINK_ARROW_WEST_1|| cur_cmdframe==0) {
                         sprite = LINK_ARROW_WEST_1;
                     }
                 }else if (direction == DIRECTION_SOUTH) {
-                    if (sprite > LINK_ARROW_SOUTH_6 || sprite < LINK_ARROW_SOUTH_1) {
+                    if (sprite > LINK_ARROW_SOUTH_6 || sprite < LINK_ARROW_SOUTH_1 || cur_cmdframe==0) {
                         sprite = LINK_ARROW_SOUTH_1;
                     }
                 }
@@ -207,21 +207,73 @@ namespace foz {
             break;
 
         case THROW_CMD:
-
             if (cur_cmdframe%10==0){
                 sprite++;
 
                 if(direction==DIRECTION_NORTH){
-                    if (sprite > LINK_THROW_NORTH_6 || sprite < LINK_THROW_NORTH_1){
+                    if (sprite > LINK_THROW_NORTH_6 || sprite < LINK_THROW_NORTH_1 || cur_cmdframe==0){
                         sprite = LINK_THROW_NORTH_1;
                     }
                 }else if (direction == DIRECTION_EAST || direction == DIRECTION_WEST){
-                    if (sprite > LINK_THROW_WEST_6 || sprite < LINK_THROW_WEST_1) {
+                    if (sprite > LINK_THROW_WEST_6 || sprite < LINK_THROW_WEST_1 || cur_cmdframe==0) {
                         sprite = LINK_THROW_WEST_1;
                     }
                 }else if (direction == DIRECTION_SOUTH) {
-                    if (sprite > LINK_THROW_SOUTH_6 || sprite < LINK_THROW_SOUTH_1) {
+                    if (sprite > LINK_THROW_SOUTH_6 || sprite < LINK_THROW_SOUTH_1 || cur_cmdframe==0) {
                         sprite = LINK_THROW_SOUTH_1;
+                    }
+                }
+            }
+            break;
+        case WARHAMMER_CMD:
+            if (cur_cmdframe<=0){
+                myGame->playSound(SFX_HAMMER_SWING,100,true);
+                if (direction == DIRECTION_NORTH  || direction == DIRECTION_SOUTH){
+                    height = GLOBALHEIGHT +40;
+                    width = GLOBALWIDTH + 10;
+                    x -= 5;
+                    y-= 10;
+                }else {
+                    height =  GLOBALHEIGHT + 20;
+                    width = GLOBALWIDTH + 40;
+                    if (direction == DIRECTION_WEST){
+                    x-=25;
+                    }
+                    y+=5;
+                }
+            }
+            if (cur_cmdframe == 50){
+                myGame->playSound(SFX_HAMMER_HIT,100,true);
+            }
+            if (cur_cmdframe>=59){
+                if (direction == DIRECTION_NORTH  || direction == DIRECTION_SOUTH){
+                    height = GLOBALHEIGHT;
+                    width = GLOBALWIDTH;
+                    x += 5;
+                    y += 10;
+                }else {
+                    height =  GLOBALHEIGHT;
+                    width = GLOBALWIDTH;
+                    if (direction == DIRECTION_WEST){
+                    x+=25;
+                    }
+                    y-=5;
+                }
+            }
+            if (cur_cmdframe%10==0){
+                sprite++;
+
+                if(direction==DIRECTION_NORTH){
+                    if (sprite > LINK_WARHAMMER_NORTH_6 || sprite < LINK_WARHAMMER_NORTH_1 || cur_cmdframe==0){
+                        sprite = LINK_WARHAMMER_NORTH_1;
+                    }
+                }else if (direction == DIRECTION_EAST || direction == DIRECTION_WEST){
+                    if (sprite > LINK_WARHAMMER_WEST_6 || sprite < LINK_WARHAMMER_WEST_1 || cur_cmdframe==0) {
+                        sprite = LINK_WARHAMMER_WEST_1;
+                    }
+                }else if (direction == DIRECTION_SOUTH) {
+                    if (sprite > LINK_WARHAMMER_SOUTH_6 || sprite < LINK_WARHAMMER_SOUTH_1 || cur_cmdframe==0) {
+                        sprite = LINK_WARHAMMER_SOUTH_1;
                     }
                 }
             }

@@ -105,6 +105,7 @@ namespace foz {
                             speed = 1.5;
                         }else if (sprite < BOMB_3){
                             if (frameCount%40 ==0) {
+                                myGame->playSound(SFX_EXPLOSION,100,true);
                                 sprite ++;
                             }
                             if (speed >0) {

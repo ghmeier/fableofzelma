@@ -4,14 +4,10 @@ select L3 Regular
 select L4 Regular
 
 start: if not l1.blocked, goto movement1
-throw l4
-wait l4
-wait l4
-left l4
-throw l1
-throw l2
-throw l3
+if not l4.blocked, goto movement4
 left l2
+heavy l4
+left l4
 if not l2.blocked, goto movement2
 right l3
 if not l3.blocked, goto movement3
@@ -37,17 +33,23 @@ if l1.blocked, goto lookL1
 goto start
 
 movement2: move l2 1
-if l2.hit, throw l2
+if l2.hit, attack l2
 if l2.interactive, activate l2
 if l2.collectible, move l2 1
 if l2.blocked, goto start
 goto movement2
 
 movement3: move l3 1
-if l3.hit, throw l3
+if l3.hit, attack l3
 if l3.interactive, activate l3
 if l3.collectible, move l3 1
 if l3.blocked, goto start
 goto movement3
+
+movement4: move l4 1
+left l4
+warhammer l4
+if not l4.blocked, throw l4
+goto start
 
 

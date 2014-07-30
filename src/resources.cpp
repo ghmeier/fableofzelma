@@ -33,7 +33,8 @@ std::string cmdNames[NUM_CMD_TYPES][NUM_CMD_SPELLINGS] = {
     {"death","remove","kill"},
     {"shoot","projectile","cast"},
     {"skip","next","pass"},
-    {"throw","toss","bomb"}
+    {"throw","toss","bomb"},
+    {"warhammer","heavy","swing"}
     };
 
 /* Predicate spellings */
@@ -86,7 +87,11 @@ std::string sfxFiles[NUM_SFX]{
     "audio/enemyHit.wav",
     "audio/enemyKill.wav",
     "audio/shootFire.wav",
-    "audio/switch.wav"
+    "audio/switch.wav",
+    "audio/splosion.wav",
+    "audio/throw.wav",
+    "audio/hammerSwing.wav",
+    "audio/hammerHit.wav"
 };
 /* Sprite map for LINK objects */
 uint16_t link_object_spriteMap[][4] = {
@@ -116,12 +121,14 @@ uint16_t link_object_spriteMap[][4] = {
 {1874,190,1895,214} ,{1896,190,1917,214}  ,{1918,190,1939,214}  ,{1940,190,1961,214}  ,{1962,190,1983,214}  ,
 {1790,226,1811,248} ,{1816,226,1837,248}  ,{1840,226,1861,248}  ,{1863,226,1884,248}  ,{1886,226,1907,248}  ,
 {1909,226,1930,248} ,{1851,258,1867,282}  ,{1872,258,1888,282}  ,{1893,258,1909,282}  ,{1915,258,1931,282}  ,
-{1936,258,1952,282} ,{1957,258,1972,282}
+{1936,258,1952,282} ,{1957,258,1972,282}  ,{737,457,756,499}    ,{759,457,778,499}    ,{781,457,800,499}    ,
+{781,457,800,499}   ,{759,457,778,499}    ,{737,457,756,499}    ,{706,503,740,535}    ,{741,503,775,535}    ,
+{630,443,663,474}   ,{630,443,663,474}    ,{741,503,775,535}    ,{706,503,740,535}    ,{735,543,754,585}    ,
+{760,551,779,593}   ,{781,551,800,593}    ,{781,551,800,593}    ,{760,551,779,593}    ,{735,543,754,585}
 };
 
 int16_t link_sprite_move[][2] = {
 {-8,0},{3,-5},{4,-4},{1,-2},{5,2},{6,4},{3,5},{-3,4}
-
 };
 
 uint16_t link_object_spriteMap_centers[][2] = {
