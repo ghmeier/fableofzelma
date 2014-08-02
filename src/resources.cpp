@@ -64,7 +64,8 @@ std::string texFiles[NUM_TEXTURES] = {
     "sprites/red_link.png",
     "sprites/fonts.png",
     "sprites/rupee.png",
-    "sprites/enemies.png"
+    "sprites/enemies.png",
+    "sprites/navi.png"
     };
 
 std::string sfxFiles[NUM_SFX]{
@@ -129,6 +130,13 @@ uint16_t link_object_spriteMap[][4] = {
 
 int16_t link_sprite_move[][2] = {
 {-8,0},{3,-5},{4,-4},{1,-2},{5,2},{6,4},{3,5},{-3,4}
+};
+
+uint16_t navi_object_spriteMap[][4]  = {
+{0,52,15,62},   {29,52,44,62},  {59,52,74,62},  {89,52,104,62},     {119,52,134,62},    {149,52,165,62},
+{0,35,15,44},   {29,35,44,44},  {59,35,74,44},  {89,35,104,44},     {119,35,134,44},    {149,35,165,44},
+{0,0,15,9},     {29,0,44,9},    {59,0,74,9},    {89,0,104,9},       {119,0,134,9},      {149,0,165,9},
+{0,19,15,29},   {29,19,44,29},  {59,19,74,29},  {89,19,104,29},     {119,19,134,29},    {149,19,165,29}
 };
 
 uint16_t link_object_spriteMap_centers[][2] = {

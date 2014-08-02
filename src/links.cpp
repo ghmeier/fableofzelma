@@ -24,7 +24,11 @@
 #define GLOBALSPEED 0.983333
 
 std::string linkNames[NUM_LINK_TYPE][NUM_LINK_SPELLINGS] = {
-    {"regular", "link", "normal", "default"}
+    {"regular", "link", "normal", "default"},
+    {"archer","arrow","sniper","ranged"},
+    {"heavy","hammer","warhammer","big"},
+    {"bomb","demolition","explosion","demo"},
+    {"navi","scout","fast","light"}
     };
 /* Link costs */
 uint16_t linkCosts[NUM_LINK_TYPE] = {1};
@@ -41,7 +45,6 @@ namespace foz {
     * Description: Updates the link sprite based on command type
     *****************************************************************************/
     void Link::update(uint8_t cmd) {
-
         //link shouldn't update unless it is active
         if (!active) {
             return;
@@ -60,20 +63,25 @@ namespace foz {
 
                 if (cur_cmdframe%10==0) {
                     sprite++;
-
-                    if (direction == DIRECTION_NORTH) {
-                        if (sprite > LINK_WALKING_NORTH_6 || sprite < LINK_WALKING_NORTH_1 || cur_cmdframe==0) {
-                            sprite = LINK_WALKING_NORTH_1;
+                    if (type == NAVI_LINK){
+                        if (sprite >= team * 6 + 5){
+                            sprite = team*6;
                         }
-                    }
-                    if (direction == DIRECTION_SOUTH) {
-                        if (sprite > LINK_WALKING_SOUTH_6 || sprite < LINK_WALKING_SOUTH_1 || cur_cmdframe==0) {
-                            sprite = LINK_WALKING_SOUTH_1;
+                    }else {
+                        if (direction == DIRECTION_NORTH) {
+                            if (sprite > LINK_WALKING_NORTH_6 || sprite < LINK_WALKING_NORTH_1 || cur_cmdframe==0) {
+                                sprite = LINK_WALKING_NORTH_1;
+                            }
                         }
-                    }
-                    if (direction == DIRECTION_WEST || direction == DIRECTION_EAST) {
-                        if (sprite > LINK_WALKING_WEST_6 || sprite < LINK_WALKING_WEST_1 || cur_cmdframe==0) {
-                            sprite = LINK_WALKING_WEST_1;
+                        if (direction == DIRECTION_SOUTH) {
+                            if (sprite > LINK_WALKING_SOUTH_6 || sprite < LINK_WALKING_SOUTH_1 || cur_cmdframe==0) {
+                                sprite = LINK_WALKING_SOUTH_1;
+                            }
+                        }
+                        if (direction == DIRECTION_WEST || direction == DIRECTION_EAST) {
+                            if (sprite > LINK_WALKING_WEST_6 || sprite < LINK_WALKING_WEST_1 || cur_cmdframe==0) {
+                                sprite = LINK_WALKING_WEST_1;
+                            }
                         }
                     }
                 }
@@ -150,20 +158,25 @@ namespace foz {
             width = GLOBALWIDTH;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_WEST;
+                 if (type != NAVI_LINK)
                 sprite = LINK_WALKING_WEST_1;
             }
             else if (direction == DIRECTION_SOUTH) {
                 direction = DIRECTION_EAST;
+                 if (type != NAVI_LINK)
                 sprite = LINK_WALKING_WEST_1;
             }
             else if (direction == DIRECTION_WEST) {
                 direction = DIRECTION_SOUTH;
+                 if (type != NAVI_LINK)
                 sprite = LINK_WALKING_SOUTH_1;
             }
             else if (direction == DIRECTION_EAST) {
                 direction = DIRECTION_NORTH;
+                 if (type != NAVI_LINK)
                 sprite = LINK_WALKING_NORTH_1;
             }
+
             break;
 
         case RIGHT_CMD:
@@ -171,18 +184,22 @@ namespace foz {
             width = GLOBALWIDTH;
             if (direction == DIRECTION_NORTH) {
                 direction = DIRECTION_EAST;
+                if (type!=NAVI_LINK)
                 sprite = LINK_WALKING_WEST_1;
             }
             else if (direction == DIRECTION_SOUTH) {
                 direction = DIRECTION_WEST;
+                if (type!=NAVI_LINK)
                 sprite = LINK_WALKING_WEST_1;
             }
             else if (direction == DIRECTION_WEST) {
                 direction = DIRECTION_NORTH;
+                if (type!=NAVI_LINK)
                 sprite = LINK_WALKING_NORTH_1;
             }
             else if (direction == DIRECTION_EAST) {
                 direction = DIRECTION_SOUTH;
+                if (type!=NAVI_LINK)
                 sprite = LINK_WALKING_SOUTH_1;
             }
             break;
@@ -281,6 +298,9 @@ namespace foz {
         case WAIT_CMD:
             height = GLOBALHEIGHT;
             width = GLOBALWIDTH;
+            if (type == NAVI_LINK){
+                sprite = team*6;
+            }else {
             if (direction == DIRECTION_EAST) {
                 sprite = LINK_WALKING_WEST_1;
             }else if (direction == DIRECTION_WEST) {
@@ -289,6 +309,7 @@ namespace foz {
                 sprite = LINK_WALKING_NORTH_1;
             }else if (direction == DIRECTION_SOUTH) {
                 sprite = LINK_WALKING_SOUTH_1;
+            }
             }
             break;
         case DEATH_CMD:
@@ -319,7 +340,11 @@ namespace foz {
         health = MAX_HEALTH;
         height = GLOBALHEIGHT;
         width = GLOBALWIDTH;
-        speed = GLOBALSPEED;
+        if (type == NAVI_LINK){
+            speed = GLOBALSPEED*2;
+        }else {
+            speed = GLOBALSPEED;
+        }
         damage = 30;
         active = true;
         cur_cmd = 0;
@@ -328,43 +353,67 @@ namespace foz {
         switch(team) {
             case 0:
             default:
-                texfile = TEX_GREEN_LINK;
+                if (type == NAVI_LINK){
+                    texfile = TEX_NAVI;
+                    sprite = GREEN_NAVI_1;
+                }else{
+                    texfile = TEX_GREEN_LINK;
+                    sprite = LINK_WALKING_SOUTH_1;
+                }
                 room_x = 0;
                 room_y = 0;
                 x = LINK_START_X;
                 y = LINK_START_Y;
-                sprite = LINK_WALKING_SOUTH_1;
+
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
             case 1:
-                texfile = TEX_PURPLE_LINK;
+                if (type == NAVI_LINK){
+                    texfile = TEX_NAVI;
+                    sprite = PURPLE_NAVI_1;
+                }else{
+                    texfile = TEX_PURPLE_LINK;
+                    sprite = LINK_WALKING_SOUTH_1;
+                }
                 room_x = 0;
                 room_y = world_height-1;
                 x = LINK_START_X;
                 y = LINK_START_Y;
-                sprite = LINK_WALKING_SOUTH_1;
+
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
             case 2:
-                texfile = TEX_BLUE_LINK;
+                if (type == NAVI_LINK){
+                    texfile = TEX_NAVI;
+                    sprite = BLUE_NAVI_1;
+                }else{
+                    texfile = TEX_BLUE_LINK;
+                    sprite = LINK_WALKING_SOUTH_1;
+                }
                 room_x = world_width-1;
                 room_y = 0;
                 x = LINK_START_X;
                 y = LINK_START_Y;
-                sprite = LINK_WALKING_SOUTH_1;
+
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
 
                 break;
             case 3:
-                texfile = TEX_RED_LINK;
+                if (type == NAVI_LINK){
+                    texfile = TEX_NAVI;
+                    sprite = RED_NAVI_1;
+                }else{
+                    texfile = TEX_RED_LINK;
+                    sprite = LINK_WALKING_SOUTH_1;
+                }
                 room_x = world_width-1;
                 room_y = world_height-1;
                 x = LINK_START_X;
                 y = LINK_START_Y;
-                sprite = LINK_WALKING_SOUTH_1;
+
                 direction = DIRECTION_SOUTH;
                 depth = FRONT_DEPTH;
                 break;
@@ -400,8 +449,8 @@ namespace foz {
     void Link::draw(){
         if (active) {
             float texCoords[6];
-
             getTexCoords(texfile, sprite, texCoords);
+
             glBindTexture(GL_TEXTURE_2D, myGame->myTextures[texfile].texHandle);
 
             glBegin(GL_QUADS);

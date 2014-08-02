@@ -1,13 +1,14 @@
 select L1 Regular
-select L2 Regular
-select L3 Regular
-select L4 Regular
+select L2 Arrow
+select L3 Hammer
+select L4 Bomb
+select L5 scout
 
 start: if not l1.blocked, goto movement1
 if not l4.blocked, goto movement4
+move l5 1
+left l5
 left l2
-heavy l4
-left l4
 if not l2.blocked, goto movement2
 right l3
 if not l3.blocked, goto movement3
@@ -15,7 +16,7 @@ if l1.blocked, goto lookL1
 goto start
 
 movement1: move l1 1
-if l1.hit, throw l1
+if l1.hit, attack l1
 if l1.interactive, activate l1
 if l1.collectible, move l1 1
 if l1.blocked, goto start
@@ -33,14 +34,14 @@ if l1.blocked, goto lookL1
 goto start
 
 movement2: move l2 1
-if l2.hit, attack l2
+if l2.hit, shoot l2
 if l2.interactive, activate l2
 if l2.collectible, move l2 1
 if l2.blocked, goto start
 goto movement2
 
 movement3: move l3 1
-if l3.hit, attack l3
+if l3.hit, warhammer l3
 if l3.interactive, activate l3
 if l3.collectible, move l3 1
 if l3.blocked, goto start
@@ -48,8 +49,7 @@ goto movement3
 
 movement4: move l4 1
 left l4
-warhammer l4
-if not l4.blocked, throw l4
+if l4.hit, throw l4
 goto start
 
 

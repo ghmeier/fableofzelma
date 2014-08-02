@@ -142,6 +142,7 @@ namespace foz {
         myTextures[TEX_FONTS].spriteMap = font_spriteMap;
         myTextures[TEX_RUPEE].spriteMap = rupee_spriteMap;
         myTextures[TEX_ENEMIES].spriteMap = enemy_spriteMap;
+        myTextures[TEX_NAVI].spriteMap = navi_object_spriteMap;
         if (myConfig.debug_level > 3)
             printf("done.\n");
 

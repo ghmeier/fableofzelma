@@ -22,6 +22,7 @@ foz::Game *myGame;
 int main(int argc, char *argv[]) {
 
     myGame = new(std::nothrow)foz::Game(argc,argv);
+
     myGame->init();
     myGame->printConfig();
 
@@ -150,6 +151,10 @@ namespace foz {
                                     myLink->can_move = false;
                                     if (myObject->type == CHEST) {
                                         lookChest = myObject;
+                                    }else if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
+                                        myLink->doDamage(25);
+                                        playSound(SFX_LINKHURT_1,100,true);
+                                        myObject->active = false;
                                     }
                                 }else {
                                     myLink->can_move = true;
@@ -161,9 +166,6 @@ namespace foz {
                                         toCollect = myObject;
                                     }else if (myObject->type == KEY) {
                                         toCollect = myObject;
-                                    }else if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
-                                        myLink->doDamage(25);
-                                        playSound(SFX_LINKHURT_1,100,true);
                                     }else if (myObject->type == BOMB_1 && myObject->sprite==BOMB_9 ){
                                         myLink->doDamage(15);
                                         playSound(SFX_LINKHURT_1,100,true);
@@ -998,6 +1000,7 @@ namespace foz {
                     if (cmd_ntok == 3) {
                         valid_cmd = true;
                         hasLink = true;
+
                     }
                     break;
                   case LEFT_CMD:
@@ -1006,6 +1009,7 @@ namespace foz {
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
                         hasLink = true;
+
                     }
                     break;
                   case RIGHT_CMD:
@@ -1013,11 +1017,12 @@ namespace foz {
                     if (cmd_ntok == 2) {
                         valid_cmd = true;
                         hasLink = true;
+
                     }
                     break;
                   case ATTACK_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
-                    if (cmd_ntok == 2) {
+                    if (cmd_ntok == 2 ) {
                         valid_cmd = true;
                         hasLink = true;
                     }
@@ -1056,7 +1061,6 @@ namespace foz {
                         valid_cmd = true;
                         hasLink = true;
                     }
-                    break;
                     break;
                  case ACTIVATE_CMD:
                     cmd_ntok = sscanf(cmd_str2, "%s l%hu", place_str, &link);
@@ -1104,21 +1108,47 @@ namespace foz {
                 local_cmd->opt[1] = opt[1];
 
                 //add commands to the correct link
+                bool valid_type = false;
                 for (int linkIndex = 0; linkIndex < myTeams[i_team].myLinks.size(); linkIndex++) {
-                    if (!local_cmd->has_link && !local_cmd->has_link_pred) {
-                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
-                    }else if ((local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) || (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id)){
-                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
-                    }else if (local_cmd->has_label){
-                        cmd_type* waitCmd = new cmd_type;
-                        waitCmd->cmd = SKIP_CMD;
-                        waitCmd->link = myTeams[i_team].myLinks[linkIndex].id;
-                        waitCmd->has_pred = false;
-                        waitCmd->has_label = true;
-                        strcpy(waitCmd->label_str, local_cmd->label_str);
+                    Link* curLink = &myTeams[i_team].myLinks[linkIndex];
+                    valid_type = local_cmd->cmd == MOVE_CMD ||
+                                 local_cmd->cmd == LEFT_CMD ||
+                                 local_cmd->cmd == RIGHT_CMD ||
+                                 local_cmd->cmd == WAIT_CMD ||
+                                 local_cmd->cmd == DEATH_CMD ||
+                                 local_cmd->cmd == ACTIVATE_CMD ||
+                                 local_cmd->cmd == GOTO_CMD ||
+                                 local_cmd->cmd == SKIP_CMD ||
+                                 local_cmd->cmd == SELECT_CMD ||
+                                 (curLink->type==REGULAR_LINK && local_cmd->cmd == ATTACK_CMD) ||
+                                 (curLink->type==ARROW_LINK && local_cmd->cmd == SHOOT_CMD) ||
+                                 (curLink->type==BOMB_LINK && local_cmd->cmd == THROW_CMD) ||
+                                 (curLink->type==HEAVY_LINK && local_cmd->cmd == WARHAMMER_CMD);
+                    if (valid_type){
+                        if (!local_cmd->has_link && !local_cmd->has_link_pred ) {
+                            myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
+                        }else if ((local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) || (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id)){
+                            myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
+                        }else if (local_cmd->has_label){
+                            cmd_type* waitCmd = new cmd_type;
+                            waitCmd->cmd = SKIP_CMD;
+                            waitCmd->link = myTeams[i_team].myLinks[linkIndex].id;
+                            waitCmd->has_pred = false;
+                            waitCmd->has_label = true;
+                            strcpy(waitCmd->label_str, local_cmd->label_str);
 
-                        myTeams[i_team].myLinks[linkIndex].commands.push_back(*waitCmd);
-                        delete waitCmd;
+                            myTeams[i_team].myLinks[linkIndex].commands.push_back(*waitCmd);
+                            delete waitCmd;
+                        }
+                    }else {
+                         if (!local_cmd->has_link && !local_cmd->has_link_pred ||
+                            (local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) ||
+                            (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id) ||
+                            (local_cmd->has_label)){
+                                printf("Error compiling links\n");
+                                printf("  command %s does not apply to link of type %s\n",cmdNames[local_cmd->cmd][0].c_str(),linkNames[curLink->type][0].c_str());
+                                raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
+                        }
                     }
                 }
                 myTeams[i_team].cmds.insert(myTeams[i_team].cmds.end(), 1, *local_cmd);
@@ -1549,7 +1579,7 @@ namespace foz {
     * Description returns true if the two link's collision boxes overlap
     *****************************************************************************/
     bool Game::linkColLink(Link *myLink, Link *other) {
-        if (!myLink->active || !other->active) {
+        if (!myLink->active || !other->active || myLink->type == NAVI_LINK) {
             return false;
         }
 
@@ -1601,7 +1631,7 @@ namespace foz {
     *****************************************************************************/
 
     bool Game::linkColObj(Link *myLink, Object *myObject) {
-        if (!myObject->active || !myLink->active) {
+        if (!myObject->active || !myLink->active || myLink->type == NAVI_LINK) {
             return false;
         }
 

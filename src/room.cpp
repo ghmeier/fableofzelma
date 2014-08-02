@@ -397,6 +397,9 @@ namespace foz {
                             if ( myObject->type == ARROW_EAST || myObject->type == ARROW_NORTH || myObject->type == ARROW_SOUTH || myObject->type == ARROW_WEST){
                                 myObject->active = false;
                                 e->doDamage(10);
+                            }else if (myObject->sprite >= ARROW_NORTH && myObject->sprite <= ARROW_WEST){
+                                myObject->active = false;
+                                e->doDamage(10);
                             }else if (myObject->sprite == BOMB_9){
                                 e->doDamage(15);
                             }else if (myObject->status == SOLID) {

@@ -41,7 +41,7 @@ typedef enum {MUSIC_MAIN=0, MUSIC_ANNIVERSARY, NUM_MUSIC} MUSIC_ENUM;
 extern std::string musicFiles[NUM_MUSIC];
 
  /* Texture file enum */
-typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, TEX_RUPEE, TEX_ENEMIES, NUM_TEXTURES} TEXTURE_ENUM;
+typedef enum {TEX_BASIC_ROOM=0, TEX_BLUE_LINK, TEX_GREEN_LINK, TEX_PURPLE_LINK, TEX_RED_LINK, TEX_FONTS, TEX_RUPEE, TEX_ENEMIES, TEX_NAVI, NUM_TEXTURES} TEXTURE_ENUM;
 extern std::string texFiles[NUM_TEXTURES];
 
 /* Depth enum */
@@ -94,7 +94,14 @@ extern uint16_t link_object_spriteMap[][4];
 extern int16_t link_sprite_move[][2];
 ;extern uint16_t link_object_spriteMap_centers[][2];
 
-
+/*Sprite for Navi enum*/
+typedef enum
+{GREEN_NAVI_1, GREEN_NAVI_2, GREEN_NAVI_3, GREEN_NAVI_4, GREEN_NAVI_5, GREEN_NAVI_6,
+PURPLE_NAVI_1, PURPLE_NAVI_2, PURPLE_NAVI_3, PURPLE_NAVI_4, PURPLE_NAVI_5, PURPLE_NAVI_6,
+BLUE_NAVI_1, BLUE_NAVI_2, BLUE_NAVI_3, BLUE_NAVI_4, BLUE_NAVI_5, BLUE_NAVI_6,
+RED_NAVI_1, RED_NAVI_2, RED_NAVI_3,RED_NAVI_4, RED_NAVI_5, RED_NAVI_6
+} NAVI_SPRITE_ENUM;
+extern uint16_t navi_object_spriteMap[][4];
 
 /*Sprite enum for ROOM*/
 typedef enum
