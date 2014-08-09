@@ -81,7 +81,7 @@ namespace foz {
         }
     }
 
-    void Object::draw(){
+    void Object::update(){
         if (!active) {
             //delete this;
             return;
@@ -192,6 +192,9 @@ namespace foz {
                     y += speed*direction_Modifier[direction][1];
                 }
         }
+    }
+
+    void Object::draw(){
 
         float texCoords[6];
 

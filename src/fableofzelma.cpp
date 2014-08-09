@@ -74,6 +74,7 @@ namespace foz {
     void Game::reset() {
 
         for (uint8_t i = 0; i < 4; i++) {
+            myTeams[i].~Team();
             myLinks[i].clear();
         }
 
@@ -93,14 +94,29 @@ namespace foz {
             processEvents();
             switch (myStatus.mode) {
                 case GAME_START:
+                    myWorld.draw();
+                    drawScoreboard();
+                    break;
                 case GAME_MID:
-                    myCamera.update(false);
+                    myCamera.update(true);
+                    myWorld.update();
                     myWorld.draw();
                     drawScoreboard();
                     updateGame();
                    break;
+                case GAME_MID_NODRAW:
+                    myWorld.update();
+                    updateGame();
+                    break;
                 case GAME_END:
                     endGame();
+                    break;
+                case GAME_RESET:
+                    reset();
+                    break;
+                case GAME_PAUSE:
+                    myWorld.draw();
+                    drawScoreboard();
                     break;
                 default:
                     break;
@@ -455,6 +471,7 @@ namespace foz {
                         }
                         break;
                     case WARHAMMER_CMD:
+                        CMDFRAMEMAX = 120;
                         myLink->update(mycmd->cmd);
                             if (toHit!= NULL) {
                                 toHit->wasHitLast = true;
@@ -470,7 +487,9 @@ namespace foz {
                             myLink->cur_cmdframe = 0;
                             myLink->cur_cmd++;
                         }
+                        CMDFRAMEMAX = 60;
                         break;
+
                     case LEFT_CMD:
                     case RIGHT_CMD:
                     case WAIT_CMD:
@@ -1111,20 +1130,17 @@ namespace foz {
                 bool valid_type = false;
                 for (int linkIndex = 0; linkIndex < myTeams[i_team].myLinks.size(); linkIndex++) {
                     Link* curLink = &myTeams[i_team].myLinks[linkIndex];
-                    valid_type = local_cmd->cmd == MOVE_CMD ||
-                                 local_cmd->cmd == LEFT_CMD ||
-                                 local_cmd->cmd == RIGHT_CMD ||
-                                 local_cmd->cmd == WAIT_CMD ||
-                                 local_cmd->cmd == DEATH_CMD ||
-                                 local_cmd->cmd == ACTIVATE_CMD ||
-                                 local_cmd->cmd == GOTO_CMD ||
-                                 local_cmd->cmd == SKIP_CMD ||
-                                 local_cmd->cmd == SELECT_CMD ||
-                                 (curLink->type==REGULAR_LINK && local_cmd->cmd == ATTACK_CMD) ||
-                                 (curLink->type==ARROW_LINK && local_cmd->cmd == SHOOT_CMD) ||
-                                 (curLink->type==BOMB_LINK && local_cmd->cmd == THROW_CMD) ||
-                                 (curLink->type==HEAVY_LINK && local_cmd->cmd == WARHAMMER_CMD);
-                    if (valid_type){
+                        if (curLink->type == REGULAR_LINK  && (local_cmd->cmd == SHOOT_CMD || local_cmd->cmd == THROW_CMD || local_cmd->cmd == WARHAMMER_CMD)) {
+                            local_cmd->cmd = ATTACK_CMD;
+                        }else if (curLink->type == ARROW_LINK  && (local_cmd->cmd == ATTACK_CMD || local_cmd->cmd == THROW_CMD || local_cmd->cmd == WARHAMMER_CMD)){
+                            local_cmd->cmd = SHOOT_CMD;
+                        }else if  (curLink->type == BOMB_LINK  && (local_cmd->cmd == SHOOT_CMD || local_cmd->cmd == ATTACK_CMD || local_cmd->cmd == WARHAMMER_CMD)){
+                            local_cmd->cmd = THROW_CMD;
+                        }else if (curLink->type == HEAVY_LINK  && (local_cmd->cmd == SHOOT_CMD || local_cmd->cmd == THROW_CMD || local_cmd->cmd == ATTACK_CMD)){
+                            local_cmd->cmd = WARHAMMER_CMD;
+                        }else if (curLink->type == NAVI_LINK   && (local_cmd->cmd == SHOOT_CMD || local_cmd->cmd == THROW_CMD || local_cmd->cmd == ATTACK_CMD || local_cmd->cmd == WARHAMMER_CMD) ){
+                            local_cmd->cmd = SKIP_CMD;
+                        }
                         if (!local_cmd->has_link && !local_cmd->has_link_pred ) {
                             myTeams[i_team].myLinks[linkIndex].commands.push_back(*local_cmd);
                         }else if ((local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) || (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id)){
@@ -1140,16 +1156,6 @@ namespace foz {
                             myTeams[i_team].myLinks[linkIndex].commands.push_back(*waitCmd);
                             delete waitCmd;
                         }
-                    }else {
-                         if (!local_cmd->has_link && !local_cmd->has_link_pred ||
-                            (local_cmd->has_link && local_cmd->link == myTeams[i_team].myLinks[linkIndex].id) ||
-                            (local_cmd->has_link_pred && local_cmd->link_pred == myTeams[i_team].myLinks[linkIndex].id) ||
-                            (local_cmd->has_label)){
-                                printf("Error compiling links\n");
-                                printf("  command %s does not apply to link of type %s\n",cmdNames[local_cmd->cmd][0].c_str(),linkNames[curLink->type][0].c_str());
-                                raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
-                        }
-                    }
                 }
                 myTeams[i_team].cmds.insert(myTeams[i_team].cmds.end(), 1, *local_cmd);
                 delete local_cmd;
@@ -1228,7 +1234,7 @@ namespace foz {
             }
 
 
-            /*if (myConfig.debug_level > 50) {
+            if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
                 printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");
                 for (uint16_t i = 0; i < myTeams[i_team].cmds.size(); i++) {
@@ -1262,7 +1268,7 @@ namespace foz {
                     printf("\n");
                 }
                 printf("\n");
-            }*/
+            }
 
         }
 

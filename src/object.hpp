@@ -29,6 +29,7 @@ namespace foz {
             ~Object();
             void update(uint8_t cmd);
             void draw();
+            void update();
             void setDirection(uint8_t dir);
 
             bool active;

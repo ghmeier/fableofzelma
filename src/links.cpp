@@ -111,6 +111,7 @@ namespace foz {
                         y-=20;
                     }
                 }else if (cur_cmdframe == 59){
+                    printf("made it\n");
                     if ((direction==DIRECTION_NORTH)) {
                         x+=22;
                        // y+=25;
@@ -262,7 +263,7 @@ namespace foz {
             if (cur_cmdframe == 50){
                 myGame->playSound(SFX_HAMMER_HIT,100,true);
             }
-            if (cur_cmdframe>=59){
+            if (cur_cmdframe==59){
                 if (direction == DIRECTION_NORTH  || direction == DIRECTION_SOUTH){
                     height = GLOBALHEIGHT;
                     width = GLOBALWIDTH;

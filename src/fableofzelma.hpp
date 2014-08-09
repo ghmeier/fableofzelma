@@ -77,7 +77,7 @@
 #define GLOBALHEIGHT 64.0
 #define GLOBALWIDTH 58.0
 
-typedef enum {DEMO_START=0, DEMO_MID, DEMO_END, GAME_START, GAME_MID, GAME_END} MODE_TYPE;
+typedef enum {DEMO_START=0, DEMO_MID, DEMO_END, GAME_START, GAME_MID, GAME_END, GAME_RESET, GAME_PAUSE, GAME_MID_NODRAW} MODE_TYPE;
 
 /* Function prototypes (utils.cpp) */
 void strlower(char *in);
@@ -185,6 +185,7 @@ namespace foz {
         void compile(uint16_t id, bool rev, bool flip);
         void draw();
         void updateEnemies();
+        void update();
         ~Room();
     };
 
@@ -209,6 +210,7 @@ namespace foz {
 
         void compile(Config *myConfig, Status *myStatus);
         void draw();
+        void update();
         ~World();
     };
 
@@ -241,6 +243,7 @@ namespace foz {
         uint8_t currentTeam;
         uint16_t width, height;
         CAMERA_ENUM state;
+
 
         /* Main functions (camera.cpp) */
         void init(foz::World *myWorld);

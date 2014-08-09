@@ -360,12 +360,20 @@ namespace foz {
                 myObjects[i].draw();
         }
 
+        for (uint16_t i=0;i<myEnemies.size(); i++) {
+                myEnemies[i].draw();
+        }
         //handle everything to do with enemies
-        updateEnemies();
-
         glEnd();
 
         return;
+    }
+
+    void Room::update(){
+        for (uint16_t i = 0; i< myObjects.size(); i++) {
+                myObjects[i].update();
+        }
+        updateEnemies();
     }
 
     /***********************************************************************

@@ -69,6 +69,18 @@ namespace foz {
     }
 
     /*****************************************************************************
+    * Function: World::update()
+    * Description: Handles all of the back end updates to the rooms and links.
+    * Avoids having to draw everything in order to update it.
+    *****************************************************************************/
+    void World::update(){
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                myRooms[i][j].update();
+            }
+        }
+    }
+    /*****************************************************************************
     * Function: World::compile
     * Description: Compiles the specified world file (checks the current directory
     * as well as the scripts/maps/ directory for the file) and builds the

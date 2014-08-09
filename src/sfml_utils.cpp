@@ -47,19 +47,19 @@ namespace foz {
                         myCamera.state = CAMERA_NEXT_LINK;
                         break;
                     case sf::Keyboard::Left:
-                        if (myCamera.state == CAMERA_IDLE)
+                        if (myCamera.state == CAMERA_IDLE || myCamera.state == CAMERA_TEAM_1 || myCamera.state == CAMERA_TEAM_2 || myCamera.state == CAMERA_TEAM_3 || myCamera.state == CAMERA_TEAM_4)
                             myCamera.state = CAMERA_PAN_LEFT;
                         break;
                     case sf::Keyboard::Right:
-                        if (myCamera.state == CAMERA_IDLE)
+                        if (myCamera.state == CAMERA_IDLE || myCamera.state == CAMERA_TEAM_1 || myCamera.state == CAMERA_TEAM_2 || myCamera.state == CAMERA_TEAM_3 || myCamera.state == CAMERA_TEAM_4)
                             myCamera.state = CAMERA_PAN_RIGHT;
                         break;
                     case sf::Keyboard::Up:
-                        if (myCamera.state == CAMERA_IDLE)
+                        if (myCamera.state == CAMERA_IDLE || myCamera.state == CAMERA_TEAM_1 || myCamera.state == CAMERA_TEAM_2 || myCamera.state == CAMERA_TEAM_3 || myCamera.state == CAMERA_TEAM_4)
                             myCamera.state = CAMERA_PAN_UP;
                         break;
                     case sf::Keyboard::Down:
-                        if (myCamera.state == CAMERA_IDLE)
+                        if (myCamera.state == CAMERA_IDLE || myCamera.state == CAMERA_TEAM_1 || myCamera.state == CAMERA_TEAM_2 || myCamera.state == CAMERA_TEAM_3 || myCamera.state == CAMERA_TEAM_4)
                             myCamera.state = CAMERA_PAN_DOWN;
                         break;
                     case sf::Keyboard::Equal:
@@ -77,15 +77,29 @@ namespace foz {
                         myWindow.close();
                         break;
                     case sf::Keyboard::E:
-                        //myStatus.mode = GAME_END;
+                        if (myStatus.mode == GAME_MID){
+                            myStatus.mode = GAME_MID_NODRAW;
+                        }else if (myStatus.mode == GAME_MID_NODRAW){
+                            myStatus.mode = GAME_MID;
+                        }
                         break;
                     case sf::Keyboard::R:
-                        reset();
+                        myStatus.mode = GAME_RESET;
+                        break;
+                    case sf::Keyboard::P:
+                        if (myStatus.mode == GAME_PAUSE){
+                            myStatus.mode = GAME_MID;
+                        }else{
+                            myStatus.mode = GAME_PAUSE;
+                        }
                         break;
                     case sf::Keyboard::S:
                     case sf::Keyboard::Return:
-                        //if (myStatus.mode == DEMO_MID)
-                        //    myStatus.mode = DEMO_END;
+                        if (myStatus.mode == GAME_START){
+                            myStatus.mode = GAME_MID;
+                        }else if (myStatus.mode == GAME_PAUSE){
+                            myStatus.mode = GAME_MID;
+                        }
                         break;
                     default:
                         break;

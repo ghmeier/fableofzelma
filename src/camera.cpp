@@ -29,7 +29,6 @@ namespace foz {
     void Camera::init(foz::World *myWorld) {
 
         state = CAMERA_INIT;
-
         // Temporary code. Set the 2D view based on the size of the world
         x_left = -1920.0/2.0*myWorld->width;
         x_right = 1920.0/2.0*myWorld->width;
@@ -76,6 +75,7 @@ namespace foz {
         switch(state) {
 
             case CAMERA_INIT:
+                printf("CAMERA INIT IS CALLED\n");
                 x_left = -1920.0/2.0*width;
                 x_right = 1920.0/2.0*width;
                 y_bottom = -1080.0/2.0*height;
@@ -112,10 +112,10 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_RIGHT:
-                if (x_pos <= (-width)) { // Was -1.0, changed to -width
+                /*if (x_pos <= (-width)) {
                     state = CAMERA_IDLE;
                     break;
-                }
+                }*/
 
                 reposition = true;
                 x_left += (1080.0)/CAMERA_PAN_DELTA;
@@ -130,10 +130,10 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_LEFT:
-                if (x_pos >= (width)) {
+                /*if (x_pos >= (width)) {
                     state = CAMERA_IDLE;
                     break;
-                }
+                }*/
 
                 reposition = true;
                 x_left -= (1080.0)/CAMERA_PAN_DELTA;
@@ -143,16 +143,16 @@ namespace foz {
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos += 1.0;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
+                    printf("modified x/y_pos = [%f, %f]\n", x_pos, y_pos);
                 }
                  currentTeam = 255;
                 break;
 
             case CAMERA_PAN_DOWN:
-                if (y_pos >= (height)) {
+                /*if (y_pos >= (height)) {
                     state = CAMERA_IDLE;
                     break;
-                }
+                }*/
 
                 reposition = true;
                 y_top -= (1080.0)/CAMERA_PAN_DELTA;
@@ -162,17 +162,16 @@ namespace foz {
                     state = CAMERA_IDLE;
                     y_pan_count = 0;
                     y_pos += 1.0;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
+                    printf("modified x/y_pos = [%f, %f]\n", x_pos, y_pos);
                 }
                  currentTeam = 255;
                 break;
 
             case CAMERA_PAN_UP:
-                //if (y_pos <= (- 1 - (zoom_level+1)*(1080/1920))) {
-                if (y_pos <= (- height)) {
+                /*if (y_pos <= (- height)) {
                     state = CAMERA_IDLE;
                     break;
-                }
+                }*/
 
                 reposition = true;
                 y_top += (1080.0)/CAMERA_PAN_DELTA;
@@ -194,14 +193,15 @@ namespace foz {
                 }
 
                 reposition = true;
-
-                x_right -= (1920.0)/CAMERA_ZOOM_DELTA;
-                y_bottom += (1080.0)/CAMERA_ZOOM_DELTA;
+                printf("prev zoom count: %d, x_right: %f, y_bottom:%f, zoom_level: %f\n",zoom_count,x_right,y_bottom,zoom_level);
+                this->x_right -= zoom_count *(1920.0)/CAMERA_ZOOM_DELTA;
+                this->y_bottom += zoom_count * (1080.0)/CAMERA_ZOOM_DELTA;
                 zoom_count++;
+                printf("next zoom count: %d, x_right: %f, y_bottom:%f\n",zoom_count,x_right,y_bottom);
                 if (zoom_count == (CAMERA_ZOOM_DELTA)) {
-                    state = CAMERA_IDLE;
-                    zoom_count = 0;
-                    zoom_level -= 1.0;
+                    //state = CAMERA_IDLE;
+                    zoom_count --;
+                    zoom_level = 2.0;
                     x_pos -= 1.0;
                     y_pos -= 1080.0/1920;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
@@ -217,13 +217,14 @@ namespace foz {
                 }
 
                 reposition = true;
-                x_right += (1920.0)/CAMERA_ZOOM_DELTA;
-                y_bottom -= (1080.0)/CAMERA_ZOOM_DELTA;
+                x_right += zoom_count *(1920.0)/CAMERA_ZOOM_DELTA;
+                y_bottom -= zoom_count *(1080.0)/CAMERA_ZOOM_DELTA;
                 zoom_count--;
+
                 if (zoom_count == (-CAMERA_ZOOM_DELTA)) {
-                    state = CAMERA_IDLE;
-                    zoom_count = 0;
-                    zoom_level += 1.0;
+                    //state = CAMERA_IDLE;
+                    zoom_count ++;
+                    zoom_level = 3.0;
                     x_pos += 1.0;
                     y_pos += 1080.0/1920;
                     printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
@@ -299,6 +300,9 @@ namespace foz {
                 else {
                     state = CAMERA_IDLE;
                 }
+                break;
+            case CAMERA_IDLE:
+                reposition = false;
                 break;
             default:
                 break;
