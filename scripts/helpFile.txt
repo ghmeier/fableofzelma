@@ -5,14 +5,35 @@ This file is intended to help keep track of the functions
 of all of the different scripts in foz files.
 
 	-------------------------
+	----- Camera Commands----
+	-------------------------
+		These commands are keys that you press in game to manipulate the camera
+		**** Commands and Descriptions****
+		1	-	Zooms the camera to team one's first link
+		2	-	Zooms the camera to team two's first link
+		3	-	Zooms the camera to team three's first link
+		4	-	Zooms the camera to team four's first link
+		Z	-	Switches camera focus to the current team's previous link
+		X	-	switches camera focues to the active team's next link
+		E	-	toggles no draw mode (partially implemented)
+		R	-	resets the game (doesn't work yet)
+		P	-	toggles game's pause
+		S/Enter	-	starts/resumes the game
+		+	-	Zooms the camera in (partially implemented)
+		-	-	Zooms the camer out (doesn't work yet)
+		arrows	-	pan camera (doesn't work yet)
+		
+
+	-------------------------
 	-Zelma User Files (.zuf)-
 	-------------------------
 		****Commands and Descriptions****
-			Create	L#	-	Adds a link with id # to the game for the user's team in their starting room
+			Select	L# <type>-	Adds a link with id # to the game for the user's team in their starting room of the specified type
+					-	Types: Regular, Archer, Heavy, Bomb,and Navi
 			Move L# %	-	Translates the link with id # a number of spaces equal to % in their current direction
 			Left L#		-	Rotates the link with id # 90 degrees counterclockwise
 			Right L#	-	Rotates the link with id # clockwise 90 degrees
-			Attack L#	-	Swings links #'s sword in their current direction
+			Attack L#	-	Swings links #'s sword in their current direction (Regular link's move)
 			<label>:	-	Sets <label> as a string which is recognized by a goto command, must be followed by
 							a command on the same line
 			Goto <label>-	immediately switches commands to the command at <label>
@@ -20,7 +41,9 @@ of all of the different scripts in foz files.
 			Activate L# -	activates buttons, levers, etc. if prerequisite conditions are met and link # is facing
 							the object
 			Remove L#	-	kills the chosen link, not super useful, but hey it's there
-			Shoot L#	-	fires an arrow in the direction link # is facing
+			Shoot L#	-	fires an arrow in the direction link # is facing (archer link's move)
+			Throw L#	-	throws a bomb in the direction link # is facing (bomb link's move)
+			Warhammer L#	-	uses the warhammer attack (heavy link's move)
 			Skip  L#	-	skips the line without taking up a command cycle (used internally).
 
 		****Conditionals and Descriptions****

@@ -75,7 +75,6 @@ namespace foz {
         switch(state) {
 
             case CAMERA_INIT:
-                printf("CAMERA INIT IS CALLED\n");
                 x_left = -1920.0/2.0*width;
                 x_right = 1920.0/2.0*width;
                 y_bottom = -1080.0/2.0*height;
@@ -193,11 +192,11 @@ namespace foz {
                 }
 
                 reposition = true;
-                printf("prev zoom count: %d, x_right: %f, y_bottom:%f, zoom_level: %f\n",zoom_count,x_right,y_bottom,zoom_level);
+                //printf("prev zoom count: %d, x_right: %f, y_bottom:%f, zoom_level: %f\n",zoom_count,x_right,y_bottom,zoom_level);
                 this->x_right -= zoom_count *(1920.0)/CAMERA_ZOOM_DELTA;
                 this->y_bottom += zoom_count * (1080.0)/CAMERA_ZOOM_DELTA;
                 zoom_count++;
-                printf("next zoom count: %d, x_right: %f, y_bottom:%f\n",zoom_count,x_right,y_bottom);
+                //printf("next zoom count: %d, x_right: %f, y_bottom:%f\n",zoom_count,x_right,y_bottom);
                 if (zoom_count == (CAMERA_ZOOM_DELTA)) {
                     //state = CAMERA_IDLE;
                     zoom_count --;

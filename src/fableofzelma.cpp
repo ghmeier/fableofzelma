@@ -78,6 +78,9 @@ namespace foz {
             myLinks[i].clear();
         }
 
+        //myWorld.~World();
+       //myCamera.~Camera();
+       // myTime.~Time();
         init();
         myStatus.mode = GAME_START;
 

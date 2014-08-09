@@ -217,6 +217,8 @@ namespace foz {
     /* Per-team state information */
     class Team {
         public:
+            Team(){}
+            ~Team(){cmds.clear();myLinks.clear();}
             uint8_t id;
             uint32_t status;
             char *name;
