@@ -71,7 +71,7 @@ namespace foz {
             team_id = state - (uint8_t)CAMERA_TEAM_1;
             currentTeam = team_id;
         }
-        printf("x_pos: %.1f\n",x_pos);
+//        printf("x_pos: %.1f\n",x_pos);
         switch(state) {
 
             case CAMERA_INIT:
@@ -105,6 +105,7 @@ namespace foz {
                     x_right = x_left + 1920.0;
                     y_top = (1080.0/2.0)*(height-2*y_pos);
                     y_bottom = y_top - 1080.0;
+                    state = CAMERA_IDLE;
                 }
                 else {
                     state = CAMERA_IDLE;
@@ -195,7 +196,8 @@ namespace foz {
                 }
 
                 reposition = true;
-                this->x_right -= (1920.0)/CAMERA_ZOOM_DELTA;
+                this->x_right -= (1500.0)/CAMERA_ZOOM_DELTA;
+                this->x_left += (420.0)/CAMERA_ZOOM_DELTA;
                 this->y_bottom += (1080.0)/CAMERA_ZOOM_DELTA;
                 zoom_count++;
 
@@ -204,7 +206,7 @@ namespace foz {
                     zoom_level ++;
                     //x_pos -= 1.0;
                     //y_pos -= 1080.0/1920;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
+                    printf("zoom in x_pos,y_pos = [%2.1f, %2.1f]\n", x_pos, y_pos);
                     zoom_count = 0;
                 }
                  currentTeam = 255;
@@ -219,17 +221,35 @@ namespace foz {
 
                 reposition = true;
                 //printf("prev zoom count: %d, x_right: %6.3f, y_bottom: %6.3f, zoom_level: %1.3f\n",zoom_count,x_right,y_bottom,zoom_level);
-                x_right += (1920.0)/CAMERA_ZOOM_DELTA;
-                y_bottom -= (1080.0)/CAMERA_ZOOM_DELTA;
+                if (x_pos >0.0){
+                    x_left -= (1500.0 * (x_pos) )/CAMERA_ZOOM_DELTA;
+                    this->x_right += (420.0 * (x_pos) )/CAMERA_ZOOM_DELTA;
+                }else {
+                    x_right += (1500.0  )/CAMERA_ZOOM_DELTA;
+                    this->x_left -= (420.0  )/CAMERA_ZOOM_DELTA;
+                }
+
+                if (y_pos > 0.0){
+                    y_top += (1080.0* (y_pos) )/CAMERA_ZOOM_DELTA;
+                }else {
+                    y_bottom -= (1080.0 )/CAMERA_ZOOM_DELTA;
+                }
                 //printf("next zoom count: %d, x_right: %6.3f, y_bottom: %6.3f\n\n",zoom_count,x_right,y_bottom);
                 zoom_count++;
 
                 if (zoom_count >= (CAMERA_ZOOM_DELTA)) {
                     state = CAMERA_IDLE;
                     zoom_level --;
-                    //x_pos += 1.0;
+
+                    printf("zoom out x_pos,y_pos = [%2.1f, %2.1f]\n", x_pos, y_pos);
+                    if (x_pos >0.0){
+                        x_pos -= 1.0;
+                    }
+                    if (y_pos >0.0){
+                        y_pos -= 1.0;
+                    }
                     //y_pos += 1080.0/1920;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
+
                     zoom_count = 0;
                 }
                  currentTeam = 255;
