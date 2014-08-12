@@ -258,7 +258,22 @@ namespace foz {
         float baseX, baseY;
 
         // Reset Camera
-        CAMERA_ENUM prev_camera_state = myCamera.state;
+        Camera * prevCamera = new Camera();
+        prevCamera->currentTeam = myCamera.currentTeam;
+        prevCamera->height = myCamera.height;
+        prevCamera->state  = myCamera.state;
+        prevCamera->width = myCamera.width;
+        prevCamera->x_left = myCamera.x_left;
+        prevCamera->x_pan_count = myCamera.x_pan_count;
+        prevCamera->x_pos = myCamera.x_pos;
+        prevCamera->x_right = myCamera.x_right;
+        prevCamera->y_bottom = myCamera.y_bottom;
+        prevCamera->y_pan_count = myCamera.y_pan_count;
+        prevCamera->y_pos = myCamera.y_pos;
+        prevCamera->y_top = myCamera.y_top;
+        prevCamera->zoom_count = myCamera.zoom_count;
+        prevCamera->zoom_level = myCamera.zoom_level;
+        //CAMERA_ENUM prev_camera_state = myCamera.state;
         myCamera.state = CAMERA_INIT;
         myCamera.update(true);
         glMatrixMode(GL_MODELVIEW);
@@ -660,7 +675,22 @@ namespace foz {
         glEnd();
 
         // Reset Camera
-        myCamera.state = prev_camera_state;
+        myCamera.currentTeam = prevCamera->currentTeam;
+        myCamera.height = prevCamera->height;
+        myCamera.state  = prevCamera->state;
+        myCamera.width = prevCamera->width;
+        myCamera.x_left = prevCamera->x_left;
+        myCamera.x_pan_count = prevCamera->x_pan_count;
+        myCamera.x_pos = prevCamera->x_pos;
+        myCamera.x_right = prevCamera->x_right;
+        myCamera.y_bottom = prevCamera->y_bottom;
+        myCamera.y_pan_count = prevCamera->y_pan_count;
+        myCamera.y_pos = prevCamera->y_pos;
+        myCamera.y_top = prevCamera->y_top;
+        myCamera.zoom_count = prevCamera->zoom_count;
+        myCamera.zoom_level = prevCamera->zoom_level;
+        delete prevCamera;
+       // myCamera.state = prev_camera_state;
         myCamera.update(true);
 
     }
