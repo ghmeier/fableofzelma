@@ -71,7 +71,7 @@ namespace foz {
             team_id = state - (uint8_t)CAMERA_TEAM_1;
             currentTeam = team_id;
         }
-//        printf("x_pos: %.1f\n",x_pos);
+
         switch(state) {
 
             case CAMERA_INIT:
@@ -124,7 +124,6 @@ namespace foz {
                 x_right += (1080.0)/CAMERA_PAN_DELTA;
                 x_pan_count--;
                 if (x_pan_count == (-CAMERA_PAN_DELTA)) {
-                    printf("width: %d, x_pos: %2.1f\n",width,x_pos);
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos += 1.0;
@@ -146,7 +145,6 @@ namespace foz {
                     state = CAMERA_IDLE;
                     x_pan_count = 0;
                     x_pos -= 1.0;
-                    printf("modified x/y_pos = [%f, %f]\n", x_pos, y_pos);
                 }
                  currentTeam = 255;
                 break;
@@ -165,7 +163,6 @@ namespace foz {
                     state = CAMERA_IDLE;
                     y_pan_count = 0;
                     y_pos += 1.0;
-                    printf("modified x/y_pos = [%f, %f]\n", x_pos, y_pos);
                 }
                  currentTeam = 255;
                 break;
@@ -184,7 +181,6 @@ namespace foz {
                     state = CAMERA_IDLE;
                     y_pan_count = 0;
                     y_pos -= 1.0;
-                    printf("modified x/y_pos = [%f, %f\n", x_pos, y_pos);
                 }
                  currentTeam = 255;
                 break;
@@ -204,9 +200,6 @@ namespace foz {
                 if (zoom_count >= (CAMERA_ZOOM_DELTA)) {
                     state = CAMERA_IDLE;
                     zoom_level ++;
-                    //x_pos -= 1.0;
-                    //y_pos -= 1080.0/1920;
-                    printf("zoom in x_pos,y_pos = [%2.1f, %2.1f]\n", x_pos, y_pos);
                     zoom_count = 0;
                 }
                  currentTeam = 255;
@@ -220,7 +213,6 @@ namespace foz {
                 }
 
                 reposition = true;
-                //printf("prev zoom count: %d, x_right: %6.3f, y_bottom: %6.3f, zoom_level: %1.3f\n",zoom_count,x_right,y_bottom,zoom_level);
                 if (x_pos > 0.0){
                     x_left -= (1500.0 * (1) )/CAMERA_ZOOM_DELTA;
                     this->x_right += (420.0 * (1) )/CAMERA_ZOOM_DELTA;
@@ -234,21 +226,17 @@ namespace foz {
                 }else {
                     y_bottom -= (1080.0 )/CAMERA_ZOOM_DELTA;
                 }
-                //printf("next zoom count: %d, x_right: %6.3f, y_bottom: %6.3f\n\n",zoom_count,x_right,y_bottom);
                 zoom_count++;
 
                 if (zoom_count >= (CAMERA_ZOOM_DELTA)) {
                     state = CAMERA_IDLE;
                     zoom_level --;
-
-                    printf("zoom out x_pos,y_pos = [%2.1f, %2.1f]\n", x_pos, y_pos);
                     if (x_pos >0.0){
                         x_pos -= 1.0;
                     }
                     if (y_pos >0.0){
                         y_pos -= 1.0;
                     }
-                    //y_pos += 1080.0/1920;
 
                     zoom_count = 0;
                 }
@@ -266,7 +254,7 @@ namespace foz {
                     x_pos = (float)myLink->room_x;
                     y_pos = (float)myLink->room_y;
 
-                    zoom_level = 1.0;
+                    zoom_level = 2.0;
                     x_pan_count = 0;
                     y_pan_count = 0;
                     zoom_count = 0;
@@ -301,7 +289,7 @@ namespace foz {
                     x_pos = (float)myLink->room_x;
                     y_pos = (float)myLink->room_y;
 
-                    zoom_level = 1.0;
+                    zoom_level = 2.0;
                     x_pan_count = 0;
                     y_pan_count = 0;
                     zoom_count = 0;
@@ -325,9 +313,7 @@ namespace foz {
                 }
                 break;
             case CAMERA_IDLE:
-                //reposition = false;
-                //printf("idle zoom count: %d, x_right: %6.3f, y_bottom: %6.3f, zoom_level: %1.3f\n",zoom_count,x_right,y_bottom,zoom_level);
-                break;
+               break;
             default:
                 break;
         }

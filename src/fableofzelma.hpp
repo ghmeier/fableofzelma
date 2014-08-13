@@ -283,6 +283,7 @@ namespace foz {
             void initSFML();
             void loadResources();
             void drawScoreboard();
+            void drawWord(std::string,float,float);
             void processEvents();
 
             /* Utility functions (utils.cpp) */

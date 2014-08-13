@@ -51,7 +51,7 @@ namespace foz {
         height = GLOBALHEIGHT;
         x = myX;
         y = myY;
-        depth = 3;
+        depth = OBJECT_DEPTH;
         texfile = TEX_BASIC_ROOM;
         sprite = type;
         frameCount = 0;

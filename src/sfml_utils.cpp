@@ -99,6 +99,8 @@ namespace foz {
                             myStatus.mode = GAME_MID;
                         }else if (myStatus.mode == GAME_PAUSE){
                             myStatus.mode = GAME_MID;
+                        }else if (myStatus.mode == GAME_MID || myStatus.mode == GAME_MID_NODRAW){
+                            myStatus.mode = GAME_PAUSE;
                         }
                         break;
                     default:
@@ -313,37 +315,13 @@ namespace foz {
             }
 
             snprintf(name, 9, "%-8s", myTeams[i].name);
+            std::stringstream s;
+            s << name;
             uint16_t font_num;
-            for (uint8_t j = 0; j < 8; j++) {
-                font_num = NUM_FONTS;
-                if (name[j] >= 'A' && name[j] <= 'Z') {
-                    font_num = name[j] - 'A' + LETTER_A;
-                }
-                if (name[j] >= 'a' && name[j] <= 'z') {
-                    font_num = name[j] - 'a' + LETTER_a;
-                }
-                if (name[j] >= '0' && name[j] <= '9') {
-                font_num = name[j] - '0' + LETTER_0;
-                }
-
-                if (font_num != NUM_FONTS) {
-                    glBegin(GL_QUADS);
-                        getTexCoords(TEX_FONTS, font_num, texCoords);
-                        glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
-                        glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
-                    glEnd();
-                }
-            }
+            drawWord(s.str(),baseX,baseY);
         }
 
         /* Draw the scores */
-        char digits[6];
         for (uint8_t i = 0; i < 4; i++) {
 
             switch(i) {
@@ -365,8 +343,6 @@ namespace foz {
                     baseY = -1080.0*(myWorld.height-1)-2.5*LETTER_HEIGHT;
                     break;
             }
-
-            sprintf(digits,"x%-3d",myStatus.scores[i]);
 
             // Gives Rupee Symbol Animation
             static int RUPEE_CYCLE = 0;
@@ -394,35 +370,10 @@ namespace foz {
                 glVertex3f(baseX, baseY, FONT_DEPTH);
             glEnd();
 
-
+            std::stringstream digitStream;
+            digitStream << "x" << myStatus.scores[i];
             glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-            for (uint8_t j = 0; j < 5; j++) {
-                if (digits[j] == '-') {
-                    getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
-                }
-                else if ((digits[j] >= '0') && (digits[j] <= '9')) {
-                    getTexCoords(TEX_FONTS, digits[j] - '0' + LETTER_0, texCoords);
-                }
-                else if (digits[j] == 'x') {
-                    getTexCoords(TEX_FONTS, LETTER_times, texCoords);
-                }
-                if (digits[j] != ' ') {
-
-                    glBegin(GL_QUADS);
-                        glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY, FONT_DEPTH);
-                        glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
-                    glEnd();
-                }
-                else {
-                    break;
-                }
-            }
+            drawWord(digitStream.str(),baseX+NUMBER_WIDTH,baseY);
         }
 
         /* Draw the Links remaining */
@@ -448,7 +399,7 @@ namespace foz {
                     baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
                     break;
             }
-            sprintf(links,"x%-2d", myGame->myTeams[i].myLinks.size());
+
             /* Draw Link Symbol */
             glBindTexture(GL_TEXTURE_2D, myTextures[myGame->myTeams[i].myLinks[myTeams[i].cur_link].texfile].texHandle);
             getTexCoords(TEX_BLUE_LINK, LINK_WALKING_SOUTH_1, texCoords);
@@ -466,45 +417,23 @@ namespace foz {
 
 
             glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
-            for (uint8_t j = 0; j < 3; j++) {
-                if ((links[j] >= '0') && (links[j] <= '9')) {
-                    getTexCoords(TEX_FONTS, links[j] - '0' + LETTER_0, texCoords);
-                }
-                else if (links[j] == 'x') {
-                    getTexCoords(TEX_FONTS, LETTER_times, texCoords);
-                }
-                if (links[j] != ' ') {
-
-                    glBegin(GL_QUADS);
-                        glTexCoord2d(texCoords[0], texCoords[1]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[1]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY - NUMBER_HEIGHT, FONT_DEPTH);
-                        glTexCoord2d(texCoords[2], texCoords[3]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+2), baseY, FONT_DEPTH);
-                        glTexCoord2d(texCoords[0], texCoords[3]);
-                        glVertex3f(baseX+NUMBER_WIDTH*(j+1), baseY, FONT_DEPTH);
-                    glEnd();
-                }
-                else {
-                    break;
-                }
-
-            }
+            std::stringstream linkStream;
+            linkStream << "x" << myGame->myTeams[i].myLinks.size();
+            drawWord(linkStream.str(),baseX+LETTER_WIDTH + 10,baseY);
         }
 
 
         // Draw the black shading rectangles
         glEnable(GL_BLEND);
         glBegin(GL_QUADS);
-            glColor4f(1.0, 0.0, 0.0, 0.5);
+            glColor4f(1.0, 1.0, 0.0, 1.0);
 
             glVertex3f(0.0, 0.0, OVERLAY_DEPTH);
-            glVertex3f(420.0, 0.0, OVERLAY_DEPTH);
-            glVertex3f(420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
-            glVertex3f(0.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
+            glVertex3f(420.0, 0.0,OVERLAY_DEPTH);
+            glVertex3f(420.0, 1080.0, OVERLAY_DEPTH);
+            glVertex3f(0.0, 1080.0, OVERLAY_DEPTH);
 
-            glColor4f(0.0, 1.0, 0.0, 0.5);
+            glColor4f(1.0, 1.0, 0.0, 1.0);
             glVertex3f(1920.0*(myWorld.width)-420.0, 0.0, OVERLAY_DEPTH);
             glVertex3f(1920.0*myWorld.width, 0.0, OVERLAY_DEPTH);
             glVertex3f(1920.0*(myWorld.width), -1080.0*(myWorld.height), OVERLAY_DEPTH);
@@ -516,37 +445,11 @@ namespace foz {
 
         glDisable(GL_BLEND);
 
-
         /* Draw the Time Remaining */
         char time_word[5] = "Time";
         baseX = 1920.0*myWorld.width - 10*LETTER_WIDTH;
         baseY = -1080.0 + NUMBER_HEIGHT;
-        uint16_t font_numx;
-        for (uint8_t j = 0; j < 4; j++) {
-            font_numx = NUM_FONTS;
-            if (time_word[j] >= 'A' && time_word[j] <= 'Z') {
-                font_numx = time_word[j] - 'A' + LETTER_A;
-            }
-            if (time_word[j] >= 'a' && time_word[j] <= 'z') {
-                font_numx = time_word[j] - 'a' + LETTER_a;
-            }
-            if (time_word[j] == ':') {
-                font_numx = LETTER_colon;
-            }
-            if (font_numx != NUM_FONTS) {
-                glBegin(GL_QUADS);
-                    getTexCoords(TEX_FONTS, font_numx, texCoords);
-                    glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
-                    glTexCoord2d(texCoords[2], texCoords[3]);
-                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
-                    glTexCoord2d(texCoords[0], texCoords[3]);
-                    glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
-                glEnd();
-            }
-        }
+        drawWord("Time",baseX,baseY);
 
         int32_t time_ms;
         if (myStatus.time_ms >= 6000000) {
@@ -562,117 +465,32 @@ namespace foz {
         uint32_t secs = ((time_ms % 60000) / 1000) % 10;
         uint32_t tenths = (time_ms % 1000) / 100;
 
-
         baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
         baseY  = -1080.0 - 1.5*NUMBER_HEIGHT;
 
-        glBegin(GL_QUADS);
-        if (fullmins != 0) {
-            getTexCoords(TEX_FONTS, LETTER_0 + fullmins, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-        }
         baseX += NUMBER_WIDTH;
         if ((fullmins > 0) || (mins > 0)) {
-            getTexCoords(TEX_FONTS, LETTER_0 + mins, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            baseX += 0.75*NUMBER_WIDTH;
-
-            getTexCoords(TEX_FONTS, LETTER_colon, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-
-            baseX += 0.75*NUMBER_WIDTH;
-            getTexCoords(TEX_FONTS, LETTER_0 + fullsecs, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-
-            baseX += NUMBER_WIDTH;
-            getTexCoords(TEX_FONTS, LETTER_0 + secs, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            std::stringstream timeStream;
+            timeStream << mins << ":" << fullsecs << secs;
+            drawWord(timeStream.str(),baseX,baseY);
         }
-
-        // Otherwise, draw the sec.tenths scoreboard mode
         else {
+            // Otherwise, draw the sec.tenths scoreboard mode
+            std::stringstream secStream;
             if (fullsecs > 0) {
-                getTexCoords(TEX_FONTS, LETTER_0 + fullsecs, texCoords);
-                glTexCoord2d(texCoords[0], texCoords[1]);
-                glVertex3f(baseX, baseY, FONT_DEPTH);
-                glTexCoord2d(texCoords[2], texCoords[1]);
-                glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-                glTexCoord2d(texCoords[2], texCoords[3]);
-                glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-                glTexCoord2d(texCoords[0], texCoords[3]);
-                glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+                secStream << fullsecs;
             }
-
-            baseX += NUMBER_WIDTH;
-            getTexCoords(TEX_FONTS, LETTER_0 + secs, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-
-            baseX += 0.75*NUMBER_WIDTH;
-            getTexCoords(TEX_FONTS, LETTER_dot, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
-
-            baseX += 0.75*NUMBER_WIDTH;
-            getTexCoords(TEX_FONTS, LETTER_0 + tenths, texCoords);
-            glTexCoord2d(texCoords[0], texCoords[1]);
-            glVertex3f(baseX, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[1]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY, FONT_DEPTH);
-            glTexCoord2d(texCoords[2], texCoords[3]);
-            glVertex3f(baseX+LETTER_WIDTH, baseY+LETTER_HEIGHT, FONT_DEPTH);
-            glTexCoord2d(texCoords[0], texCoords[3]);
-            glVertex3f(baseX, baseY+LETTER_HEIGHT, FONT_DEPTH);
+            secStream << secs << "." << tenths;
+            drawWord(secStream.str(),baseX,baseY);
         }
 
-        glEnd();
+        if (myStatus.mode == GAME_PAUSE){
+            std::string pause = "Press enter or 'p' to resume";
+            drawWord(pause,2100,-1080.0 - 5.5*LETTER_HEIGHT);
+        }else if (myStatus.mode == GAME_START){
+            std::string startString  = " Press enter to begin game. ";
+            drawWord(startString,2100.0,-1080.0 - 5.5*LETTER_HEIGHT);
+        }
 
         // Reset Camera
         myCamera.currentTeam = prevCamera->currentTeam;
@@ -690,9 +508,46 @@ namespace foz {
         myCamera.zoom_count = prevCamera->zoom_count;
         myCamera.zoom_level = prevCamera->zoom_level;
         delete prevCamera;
-       // myCamera.state = prev_camera_state;
         myCamera.update(true);
 
+    }
+    void Game::drawWord(std::string word, float baseX, float baseY ){
+            float texCoords[6];
+            uint16_t font_numx;
+            const char* time_word = word.c_str();
+            for (uint8_t j = 0; j < word.length(); j++) {
+            font_numx = NUM_FONTS;
+            if (time_word[j] >= 'A' && time_word[j] <= 'Z') {
+                font_numx = time_word[j] - 'A' + LETTER_A;
+            }
+            if (time_word[j] >= 'a' && time_word[j] <= 'z') {
+                font_numx = time_word[j] - 'a' + LETTER_a;
+            }
+            if (time_word[j] == ':') {
+                font_numx = LETTER_colon;
+            }
+            if (time_word[j] == '-') {
+                    getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
+            }
+            if ((time_word[j] >= '0') && (time_word[j] <= '9')) {
+                font_numx = time_word[j] - '0' + LETTER_0;
+            }
+
+            if (font_numx != NUM_FONTS) {
+                glBegin(GL_QUADS);
+                    getTexCoords(TEX_FONTS, font_numx, texCoords);
+                    glTexCoord2d(texCoords[0], texCoords[1]);
+                    glVertex3f(baseX + j*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[1]);
+                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY - LETTER_HEIGHT, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[3]);
+                    glVertex3f(baseX+(j+1)*LETTER_WIDTH, baseY, FONT_DEPTH);
+                    glTexCoord2d(texCoords[0], texCoords[3]);
+                    glVertex3f(baseX + j*LETTER_WIDTH, baseY, FONT_DEPTH);
+                glEnd();
+            }
+        }
+        delete time_word;
     }
 
 } // namespace foz
