@@ -114,7 +114,7 @@ namespace foz {
 
             case CAMERA_PAN_RIGHT:
 
-                if (x_pos >= width-1  || zoom_level == 0.0) {
+                if (x_pos >= zoom_level  || zoom_level == 0.0) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -152,7 +152,7 @@ namespace foz {
                 break;
 
             case CAMERA_PAN_DOWN:
-                if (y_pos >= (height-1)  || zoom_level == 0.0) {
+                if (y_pos >= (zoom_level)  || zoom_level == 0.0) {
                     state = CAMERA_IDLE;
                     break;
                 }
@@ -221,16 +221,16 @@ namespace foz {
 
                 reposition = true;
                 //printf("prev zoom count: %d, x_right: %6.3f, y_bottom: %6.3f, zoom_level: %1.3f\n",zoom_count,x_right,y_bottom,zoom_level);
-                if (x_pos >0.0){
-                    x_left -= (1500.0 * (x_pos) )/CAMERA_ZOOM_DELTA;
-                    this->x_right += (420.0 * (x_pos) )/CAMERA_ZOOM_DELTA;
+                if (x_pos > 0.0){
+                    x_left -= (1500.0 * (1) )/CAMERA_ZOOM_DELTA;
+                    this->x_right += (420.0 * (1) )/CAMERA_ZOOM_DELTA;
                 }else {
                     x_right += (1500.0  )/CAMERA_ZOOM_DELTA;
                     this->x_left -= (420.0  )/CAMERA_ZOOM_DELTA;
                 }
 
                 if (y_pos > 0.0){
-                    y_top += (1080.0* (y_pos) )/CAMERA_ZOOM_DELTA;
+                    y_top += (1080.0* (1) )/CAMERA_ZOOM_DELTA;
                 }else {
                     y_bottom -= (1080.0 )/CAMERA_ZOOM_DELTA;
                 }
