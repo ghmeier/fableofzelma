@@ -484,9 +484,34 @@ namespace foz {
             drawWord(secStream.str(),baseX,baseY);
         }
 
-        //drawWord("yeah",0.0,0.0);
-        drawMinimap(myCamera.zoom_level,myCamera.x_pos,myCamera.y_pos);
+        drawMinimap(myCamera.zoom_level,myCamera.x_pos ,myCamera.y_pos);
+
         glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+        glEnable (GL_BLEND);
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBegin(GL_QUADS);
+
+        getTexCoords(TEX_FONTS,GRADIENT,texCoords);
+        glTexCoord2d(texCoords[0], texCoords[1]);
+        glVertex3f(0, 10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[2], texCoords[1]);
+        glVertex3f(1280,10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[2], texCoords[3]);
+        glVertex3f(1280,-1080*myCamera.height-10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[0], texCoords[3]);
+        glVertex3f(0,-1080*myCamera.height-10, FONT_DEPTH+2);
+
+        getTexCoords(TEX_FONTS,GRADIENT,texCoords);
+        glTexCoord2d(texCoords[2], texCoords[3]);
+        glVertex3f(4500, 10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[0], texCoords[3]);
+        glVertex3f(1920*myCamera.width +10,10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[0], texCoords[1]);
+        glVertex3f(1920*myCamera.width+10,-1080*myCamera.height-10, FONT_DEPTH+2);
+        glTexCoord2d(texCoords[2], texCoords[1]);
+        glVertex3f(4500,-1080*myCamera.height-10, FONT_DEPTH+2);
+
+        glEnd();
 
         if (myStatus.mode == GAME_PAUSE){
             std::string pause = "Press enter or 'p' to resume";
@@ -561,7 +586,7 @@ namespace foz {
         float texCoords[6];
         float baseX =  0.0;
         float baseY = 0.0;
-        float gridSize = LETTER_HEIGHT*2;
+        float gridSize = LETTER_HEIGHT*2.0;
 
         baseY = -1000.0;
         baseX = 100.0;
@@ -586,20 +611,20 @@ namespace foz {
                 baseY += 30;
         }
 
-        baseY = -990.0 - gridSize * y - 10*y;
-        baseX = 90.0 + gridSize *x + 10*x;
+        baseY = -990.0 - gridSize * y - 10.0*y;
+        baseX = 90.0 + gridSize *x + 10.0*x;
         glBegin(GL_QUADS);
 
         //getTexCoords(TEX_BASIC_ROOM,FLOOR_TILE,texCoords);
         getTexCoords(TEX_BASIC_ROOM,GOLD_BLOCK,texCoords);
         glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(baseX + (4- zoomLevel)*gridSize + 10.0*(4-zoomLevel), baseY - (4-zoomLevel)*gridSize - 10.0*(4-zoomLevel), FONT_DEPTH+1);
+        glVertex3f(baseX + (4.0- zoomLevel)*gridSize + 10.0*(4.0-zoomLevel), baseY - (4.0-zoomLevel)*gridSize - 10.0*(4.0-zoomLevel), FONT_DEPTH+1);
         glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(baseX + (4- zoomLevel)*gridSize +  10.0*(4-zoomLevel), baseY - 1*gridSize, FONT_DEPTH+1);
+        glVertex3f(baseX + (4.0- zoomLevel)*gridSize +  10.0*(4.0-zoomLevel), baseY - 1*gridSize, FONT_DEPTH+1);
         glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(baseX + 1*gridSize , baseY - 1*gridSize, FONT_DEPTH+1);
+        glVertex3f(baseX + 1.0*gridSize , baseY - 1.0*gridSize, FONT_DEPTH+1);
         glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(baseX + 1*gridSize , baseY - (4-zoomLevel)*gridSize - 10.0*(4-zoomLevel), FONT_DEPTH+1);
+        glVertex3f(baseX + 1.0*gridSize , baseY - (4.0-zoomLevel)*gridSize - 10.0*(4.0-zoomLevel), FONT_DEPTH+1);
 
         glEnd();
 
