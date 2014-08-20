@@ -284,10 +284,12 @@ namespace foz {
             void loadResources();
             void drawScoreboard();
             void drawWord(std::string,float,float);
+            void drawMinimap(float zoomLevel,float x, float y);
             void processEvents();
 
             /* Utility functions (utils.cpp) */
             void playSound(uint16_t sfxID, uint8_t vol, bool force);
+            void playSound(uint16_t,uint8_t,bool,int,int);
             void printConfig();
             void printStatus();
 

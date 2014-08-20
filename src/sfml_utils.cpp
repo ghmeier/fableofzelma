@@ -484,6 +484,10 @@ namespace foz {
             drawWord(secStream.str(),baseX,baseY);
         }
 
+        //drawWord("yeah",0.0,0.0);
+        drawMinimap(myCamera.zoom_level,myCamera.x_pos,myCamera.y_pos);
+        glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
+
         if (myStatus.mode == GAME_PAUSE){
             std::string pause = "Press enter or 'p' to resume";
             drawWord(pause,2100,-1080.0 - 5.5*LETTER_HEIGHT);
@@ -511,6 +515,8 @@ namespace foz {
         myCamera.update(true);
 
     }
+
+
     void Game::drawWord(std::string word, float baseX, float baseY ){
             float texCoords[6];
             uint16_t font_numx;
@@ -548,6 +554,55 @@ namespace foz {
             }
         }
         delete time_word;
+    }
+
+    void Game::drawMinimap(float zoomLevel,float x, float y){
+        glBindTexture(GL_TEXTURE_2D, myGame->myTextures[TEX_BASIC_ROOM].texHandle);
+        float texCoords[6];
+        float baseX =  0.0;
+        float baseY = 0.0;
+        float gridSize = LETTER_HEIGHT*2;
+
+        baseY = -1000.0;
+        baseX = 100.0;
+        for (int i=1; i <= myGame->myWorld.width; i++) {
+                for (int j=1; j<=myGame->myWorld.height; j++){
+                    glBegin(GL_QUADS);
+
+                    getTexCoords(TEX_BASIC_ROOM,FLOOR_TILE,texCoords);
+                    glTexCoord2d(texCoords[0], texCoords[1]);
+                    glVertex3f(baseX + (i+1)*gridSize, baseY - (j+1)*gridSize, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[1]);
+                    glVertex3f(baseX + (i+1)*gridSize, baseY - j*gridSize, FONT_DEPTH);
+                    glTexCoord2d(texCoords[2], texCoords[3]);
+                    glVertex3f(baseX + i*gridSize, baseY - j*gridSize, FONT_DEPTH);
+                    glTexCoord2d(texCoords[0], texCoords[3]);
+                    glVertex3f(baseX + i*gridSize, baseY - (j+1)*gridSize, FONT_DEPTH);
+
+                    glEnd();
+                    baseY-= 10;
+                }
+                baseX+=10;
+                baseY += 30;
+        }
+
+        baseY = -990.0 - gridSize * y - 10*y;
+        baseX = 90.0 + gridSize *x + 10*x;
+        glBegin(GL_QUADS);
+
+        //getTexCoords(TEX_BASIC_ROOM,FLOOR_TILE,texCoords);
+        getTexCoords(TEX_BASIC_ROOM,GOLD_BLOCK,texCoords);
+        glTexCoord2d(texCoords[0], texCoords[1]);
+        glVertex3f(baseX + (4- zoomLevel)*gridSize + 10.0*(4-zoomLevel), baseY - (4-zoomLevel)*gridSize - 10.0*(4-zoomLevel), FONT_DEPTH+1);
+        glTexCoord2d(texCoords[2], texCoords[1]);
+        glVertex3f(baseX + (4- zoomLevel)*gridSize +  10.0*(4-zoomLevel), baseY - 1*gridSize, FONT_DEPTH+1);
+        glTexCoord2d(texCoords[2], texCoords[3]);
+        glVertex3f(baseX + 1*gridSize , baseY - 1*gridSize, FONT_DEPTH+1);
+        glTexCoord2d(texCoords[0], texCoords[3]);
+        glVertex3f(baseX + 1*gridSize , baseY - (4-zoomLevel)*gridSize - 10.0*(4-zoomLevel), FONT_DEPTH+1);
+
+        glEnd();
+
     }
 
 } // namespace foz

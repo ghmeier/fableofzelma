@@ -162,6 +162,24 @@ namespace foz {
 
     }
 
+    /*****************************************************************************
+    * Function: playSound
+    * Description: adds room parameters to the play sound function for localized sound handling
+    *****************************************************************************/
+    void Game::playSound(uint16_t sfxID, uint8_t vol, bool force, int xRoom, int yRoom){
+      if ((mySounds[myStatus.music_buffer].getStatus() == sf::Sound::Stopped) || (force == true) ) {
+            if ( (xRoom >= myCamera.x_pos && xRoom<= myCamera.x_pos + 2 - myCamera.zoom_level) &&
+                 (yRoom >= myCamera.y_pos && yRoom<= myCamera.y_pos + 2 - myCamera.zoom_level) ){
+                mySounds[myStatus.music_buffer].setBuffer(mySoundBuffers[sfxID]);
+                mySounds[myStatus.music_buffer].setVolume(vol);
+                mySounds[myStatus.music_buffer].play();
+                myStatus.music_buffer++;
+                myStatus.music_buffer %= NUM_SOUNDS;
+            }
+        }
+    }
+
+
 
     /*****************************************************************************
     * Function: Game::printStatus

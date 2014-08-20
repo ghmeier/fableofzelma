@@ -172,7 +172,7 @@ namespace foz {
                                         lookChest = myObject;
                                     }else if (myObject->type >= FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
                                         myLink->doDamage(25);
-                                        playSound(SFX_LINKHURT_1,100,true);
+                                        playSound(SFX_LINKHURT_1,100,true,myLink->room_x,myLink->room_y);
                                         myObject->active = false;
                                     }
                                 }else {
@@ -187,12 +187,12 @@ namespace foz {
                                         toCollect = myObject;
                                     }else if (myObject->type == BOMB_1 && myObject->sprite==BOMB_9 ){
                                         myLink->doDamage(15);
-                                        playSound(SFX_LINKHURT_1,100,true);
+                                        playSound(SFX_LINKHURT_1,100,true,myLink->room_x,myLink->room_y);
                                     }else if (myObject->type == BUTTON) {
                                         myObject->type = POT_TILE;
                                         myObject->sprite = POT_TILE;
 
-                                        playSound(SFX_SWTICH,100,true);
+                                        playSound(SFX_SWTICH,100,true,myLink->room_x,myLink->room_y);
                                         for (int roomObj = 0; roomObj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); roomObj++) {
                                             foz::Object *buttonObj = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[roomObj];
                                             if (obj != roomObj && myObject->subject > 0 && buttonObj->subject > 0 && myObject->subject == buttonObj->subject) {
@@ -217,10 +217,10 @@ namespace foz {
                                         if (obj!=j && test->status==SOLID && test->active && objColObj(myObject,test)) {
                                             if (myObject->type >= ARROW_NORTH && myObject->type <= ARROW_WEST){
                                                 myObject->active = false;
-                                                playSound(SFX_ARROWHIT,100,true);
+                                                playSound(SFX_ARROWHIT,100,true,myLink->room_x,myLink->room_y);
                                             }else if (myObject->type >=FIREBALL_NORTH && myObject->type <= FIREBALL_WEST){
                                                 myObject->active = false;
-                                                playSound(SFX_FIREBALL,100,true);
+                                                playSound(SFX_FIREBALL,100,true,myLink->room_x,myLink->room_y);
                                             }else if (myObject->type >= BOMB_1 && myObject->type <=BOMB_9){
                                                 myObject->can_move = false;
                                                 if (myObject->sprite == BOMB_8) {
@@ -261,7 +261,7 @@ namespace foz {
                             if (myLink->direction == DIRECTION_SOUTH) {
                                 if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][12] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                     myLink->room_y++;
-                                    playSound(SFX_HEY,100,true);
+                                    playSound(SFX_HEY,100,true,myLink->room_x,myLink->room_y);
                                     myLink->y = 266.0;
                                 }else {
                                     myLink->can_move = false;
@@ -273,7 +273,7 @@ namespace foz {
                             if (myLink->direction == DIRECTION_NORTH) {
                                 if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[6][0] == 50 && (myLink->x > -50)&&(myLink->x < 0)) {
                                     myLink->room_y--;
-                                    playSound(SFX_HEY,100,true);
+                                    playSound(SFX_HEY,100,true,myLink->room_x,myLink->room_y);
                                     myLink->y = -328.0;
                                 }else {
                                     myLink->can_move = false;
@@ -285,7 +285,7 @@ namespace foz {
                             if (myLink->direction == DIRECTION_EAST) {
                                 if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[12][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                     myLink->room_x++;
-                                    playSound(SFX_HEY,100,true);
+                                    playSound(SFX_HEY,100,true,myLink->room_x,myLink->room_y);
                                     myLink->x = -379.0;
                                     myLink->y = -33;
                                 }else {
@@ -298,7 +298,7 @@ namespace foz {
                             if (myLink->direction == DIRECTION_WEST) {
                                 if (myWorld.myRooms[myLink->room_x][myLink->room_y].myTiles[0][6] == 50 && (myLink->y > -50) && (myLink->y < 0)) {
                                     myLink->room_x--;
-                                    playSound(SFX_HEY,100,true);
+                                    playSound(SFX_HEY,100,true,myLink->room_x,myLink->room_y);
                                     myLink->x = 328.0;
                                     myLink->y = -33;
                                     myLink->can_move = true;
@@ -387,13 +387,13 @@ namespace foz {
                             myLink->update(mycmd->cmd);
                             if (toCollect != NULL){
                                 if (toCollect->type>=RUPEE_GREEN_1 && toCollect->type<=RUPEE_RED_3) {
-                                    playSound(SFX_GETRUPEE,100,true);
+                                    playSound(SFX_GETRUPEE,100,true,myLink->room_x,myLink->room_y);
                                     myTeams[myLink->team].score++;
                                     toCollect->active = false;
                                 }else if (toCollect->type == VOID_BLOCK) {
                                     myLink->health = -1;
                                 }else if (toCollect->type == KEY) {
-                                    playSound(SFX_GETITEM,100,true);
+                                    playSound(SFX_GETITEM,100,true,myLink->room_x,myLink->room_y);
                                     toCollect->active = false;
                                     myLink->numKeys++;
                                 }
@@ -406,9 +406,8 @@ namespace foz {
 
                         // Have we reached the end of a CMDFRAME?
                         // If so, see how many squares we have left to go.
-                        if (myLink->cur_cmdframe == (i*11 + myLink->id*4) ) {
-
-                            //playSound(SFX_STONESTEP,100,false);
+                        if (myCamera.zoom_level > 0 && myLink->cur_cmdframe == (i*11 + myLink->id*4) ) {
+                            playSound(SFX_STONESTEP,100,false,myLink->room_x,myLink->room_y);
                         }
                         if (myLink->cur_cmdframe >= CMDFRAMEMAX) {
                             myLink->cur_cmdframe = 0;
@@ -462,7 +461,7 @@ namespace foz {
 
                         if (myLink->cur_cmdframe ==0) {
                             arrow = new Object(BOMB_1,myLink->x,myLink->y);
-                            playSound(SFX_THROW,100,true);
+                            playSound(SFX_THROW,100,true,myLink->room_x,myLink->room_y);
                             arrow->setDirection(myLink->direction);
                             myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.push_back(*arrow);
                         }
