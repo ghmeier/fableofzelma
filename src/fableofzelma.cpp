@@ -183,7 +183,7 @@ namespace foz {
                                         toCollect->active = false;
                                     }else if (myObject->type == VOID_BLOCK) {
                                         toCollect = myObject;
-                                    }else if (myObject->type == KEY) {
+                                    }else if (myObject->type == KEY || myObject->type == LEVER_OFF) {
                                         toCollect = myObject;
                                     }else if (myObject->type == BOMB_1 && myObject->sprite==BOMB_9 ){
                                         myLink->doDamage(15);
@@ -357,7 +357,7 @@ namespace foz {
                         canProceed = toCollect!=NULL && (toCollect->type == KEY || (toCollect->type >= RUPEE_GREEN_1 && toCollect->type <=RUPEE_RED_3));
                         break;
                     case ACTIVATE_PRED:
-                        canProceed = toCollect!=NULL && (toCollect->type==CHEST);
+                        canProceed = toCollect!=NULL && ((toCollect->type==CHEST) || (toCollect->type == LEVER_OFF)) ;
                         break;
                     default:
                         break;
@@ -509,13 +509,31 @@ namespace foz {
                         }
                         break;
                     case ACTIVATE_CMD:
-                        //CMDFRAMEMAX = 60;
-
                         if (lookChest!=NULL && myLink->numKeys>0) {
                             lookChest->type = CHEST_OPEN;
                             lookChest->sprite = CHEST_OPEN;
                             myTeams[myLink->team].score +=10;
                             myLink->numKeys--;
+                        }
+                        else if (toCollect != NULL && toCollect->type == LEVER_OFF){
+                            toCollect->type = LEVER_ON;
+                            toCollect->sprite = LEVER_ON;
+                            playSound(SFX_SWTICH,100,true,myLink->room_x,myLink->room_y);
+                            for (int roomObj = 0; roomObj < myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects.size(); roomObj++) {
+                                foz::Object *buttonObj = &myWorld.myRooms[myLink->room_y][myLink->room_x].myObjects[roomObj];
+                                if (toCollect != buttonObj && toCollect->subject > 0 && buttonObj->subject > 0 && toCollect->subject == buttonObj->subject) {
+                                    buttonObj->active = !buttonObj->active;
+                                    buttonObj->subject = 0;
+                                }
+                            }
+                            for (int roomEn = 0; roomEn < myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies.size(); roomEn++){
+                                Enemy *otherEn = &myWorld.myRooms[myLink->room_y][myLink->room_x].myEnemies[roomEn];
+                                if (toCollect->subject > 0 && otherEn->subject > 0 && toCollect->subject == otherEn->subject) {
+                                    otherEn->active = !otherEn->active;
+                                    otherEn->subject = 0;
+                                }
+                            }
+                            toCollect->subject = 0;
                         }
 
                         if (myLink->cur_cmdframe==0) {

@@ -557,6 +557,9 @@ namespace foz {
             if (time_word[j] == ':') {
                 font_numx = LETTER_colon;
             }
+            if (time_word[j] == '.') {
+                font_numx = LETTER_dot;
+            }
             if (time_word[j] == '-') {
                     getTexCoords(TEX_FONTS, LETTER_NEG, texCoords);
             }
@@ -594,7 +597,7 @@ namespace foz {
                 for (int j=1; j<=myGame->myWorld.height; j++){
                     glBegin(GL_QUADS);
 
-                    getTexCoords(TEX_BASIC_ROOM,FLOOR_TILE,texCoords);
+                    getTexCoords(TEX_BASIC_ROOM,SMALL_ROOM,texCoords);
                     glTexCoord2d(texCoords[0], texCoords[1]);
                     glVertex3f(baseX + (i+1)*gridSize, baseY - (j+1)*gridSize, FONT_DEPTH);
                     glTexCoord2d(texCoords[2], texCoords[1]);

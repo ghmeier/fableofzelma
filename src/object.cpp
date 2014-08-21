@@ -65,7 +65,7 @@ namespace foz {
 
         if((type>12 && type<RUPEE_GREEN_1) || type >KEY ) {
             sprite = type;
-            if (type == VOID_BLOCK || type==BUTTON || type == BOMB_1) {
+            if (type == VOID_BLOCK || type==BUTTON || type == BOMB_1 || type == LEVER_OFF || type == LEVER_ON) {
                 status = TRANSPARENT;
             }else {
                 status = SOLID;
