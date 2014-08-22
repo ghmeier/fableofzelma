@@ -243,6 +243,11 @@ namespace foz {
 
         myCamera.init(&myWorld);
 
+        NUMBER_WIDTH = 70.0/3.0 * myCamera.width;
+        NUMBER_HEIGHT = 30.0 * myCamera.width;
+        LETTER_WIDTH = 20.0 * myCamera.width;
+        LETTER_HEIGHT = 88/3.0 * myCamera.width;
+
     }
 
     /*****************************************************************************
@@ -250,12 +255,6 @@ namespace foz {
     * Description: Draws the Game Scoreboards for the four teams
     *****************************************************************************/
     void Game::drawScoreboard(){
-
-    #define NUMBER_WIDTH 70
-    #define NUMBER_HEIGHT 90
-    #define LETTER_WIDTH 60
-    #define LETTER_HEIGHT 88
-
         float texCoords[6];
         float baseX, baseY;
 
@@ -301,7 +300,7 @@ namespace foz {
                     break;
                 case 1:
                     baseX = 3*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-LETTER_HEIGHT;
                     break;
                 case 2:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
@@ -310,7 +309,7 @@ namespace foz {
                 case 3:
                 default:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-LETTER_HEIGHT;
                     break;
             }
 
@@ -331,7 +330,7 @@ namespace foz {
                     break;
                 case 1:
                     baseX = 3*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-2.5*LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-2.5*LETTER_HEIGHT;
                     break;
                 case 2:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
@@ -340,7 +339,7 @@ namespace foz {
                 case 3:
                 default:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-2.5*LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-2.5*LETTER_HEIGHT;
                     break;
             }
 
@@ -387,7 +386,7 @@ namespace foz {
                     break;
                 case 1:
                     baseX = 3*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-4.0*LETTER_HEIGHT;
                     break;
                 case 2:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
@@ -396,7 +395,7 @@ namespace foz {
                 case 3:
                 default:
                     baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
-                    baseY = -1080.0*(myWorld.height-1)-4.0*LETTER_HEIGHT;
+                    baseY = -1080.0*(myWorld.height)/1.5-4.0*LETTER_HEIGHT;
                     break;
             }
 
@@ -422,33 +421,10 @@ namespace foz {
             drawWord(linkStream.str(),baseX+LETTER_WIDTH + 10,baseY);
         }
 
-
-        // Draw the black shading rectangles
-        glEnable(GL_BLEND);
-        glBegin(GL_QUADS);
-            glColor4f(1.0, 1.0, 0.0, 1.0);
-
-            glVertex3f(0.0, 0.0, OVERLAY_DEPTH);
-            glVertex3f(420.0, 0.0,OVERLAY_DEPTH);
-            glVertex3f(420.0, 1080.0, OVERLAY_DEPTH);
-            glVertex3f(0.0, 1080.0, OVERLAY_DEPTH);
-
-            glColor4f(1.0, 1.0, 0.0, 1.0);
-            glVertex3f(1920.0*(myWorld.width)-420.0, 0.0, OVERLAY_DEPTH);
-            glVertex3f(1920.0*myWorld.width, 0.0, OVERLAY_DEPTH);
-            glVertex3f(1920.0*(myWorld.width), -1080.0*(myWorld.height), OVERLAY_DEPTH);
-            glVertex3f(1920.0*(myWorld.width)-420.0, -1080.0*(myWorld.height), OVERLAY_DEPTH);
-
-            glColor4f(1.0, 1.0, 1.0, 1.0);
-
-        glEnd();
-
-        glDisable(GL_BLEND);
-
         /* Draw the Time Remaining */
         char time_word[5] = "Time";
         baseX = 1920.0*myWorld.width - 10*LETTER_WIDTH;
-        baseY = -1080.0 + NUMBER_HEIGHT;
+        baseY = -1080.0*myCamera.height/3.0 + NUMBER_HEIGHT;
         drawWord("Time",baseX,baseY);
 
         int32_t time_ms;
@@ -466,7 +442,7 @@ namespace foz {
         uint32_t tenths = (time_ms % 1000) / 100;
 
         baseX = 1920.0*myWorld.width - 11*LETTER_WIDTH;
-        baseY  = -1080.0 - 1.5*NUMBER_HEIGHT;
+        baseY  = -1080.0*myCamera.height/3.0 - 1.5*NUMBER_HEIGHT;
 
         baseX += NUMBER_WIDTH;
         if ((fullmins > 0) || (mins > 0)) {
@@ -495,30 +471,30 @@ namespace foz {
         glTexCoord2d(texCoords[0], texCoords[1]);
         glVertex3f(0, 10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(1280,10, FONT_DEPTH+2);
+        glVertex3f(-myCamera.x_left/2.5,10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(1280,-1080*myCamera.height-10, FONT_DEPTH+2);
+        glVertex3f(-myCamera.x_left/2.5,-1080*myCamera.height-10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[0], texCoords[3]);
         glVertex3f(0,-1080*myCamera.height-10, FONT_DEPTH+2);
 
         getTexCoords(TEX_FONTS,GRADIENT,texCoords);
         glTexCoord2d(texCoords[2], texCoords[3]);
-        glVertex3f(4500, 10, FONT_DEPTH+2);
+        glVertex3f(1920.0*myCamera.width-myCamera.x_right/2.5, 10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(1920*myCamera.width +10,10, FONT_DEPTH+2);
+        glVertex3f(1920.0*myCamera.width +10,10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[0], texCoords[1]);
         glVertex3f(1920*myCamera.width+10,-1080*myCamera.height-10, FONT_DEPTH+2);
         glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(4500,-1080*myCamera.height-10, FONT_DEPTH+2);
+        glVertex3f(1920.0*myCamera.width-myCamera.x_right/2.5,-1080*myCamera.height-10, FONT_DEPTH+2);
 
         glEnd();
 
         if (myStatus.mode == GAME_PAUSE){
             std::string pause = "Press enter or 'p' to resume";
-            drawWord(pause,2100,-1080.0 - 5.5*LETTER_HEIGHT);
+            drawWord(pause,-myCamera.x_left - 1080.0*myCamera.width/4.0,-1080.0*myCamera.height/2 +LETTER_HEIGHT);
         }else if (myStatus.mode == GAME_START){
             std::string startString  = " Press enter to begin game. ";
-            drawWord(startString,2100.0,-1080.0 - 5.5*LETTER_HEIGHT);
+            drawWord(startString,-myCamera.x_left - 1080.0*myCamera.width/4.0,-1080.0*myCamera.height/2 + LETTER_HEIGHT);
         }
 
         // Reset Camera
@@ -589,9 +565,9 @@ namespace foz {
         float texCoords[6];
         float baseX =  0.0;
         float baseY = 0.0;
-        float gridSize = LETTER_HEIGHT*2.0;
+        float gridSize = (-myCamera.x_left/2.5-200.0)/myWorld.width;
 
-        baseY = -1000.0;
+        baseY = -myWorld.height * 1080.0 / 2 + gridSize * myWorld.height;
         baseX = 100.0;
         for (int i=1; i <= myGame->myWorld.width; i++) {
                 for (int j=1; j<=myGame->myWorld.height; j++){
@@ -599,9 +575,9 @@ namespace foz {
 
                     getTexCoords(TEX_BASIC_ROOM,SMALL_ROOM,texCoords);
                     glTexCoord2d(texCoords[0], texCoords[1]);
-                    glVertex3f(baseX + (i+1)*gridSize, baseY - (j+1)*gridSize, FONT_DEPTH);
+                    glVertex3f(baseX + (i-1)*gridSize, baseY - (j+1)*gridSize, FONT_DEPTH);
                     glTexCoord2d(texCoords[2], texCoords[1]);
-                    glVertex3f(baseX + (i+1)*gridSize, baseY - j*gridSize, FONT_DEPTH);
+                    glVertex3f(baseX + (i-1)*gridSize, baseY - j*gridSize, FONT_DEPTH);
                     glTexCoord2d(texCoords[2], texCoords[3]);
                     glVertex3f(baseX + i*gridSize, baseY - j*gridSize, FONT_DEPTH);
                     glTexCoord2d(texCoords[0], texCoords[3]);
@@ -611,23 +587,23 @@ namespace foz {
                     baseY-= 10;
                 }
                 baseX+=10;
-                baseY += 30;
+                baseY += 10*myWorld.height;
         }
 
-        baseY = -990.0 - gridSize * y - 10.0*y;
-        baseX = 90.0 + gridSize *x + 10.0*x;
+        baseY = -myWorld.height * 1080.0 / 2  + 10.0 + gridSize * myWorld.height - gridSize * y - 10.0*y;
+        baseX = 90.0 + gridSize *(x-1) + 10.0*x;
         glBegin(GL_QUADS);
 
         //getTexCoords(TEX_BASIC_ROOM,FLOOR_TILE,texCoords);
         getTexCoords(TEX_BASIC_ROOM,GOLD_BLOCK,texCoords);
         glTexCoord2d(texCoords[0], texCoords[1]);
-        glVertex3f(baseX + (4.0- zoomLevel)*gridSize + 10.0*(4.0-zoomLevel), baseY - (4.0-zoomLevel)*gridSize - 10.0*(4.0-zoomLevel), FONT_DEPTH+1);
+        glVertex3f(baseX + (myWorld.width+1.0- zoomLevel)*gridSize + 10.0*(myWorld.height+1.0-zoomLevel), baseY - (myWorld.height+1.0-zoomLevel)*gridSize - 10.0*(myWorld.height+1.0-zoomLevel), FONT_DEPTH+1);
         glTexCoord2d(texCoords[2], texCoords[1]);
-        glVertex3f(baseX + (4.0- zoomLevel)*gridSize +  10.0*(4.0-zoomLevel), baseY - 1*gridSize, FONT_DEPTH+1);
+        glVertex3f(baseX + (myWorld.width+1.0- zoomLevel)*gridSize +  10.0*(myWorld.height+1.0-zoomLevel), baseY - 1*gridSize, FONT_DEPTH+1);
         glTexCoord2d(texCoords[2], texCoords[3]);
         glVertex3f(baseX + 1.0*gridSize , baseY - 1.0*gridSize, FONT_DEPTH+1);
         glTexCoord2d(texCoords[0], texCoords[3]);
-        glVertex3f(baseX + 1.0*gridSize , baseY - (4.0-zoomLevel)*gridSize - 10.0*(4.0-zoomLevel), FONT_DEPTH+1);
+        glVertex3f(baseX + 1.0*gridSize , baseY - (myWorld.height+1.0-zoomLevel)*gridSize - 10.0*(myWorld.height+1.0-zoomLevel), FONT_DEPTH+1);
 
         glEnd();
 

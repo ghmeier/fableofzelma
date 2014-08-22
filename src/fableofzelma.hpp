@@ -298,6 +298,12 @@ namespace foz {
             bool linkColLink(Link *myLink, Link *other);
             bool objColObj(Object *myLink, Object *myObject);
 
+
+            float NUMBER_WIDTH = 0;
+            float NUMBER_HEIGHT = 0;
+            float LETTER_WIDTH = 0;
+            float LETTER_HEIGHT = 0;
+
              /* Globally declare Textures */
             foz::Texture myTextures[NUM_TEXTURES];
 
