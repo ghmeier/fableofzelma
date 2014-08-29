@@ -1,8 +1,9 @@
 # Joseph Zambreno
+# Garret Meier
 # Iowa State University
-# room000.zrf - example Fable of Zelma Room File
+# room000.zrf - Fable of Zelma Room File
 
-# This room has a plain floor, with doors at the South and East ends
+# Corner room, easy
 .size 13 13
 .tiles
  0  1  1  1  1  1  1  1  1  1  1  1  2

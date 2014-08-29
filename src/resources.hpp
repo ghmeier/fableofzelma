@@ -108,18 +108,19 @@ extern uint16_t navi_object_spriteMap[][4];
 
 /*Sprite enum for ROOM*/
 typedef enum
-{WALL_TOP_LEFT, WALL_TOP_CENTER, WALL_TOP_RIGHT, DOOR_LEFT, DOOR_TOP,                                                                                                           //1
-DOOR_RIGHT, WALL_LEFT, FLOOR_TILE, WALL_RIGHT, DOOR_BOTTOM,                                                                                                                     //2
-WALL_BOTTOM_LEFT, WALL_BOTTOM, WALL_BOTTOM_RIGHT,
-/* objects begin at 13*/
-CHEST, CHEST_OPEN, POT, POT_TILE,
-BUTTON, TORCH_UNLIT, TORCH_LIT,DEFAULT_BLOCK, VOID_BLOCK, RUPEE_GREEN_1,RUPEE_GREEN_2,
-RUPEE_GREEN_3,RUPEE_PURPLE_1,RUPEE_PURPLE_2,RUPEE_PURPLE_3, RUPEE_BLUE_1,RUPEE_BLUE_2,
-RUPEE_BLUE_3, RUPEE_ORANGE_1,RUPEE_ORANGE_2,RUPEE_ORANGE_3, RUPEE_RED_1,RUPEE_RED_2,
-RUPEE_RED_3,KEY,ARROW_NORTH,ARROW_EAST,ARROW_SOUTH,ARROW_WEST,
-FIREBALL_NORTH,FIREBALL_EAST,FIREBALL_SOUTH,FIREBALL_WEST,
-BOMB_1,BOMB_2,BOMB_3,BOMB_4,BOMB_5,BOMB_6,BOMB_7,BOMB_8,BOMB_9,
-GOLD_BLOCK, LEVER_OFF, LEVER_ON, SMALL_ROOM}
+{WALL_TOP_LEFT,     WALL_TOP_CENTER,   WALL_TOP_RIGHT,     DOOR_LEFT,      DOOR_TOP,        //0-4
+ DOOR_RIGHT,        WALL_LEFT,         FLOOR_TILE,         WALL_RIGHT,     DOOR_BOTTOM,     //5-9
+ WALL_BOTTOM_LEFT,  WALL_BOTTOM,       WALL_BOTTOM_RIGHT,  CHEST,          CHEST_OPEN,      //10-14
+ POT,               POT_TILE,          BUTTON,             TORCH_UNLIT,    TORCH_LIT,       //15-19
+ DEFAULT_BLOCK,     VOID_BLOCK,        RUPEE_GREEN_1,      RUPEE_GREEN_2,  RUPEE_GREEN_3,   //20-14
+ RUPEE_PURPLE_1,    RUPEE_PURPLE_2,    RUPEE_PURPLE_3,     RUPEE_BLUE_1,   RUPEE_BLUE_2,    //25-29
+ RUPEE_BLUE_3,      RUPEE_ORANGE_1,    RUPEE_ORANGE_2,     RUPEE_ORANGE_3, RUPEE_RED_1,     //30-34
+ RUPEE_RED_2,       RUPEE_RED_3,       KEY,                ARROW_NORTH,    ARROW_EAST,      //35-39
+ ARROW_SOUTH,       ARROW_WEST,        FIREBALL_NORTH,     FIREBALL_EAST,  FIREBALL_SOUTH,  //40-44
+ FIREBALL_WEST,     BOMB_1,            BOMB_2,             BOMB_3,         BOMB_4,          //45-49
+ BOMB_5,            BOMB_6,            BOMB_7,             BOMB_8,         BOMB_9,          //50-54
+ GOLD_BLOCK,        LEVER_OFF,         LEVER_ON,           SMALL_ROOM
+}
 ROOM_SPRITE_ENUM ;
 extern uint16_t room_object_spriteMap[][4];
 
