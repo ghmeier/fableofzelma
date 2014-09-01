@@ -37,7 +37,7 @@ namespace foz {
         char linebuf[256], tiles_str[16];
         char *linebuf_temp;
         uint32_t line_count;
-        uint8_t size_ntok, tiles_ntok;
+        uint8_t size_ntok, tiles_ntok, push_tok;
         uint16_t width_tok, height_tok, tile_tok;
         int16_t subject_tok;
         uint16_t tile_i=0, tile_j=0;
@@ -81,10 +81,10 @@ namespace foz {
                 }
 
                 linebuf_temp = strtok(linebuf, " ,.");
-                subject_tok = 0;
+                subject_tok = push_tok = 0;
                 for (tile_j = 0; tile_j < width; tile_j++) {
-                    tiles_ntok = sscanf(linebuf_temp, " %hu:%d", &tile_tok,&subject_tok);
-                    if (tiles_ntok > 2) {
+                    tiles_ntok = sscanf(linebuf_temp, " %hu:%d:%b", &tile_tok,&subject_tok,&push_tok);
+                    if (tiles_ntok > 3) {
                         printf("Error compiling %s, line %d\n", fname1, line_count);
                         printf("  Invalid room specification in command \'%s\'", linebuf);
                         raise_error(ERR_BADFILE4, fname1);
@@ -96,9 +96,11 @@ namespace foz {
                        if (tile_tok<100) {
                             if (tiles_ntok == 2) {//this handles objects that are connected to others
                                 Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0,subject_tok);
+                                toPush.can_push = push_tok;
                                 myObjects.push_back(toPush);
                             }else{
                                 Object toPush(tile_tok,tile_j*59.0-380.0,tile_i*(-59.0)+321.0);
+                                toPush.can_push = push_tok;
                                 myObjects.push_back(toPush);
                             }
                         }else {

@@ -34,6 +34,7 @@ namespace foz {
 
             bool active;
             bool can_move;
+            bool can_push;
             uint8_t type;
             uint8_t direction;
             uint8_t status;

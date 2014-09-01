@@ -158,6 +158,7 @@ namespace foz {
                 //the vertices of link and each object for easier access
                 Object* lookChest = NULL;
                 Object* toCollect = NULL;
+                Object* toPush = NULL;
                 Enemy* toHit = NULL;
                 Object * arrow = NULL;
 
@@ -174,6 +175,9 @@ namespace foz {
                                         myLink->doDamage(25);
                                         playSound(SFX_LINKHURT_1,100,true,myLink->room_x,myLink->room_y);
                                         myObject->active = false;
+                                    }else if (myObject->can_push){
+                                        //TODO: decide what to do here
+                                        Object* toPush = myObject;
                                     }
                                 }else {
                                     myLink->can_move = true;
@@ -358,6 +362,9 @@ namespace foz {
                         break;
                     case ACTIVATE_PRED:
                         canProceed = toCollect!=NULL && ((toCollect->type==CHEST) || (toCollect->type == LEVER_OFF)) ;
+                        break;
+                    case PUSHABLE_PRED:
+                        canProceed = !myLink->can_move && toPush!= NULL;
                         break;
                     default:
                         break;
