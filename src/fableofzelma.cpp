@@ -588,6 +588,7 @@ namespace foz {
 
                 if (!myLink->active){
                     myTeams[i].myLinks.erase(myTeams[i].myLinks.begin() + i_link);
+                    myTeams[i].link_left --;
                     i_link--;
                 }
             //myTeams[i].cmds_done = true;
@@ -908,7 +909,6 @@ namespace foz {
                         raise_error(ERR_BADFILE2, myConfig.team_fname[i_team]);
                     }
                 }
-
 
                 // If we didn't match a select, we must be done with that command-type
                 if (select_match == true) {
@@ -1260,7 +1260,7 @@ namespace foz {
                 }
             }
 
-
+            myTeams[i_team].link_left = myTeams[i_team].myLinks.size();
             if (myConfig.debug_level > 50) {
                 printf("\nCommands are as follows: \n");
                 printf("   ID    | LINE |   LABEL   | IF? | NOT? |   PRED   |   CMD   | LINK | OPTS  \n");

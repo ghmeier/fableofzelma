@@ -417,7 +417,7 @@ namespace foz {
 
             glBindTexture(GL_TEXTURE_2D, myTextures[TEX_FONTS].texHandle);
             std::stringstream linkStream;
-            linkStream << "x" << myGame->myTeams[i].myLinks.size();
+            linkStream << "x" << myGame->myTeams[i].link_left;
             drawWord(linkStream.str(),baseX+LETTER_WIDTH + 10,baseY);
         }
 

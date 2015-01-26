@@ -375,14 +375,14 @@ namespace foz {
                     sprite = PURPLE_NAVI_1;
                 }else{
                     texfile = TEX_PURPLE_LINK;
-                    sprite = LINK_WALKING_SOUTH_1;
+                    sprite = LINK_WALKING_NORTH_1;
                 }
                 room_x = 0;
                 room_y = world_height-1;
                 x = LINK_START_X;
                 y = LINK_START_Y;
 
-                direction = DIRECTION_SOUTH;
+                direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
                 break;
             case 2:
@@ -408,14 +408,14 @@ namespace foz {
                     sprite = RED_NAVI_1;
                 }else{
                     texfile = TEX_RED_LINK;
-                    sprite = LINK_WALKING_SOUTH_1;
+                    sprite = LINK_WALKING_NORTH_1;
                 }
                 room_x = world_width-1;
                 room_y = world_height-1;
                 x = LINK_START_X;
                 y = LINK_START_Y;
 
-                direction = DIRECTION_SOUTH;
+                direction = DIRECTION_NORTH;
                 depth = FRONT_DEPTH;
                 break;
         }

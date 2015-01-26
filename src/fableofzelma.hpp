@@ -229,6 +229,7 @@ namespace foz {
             uint16_t cur_link;
             uint16_t cur_cmdframe;
             uint16_t cur_cmdopt;
+            uint16_t link_left;
             bool cmds_done;
             std::vector<foz::cmd_type> cmds;
             std::vector<foz::Link> myLinks;

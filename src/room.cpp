@@ -157,10 +157,36 @@ namespace foz {
             for (tile_i = 0; tile_i < height; tile_i++) {
                 std::reverse(myTiles[tile_i].begin(), myTiles[tile_i].end());
             }
+            int i=0;
+            for (i=0; i < myObjects.size();i++){
+                myObjects[i].x = (width-myObjects[i].width - 10.0) - myObjects[i].x ;
+                if (myObjects[i].direction = DIRECTION_EAST || myObjects[i].direction == DIRECTION_WEST){
+                    myObjects[i].direction = (myObjects[i].direction + 2) % 4;
+                }
+            }
+            for (i=0; i< myEnemies.size();i++){
+                myEnemies[i].x = (width-myEnemies[i].width - 10.0) - myEnemies[i].x;
+                if (myEnemies[i].direction = DIRECTION_EAST || myEnemies[i].direction == DIRECTION_WEST){
+                    myEnemies[i].direction = (myEnemies[i].direction + 2) % 4;
+                }
+            }
         }
 
         if (flip == true) {
             std::reverse(myTiles.begin(), myTiles.end());
+            int i=0;
+            for (i=0; i < myObjects.size();i++){
+                myObjects[i].y = (height-myObjects[i].height) - myObjects[i].y - 20.0 ;
+                if (myObjects[i].direction = DIRECTION_NORTH || myObjects[i].direction == DIRECTION_SOUTH){
+                    myObjects[i].direction = (myObjects[i].direction + 2) % 4;
+                }
+            }
+            for (i=0; i< myEnemies.size();i++){
+                myEnemies[i].y = (height-myEnemies[i].height) - myEnemies[i].y - 20.0;
+                if (myEnemies[i].direction = DIRECTION_NORTH || myEnemies[i].direction == DIRECTION_SOUTH){
+                    myEnemies[i].direction = (myEnemies[i].direction + 2) % 4;
+                }
+            }
         }
 
         return;
